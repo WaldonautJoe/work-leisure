@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="5dp" >
+    
+    <View
+        android:paddingTop="10dp"
+        android:paddingBottom="5dp"
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="#dddddd" />
+    
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="5dp" >
+        
+        <TextView
+            android:id="@+id/txtClaimDate"
+	        android:layout_width="0dip"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:textSize="18sp" />
+        
+        <TextView
+            android:id="@+id/txtClaimBounty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp" />
+        
+    </LinearLayout>
+        
+    <TextView
+        android:id="@+id/txtClaimComment"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+    
+</LinearLayout>

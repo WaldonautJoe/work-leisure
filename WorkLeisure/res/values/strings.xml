@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Work/Leisure</string>
+    <string name="title_activity_claim_list">Claim List</string>
+    <string name="title_activity_task_list">Task List</string>
+    <string name="title_activity_edit_task">Edit Task</string>
+    <string name="title_activity_task_detail">Task Detail</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_add_task">Add Task</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_undo">Undo</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_view_archive">View Archive</string>
+    <string name="action_accept">Accept</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="user_balances">jneickhoff.workleisure.USER_BALANCE</string>
+    <string name="default_balance">DEFAULT_BALANCE</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="balance">Balance</string>
+    <string name="work">"Work "</string>
+    <string name="leisure">"Leisure "</string>
+    <string name="add_new">Add Task</string>
+    <string name="old_tasks">View Archive</string>
+    <string name="archive">archive</string>
+    <string name="task_name">Task name</string>
+    <string name="archived_task">Archived task</string>
+    <string name="importance">Importance</string>
+    <string name="task_name_hint">What is the task?</string>
+    <string name="task_description">Description</string>
+    <string name="task_description_hint">What are the details about the task?</string>
+    <string name="task_bounty">Expected hour bounty</string>
+    <string name="task_stock">Remaining stock</string>
+    <string name="stock_type_prompt">Choose…</string>
+    <string name="default_stock">1</string>
+    <string name="default_bounty">0</string>
+
+    <string-array name="importance_types">
+        <item>High importance</item>
+        <item>Low importance</item>
+    </string-array>
+    <string-array name="stock_types">
+        <item>Unlimited</item>
+        <item>Limited to…</item>
+    </string-array>
+    <string-array name="sort_types">
+        <item>Importance</item>
+        <item>A to Z</item>
+        <item>Z to A</item>
+        <item>Oldest first</item>
+        <item>Newest first</item>
+        <item>Times claimed</item>
+    </string-array>
+
+    <string name="sort">Sort</string>
+    <string name="add_task">Add Task</string>
+    <string name="add_claim_task">Add &amp; Claim Task</string>
+    <string name="confirm">Confirm</string>
+    <string name="delete_task">Delete</string>
+    <string name="cancel">Never mind!</string>
+    <string name="okay">Okay</string>
+    <string name="updated_label">"Updated "</string>
+    <string name="due_label">"Due "</string>
+    <string name="archived">"Archived, "</string>
+    <string name="high_importance">High importance</string>
+    <string name="low_importance">Low importance</string>
+    <string name="high">High</string>
+    <string name="low">Low</string>
+    <string name="bounty_label">"Expected bounty"</string>
+    <string name="stock_label">"Remaining stock"</string>
+    <string name="claim">Claim</string>
+    <string name="latest_claims">Latest 3 claims</string>
+    <string name="latest_claims_5">Latest 5 claims</string>
+    <string name="editTask">Edit</string>
+    <string name="msg_claim_task">"Would you like to claim this task?"</string>
+    <string name="label_balance_change">"Change in balance: "</string>
+    <string name="arrow">" &#8594; "</string>
+    <string name="bounty">Different bounty (optional)</string>
+    <string name="comment">Comment</string>
+    <string name="dash_break">" - "</string>
+    <string name="view_all">View &amp; Edit All Claims</string>
+    <string name="claim_list_instructions">To delete a claim, tap it.</string>
+    <string name="graph_title">Hours claimed per day</string>
+    <string name="undo">Undo</string>
+    <string name="dueItToday">Due it today</string>
+    <string name="dueItTomorrow">Due it tomorrow</string>
+    <string name="removeDue">Remove due date</string>
+    <string name="dueLateHeader">Some tasks are a bit late!</string>
+    <string name="dueSoonHeader">Some tasks are due soon!</string>
+    <string name="title_activity_claim_recent">Recent Claims</string>
+    <string name="view_weeks_claims">View week\'s claims</string>
+    <string name="total_claims">total claims</string>
+    <string name="unlimited">Unlimited</string>
+    <string name="claimed">claimed</string>
+
+</resources>

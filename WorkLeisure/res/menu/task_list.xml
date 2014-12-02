@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item android:id="@+id/action_add"
+          android:icon="@drawable/ic_action_add"
+          android:title="@string/action_add_task"
+          android:showAsAction="ifRoom" />
+    
+    <item android:id="@+id/action_view_archive"
+          android:icon="@drawable/ic_action_view_archive"
+          android:title="@string/action_view_archive"
+          android:showAsAction="ifRoom" />
+
+</menu>

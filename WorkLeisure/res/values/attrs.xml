@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <declare-styleable name="MirrorBarGraph">
+       <attr name="lineColor" format="color" />
+       <attr name="labelColor" format="color" />
+       <attr name="showLabels" format="boolean" />
+       <attr name="labelTextSize" format="dimension" />
+       <attr name="minTextSize" format="dimension" />
+       <attr name="topDataColor" format="color" />
+       <attr name="bottomDataColor" format="color" />
+   </declare-styleable>
+</resources>
