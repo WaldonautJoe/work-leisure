@@ -46,10 +46,12 @@ public class ClaimRecentActivity extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		//TODO add condition to updating display
 		updateDisplay();
 	}
 	
+	/**
+	 * update the displayed elements of this activity
+	 */
 	public void updateDisplay() {
 		
 		lytRecentClaims.removeAllViews();
@@ -73,6 +75,7 @@ public class ClaimRecentActivity extends Activity {
 		
 		ds.open();
 		while (groupsPos >= 0) {
+			//set up claim displays and count bounties totals
 			List<ClaimLog> daysClaims = ds.getAllClaimLogs(targetDateBeg, targetDateEnd, null, true);
 			
 			LinearLayout lytClaims = new LinearLayout(this);
@@ -120,6 +123,7 @@ public class ClaimRecentActivity extends Activity {
 				}
 			}
 			
+			//set up date header
 			TextView txtDateHeader = new TextView(this);
 			txtDateHeader.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 			txtDateHeader.setPadding((int) res.getDimension(R.dimen.activity_horizontal_margin), 
@@ -131,7 +135,15 @@ public class ClaimRecentActivity extends Activity {
 			txtDateHeader.setTextSize(22);
 			txtDateHeader.setText(DateFormat.getDateFormat(this).format(targetDateBeg.getTime()));
 			
-			//TODO create graph
+			//set up bounty meters
+			LinearLayout lytBountyMeters = new LinearLayout(this);
+			lytBountyMeters.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+			lytBountyMeters.setOrientation(LinearLayout.VERTICAL);
+			lytBountyMeters.setPadding((int) res.getDimension(R.dimen.activity_horizontal_margin), 
+								 0, 
+								 (int) res.getDimension(R.dimen.activity_horizontal_margin), 
+								 10);
+			
 			HorizontalMeter workMeter = new HorizontalMeter(this, 
 					workClaimedTime, 12, getResources().getColor(R.color.blue));
 			workMeter.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
@@ -139,12 +151,14 @@ public class ClaimRecentActivity extends Activity {
 					leisClaimedTime, 12, getResources().getColor(R.color.red));
 			leisMeter.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 			
-			lytClaims.addView(workMeter, 0);
-			lytClaims.addView(leisMeter, 1);
+			lytBountyMeters.addView(workMeter);
+			lytBountyMeters.addView(leisMeter);
 			
 			lytRecentClaims.addView(txtDateHeader);
+			lytRecentClaims.addView(lytBountyMeters);
 			lytRecentClaims.addView(lytClaims);
 			
+			//go to next day
 			targetDateBeg.add(Calendar.DAY_OF_MONTH, -1);
 			targetDateEnd.add(Calendar.DAY_OF_MONTH, -1);
 			groupsPos--;
