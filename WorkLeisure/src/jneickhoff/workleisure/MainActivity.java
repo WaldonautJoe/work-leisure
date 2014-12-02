@@ -84,8 +84,7 @@ public class MainActivity extends Activity {
 		updateBalanceDisplay();
 		ds.open();
 		updateBalanceGraph();
-		updateRecentDueTasks();
-		updateRecentClaims();		
+		updateRecentDueTasks();		
 		ds.close();
 	}
 	
@@ -237,35 +236,6 @@ public class MainActivity extends Activity {
 		else {
 			txtDueSoonHeader.setVisibility(View.GONE);
 			lytDueSoonTasks.setVisibility(View.GONE);
-		}
-	}
-	
-	/**
-	 * Updates the lists of recently claimed tasks <br/>
-	 * ds must be open prior to calling this method.
-	 */
-	private void updateRecentClaims() {
-		LinearLayout listClaims = (LinearLayout) findViewById(R.id.listClaims);
-		List<ClaimLog> recentClaims = ds.getAllClaimLogs(ClaimAllArrayAdapter.MAX_LIST_SIZE, false);
-		ClaimAllArrayAdapter adapter = new ClaimAllArrayAdapter(this, recentClaims);
-		listClaims.removeAllViews();
-		for(int i = 0; i < adapter.getCount(); i++) {
-			View view = adapter.getView(i, null, null);
-			long taskID = adapter.getItem(i).getTaskID();
-			view.setTag(taskID);
-			view.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					long taskID = (Long) v.getTag();
-					
-					Intent intent = new Intent(MainActivity.this, TaskDetailActivity.class);
-					intent.putExtra(TaskDetailActivity.EXTRA_TASK_ID, taskID);
-					startActivity(intent);
-				}
-			});
-			
-			listClaims.addView(view);
 		}
 	}
 	

@@ -111,31 +111,6 @@
 		        android:paddingBottom="10dp"
 		        android:orientation="vertical" />
 		
-		</LinearLayout>
-		    
-	    <TextView
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:paddingLeft="@dimen/activity_horizontal_margin"
-		    android:paddingRight="@dimen/activity_horizontal_margin"
-	        android:textSize="22sp"
-	        android:background="@color/yellow"
-	        android:textColor="@color/white"
-	        android:text="@string/latest_claims_5" />
-		    
-		<LinearLayout 
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:orientation="vertical"
-	        android:paddingLeft="@dimen/activity_horizontal_margin"
-		    android:paddingRight="@dimen/activity_horizontal_margin" >
-		    
-		    <LinearLayout
-		        android:id="@+id/listClaims"
-		        android:layout_width="fill_parent"
-		        android:layout_height="wrap_content"
-		        android:orientation="vertical" />
-		    
 		    <Button 
 		        android:id="@+id/btnViewRecentClaims"
 		        android:layout_width="fill_parent"
@@ -143,8 +118,8 @@
 		        android:text="@string/view_weeks_claims"
 		        android:onClick="onClick" />
 		    
-	    </LinearLayout>
-	    
+		</LinearLayout>
+	        
 	</LinearLayout>
 	
 </ScrollView>
