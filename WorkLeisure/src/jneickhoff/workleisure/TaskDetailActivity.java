@@ -52,6 +52,7 @@ public class TaskDetailActivity extends Activity
 	private Button btnClaimTask;
 	private LinearLayout listLatestClaims;
 	private TextView txtTimesClaimed;
+	private Button btnViewAllClaims;
 	private ClaimSimpleArrayAdapter adapter;
 	
 	@Override
@@ -81,6 +82,7 @@ public class TaskDetailActivity extends Activity
 		btnClaimTask = (Button) findViewById(R.id.btnClaimTask);
 		listLatestClaims = (LinearLayout) findViewById(R.id.listLatestClaims);
 		txtTimesClaimed = (TextView) findViewById(R.id.txtTimesClaimed);
+		btnViewAllClaims = (Button) findViewById(R.id.btnViewAllClaims);
 		
 		updateDisplay();
 		
@@ -377,6 +379,13 @@ public class TaskDetailActivity extends Activity
 				btnClaimTask.setEnabled(true);
 		}
 		txtTimesClaimed.setText(String.valueOf(task.getTimesClaimed() + " " + getResources().getString(R.string.total_claims)));
+		if(task.getTimesClaimed() == 0) {
+			btnViewAllClaims.setVisibility(View.GONE);
+		}
+		else {
+			btnViewAllClaims.setVisibility(View.VISIBLE);
+		}
+			
 	}
 
 }
