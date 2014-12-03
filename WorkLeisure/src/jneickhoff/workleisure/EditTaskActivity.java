@@ -25,6 +25,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +48,7 @@ public class EditTaskActivity extends Activity
 	
 	private static final String UNNAMED_TASK = "Unnamed Task";
 	
+	private LinearLayout lytHeader;
 	private EditText editTaskName;
 	private CheckBox chkTaskArchived;
 	private Spinner spnTaskImportance;
@@ -64,6 +66,7 @@ public class EditTaskActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_task);
 		
+		lytHeader = (LinearLayout) findViewById(R.id.lytHeader);
 		editTaskName = (EditText) findViewById(R.id.editTaskName);
 		chkTaskArchived = (CheckBox) findViewById(R.id.chkTaskArchived);
 		spnTaskImportance = (Spinner) findViewById(R.id.spnTaskImportance);
@@ -130,6 +133,12 @@ public class EditTaskActivity extends Activity
 		Bundle extras = getIntent().getExtras();
 		taskType = extras.getString(EXTRA_TASK_TYPE);
 		editType = extras.getInt(EXTRA_EDIT_TYPE);
+		
+		if(taskType.equals(Task.TYPE_WORK))
+			lytHeader.setBackgroundColor(getResources().getColor(R.color.blue));
+		else
+			lytHeader.setBackgroundColor(getResources().getColor(R.color.red));
+		
 		if(editType == ADD_NEW) {
 			taskDueDate = new Date();
 			txtTaskDueDate.setText(DateFormat.getDateFormat(this).format(new Date()));

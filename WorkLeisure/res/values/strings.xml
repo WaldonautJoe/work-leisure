@@ -61,7 +61,7 @@
     <string name="okay">Okay</string>
     <string name="updated_label">"Updated "</string>
     <string name="due_label">"Due "</string>
-    <string name="archived">"Archived, "</string>
+    <string name="archived_extension">", archived"</string>
     <string name="high_importance">High importance</string>
     <string name="low_importance">Low importance</string>
     <string name="high">High</string>
