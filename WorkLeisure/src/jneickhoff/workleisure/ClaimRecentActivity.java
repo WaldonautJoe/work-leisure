@@ -76,7 +76,7 @@ public class ClaimRecentActivity extends Activity {
 		ds.open();
 		while (groupsPos >= 0) {
 			//set up claim displays and count bounties totals
-			List<ClaimLog> daysClaims = ds.getAllClaimLogs(targetDateBeg, targetDateEnd, null, true);
+			List<ClaimLog> daysClaims = ds.getAllClaimLogs(targetDateBeg, targetDateEnd, null, false);
 			
 			LinearLayout lytClaims = new LinearLayout(this);
 			lytClaims.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));

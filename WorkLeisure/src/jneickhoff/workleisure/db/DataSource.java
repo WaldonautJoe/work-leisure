@@ -423,7 +423,8 @@ public class DataSource {
 		
 		/**
 		 * Query list of all claim logs in database; ordered by claim date; set limit to null to return all claims
-		 * @param date oldest age of claims to return
+		 * @param claimsAfterDate oldest age of claims to return
+		 * @param claimsBeforeDate newest age of claims to return
 		 * @param limit max number of claims to return, set to null to have no limit
 		 * @param retNullTaskID whether to return claims whose task has been deleted
 		 * @return list of claim logs
