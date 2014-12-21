@@ -8,24 +8,22 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 
-public class ClaimDeleteDialogFragment extends DialogFragment {
+public class TaskDeleteDialogFragment extends DialogFragment {
 
-	public interface ClaimDeleteDialogListener {
-		public void onDialogPositiveClick(DialogFragment dialog);
+	public interface TaskDeleteDialogListener {
+		public void onTaskDeleteDialogPositiveClick(DialogFragment dialog);
 	}
 	
-	public final static String EXTRA_POSITION = "extra_position";
-	
-	ClaimDeleteDialogListener mListener;
+	TaskDeleteDialogListener mListener;
 	
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			mListener = (ClaimDeleteDialogListener) activity;
+			mListener = (TaskDeleteDialogListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString() 
-					+ " must implement ClaimDeleteDialogListener");
+					+ " must implement TaskDeleteDialogListener");
 		}
 	}
 	
@@ -33,12 +31,12 @@ public class ClaimDeleteDialogFragment extends DialogFragment {
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		
-		builder.setMessage(getResources().getString(R.string.claim_delete_confirm))
+		builder.setMessage(getResources().getString(R.string.task_delete_confirm))
 		       .setPositiveButton(R.string.okay, new OnClickListener() {
 				
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						mListener.onDialogPositiveClick(ClaimDeleteDialogFragment.this);
+						mListener.onTaskDeleteDialogPositiveClick(TaskDeleteDialogFragment.this);
 					}
 				})
 			   .setNegativeButton(R.string.cancel, null);

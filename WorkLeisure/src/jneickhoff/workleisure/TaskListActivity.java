@@ -40,7 +40,6 @@ public class TaskListActivity extends Activity {
 	private Spinner spnSortType;
 	private ListView taskList;
 	private int selectedItemPosition;
-	private LinearLayout lytUndoPrompt;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +50,6 @@ public class TaskListActivity extends Activity {
 		displayArchived = getIntent().getBooleanExtra(EXTRA_BOOL_ARCHIVE, false);
 		itemUnarchived = false;
 		spnSortType = (Spinner) findViewById(R.id.spnSort);
-		lytUndoPrompt = (LinearLayout) findViewById(R.id.LytUndoPrompt);
 		
 		TextView display = (TextView) findViewById(R.id.task_type_display);
 		RelativeLayout lytListHeader = (RelativeLayout) findViewById(R.id.lytListHeader);
@@ -123,36 +121,38 @@ public class TaskListActivity extends Activity {
 	
 	public void deleteTask(final Task task) {
 		final TaskArrayAdapter adapter = (TaskArrayAdapter) taskList.getAdapter();
-		TextView txtUndoMessage = (TextView) findViewById(R.id.txtUndoMessage);
-		Button btnUndo = (Button) findViewById(R.id.btnUndo);
-		final Handler handler = new Handler();
-		
-		final Runnable runDelete = new Runnable() {
-			
-			@Override
-			public void run() {
-				dataSource.open();
-				dataSource.deleteTask(task);
-				dataSource.close();
-				lytUndoPrompt.setVisibility(View.GONE);
-			}
-		};
-		
 		adapter.remove(task);
-		txtUndoMessage.setText(task.getName() + " discarded");
-		lytUndoPrompt.setVisibility(View.VISIBLE);
-		handler.postDelayed(runDelete, 4000);
-		btnUndo.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				lytUndoPrompt.setVisibility(View.GONE);
-				handler.removeCallbacks(runDelete);
-				adapter.add(task);
-				sortList();
-				Toast.makeText(TaskListActivity.this, "Deletion undone", Toast.LENGTH_SHORT).show();
-			}
-		});
+		
+//		TextView txtUndoMessage = (TextView) findViewById(R.id.txtUndoMessage);
+//		Button btnUndo = (Button) findViewById(R.id.btnUndo);
+//		final Handler handler = new Handler();
+//		
+//		final Runnable runDelete = new Runnable() {
+//			
+//			@Override
+//			public void run() {
+//				dataSource.open();
+//				dataSource.deleteTask(task);
+//				dataSource.close();
+//				lytUndoPrompt.setVisibility(View.GONE);
+//			}
+//		};
+//		
+//		adapter.remove(task);
+//		txtUndoMessage.setText(task.getName() + " discarded");
+//		lytUndoPrompt.setVisibility(View.VISIBLE);
+//		handler.postDelayed(runDelete, 4000);
+//		btnUndo.setOnClickListener(new View.OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				lytUndoPrompt.setVisibility(View.GONE);
+//				handler.removeCallbacks(runDelete);
+//				adapter.add(task);
+//				sortList();
+//				Toast.makeText(TaskListActivity.this, "Deletion undone", Toast.LENGTH_SHORT).show();
+//			}
+//		});
 	}
 	
 	/**

@@ -1,96 +1,61 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   	xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-    
-	<LinearLayout 
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:orientation="vertical"
-	    android:paddingBottom="@dimen/activity_vertical_margin"
-	    tools:context=".TaskListActivity" >
-	
-	    <RelativeLayout
-	        android:id="@+id/lytListHeader"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:paddingLeft="@dimen/activity_horizontal_margin"
-		    android:paddingRight="@dimen/activity_horizontal_margin"
-		    android:paddingTop="@dimen/activity_vertical_margin" >
-	    
-	        <TextView
-		        android:id="@+id/task_type_display"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_alignParentLeft="true"
-		        android:layout_alignParentTop="true"
-		        android:textColor="@color/white"
-		        android:textSize="18sp" />
-		    
-		    <TextView
-		        android:id="@+id/txtArchive"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_toRightOf="@id/task_type_display"
-		        android:layout_alignBaseline="@id/task_type_display"
-		        android:textColor="@color/white"
-		        android:textSize="18sp"
-		        android:text="@string/archive" />
-	        
-	        <Spinner 
-			    android:id="@+id/spnSort"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:layout_alignParentRight="true"
-			    android:layout_alignBaseline="@id/task_type_display"
-			    android:entries="@array/sort_types" />
-	        
-	        <TextView
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_toLeftOf="@id/spnSort"
-	            android:layout_alignBaseline="@id/task_type_display"
-	            android:textColor="@color/white"
-	            android:text="@string/sort" />
-		            
-	    </RelativeLayout>
-	    
-	    <ListView 
-	        android:id="@+id/taskList"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:paddingLeft="@dimen/activity_horizontal_margin"
-		    android:paddingRight="@dimen/activity_horizontal_margin" />
-	
-	</LinearLayout>
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".TaskListActivity" >
 
-	<LinearLayout
-	    android:id="@+id/LytUndoPrompt"
-	    android:visibility="gone"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:padding="10dp"
-	    android:layout_margin="10dp"
-	    android:dividerPadding="10dp"
-	    android:orientation="horizontal"
-	    android:layout_gravity="bottom|center_horizontal"
-	    android:background="@color/light_grey" >
-	    
-	    <TextView
-	        android:id="@+id/txtUndoMessage"
-	        android:layout_weight="1"
-	        android:layout_width="0dp"
+    <RelativeLayout
+        android:id="@+id/lytListHeader"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+	    android:paddingRight="@dimen/activity_horizontal_margin"
+	    android:paddingTop="@dimen/activity_vertical_margin" >
+    
+        <TextView
+	        android:id="@+id/task_type_display"
+	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_alignParentTop="true"
 	        android:textColor="@color/white"
 	        android:textSize="18sp" />
 	    
-	    <Button
-	        android:id="@+id/btnUndo"
+	    <TextView
+	        android:id="@+id/txtArchive"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:text="@string/undo"
-	        android:textColor="@color/white" />
-	        
-	</LinearLayout>
-	
-</FrameLayout>
+	        android:layout_toRightOf="@id/task_type_display"
+	        android:layout_alignBaseline="@id/task_type_display"
+	        android:textColor="@color/white"
+	        android:textSize="18sp"
+	        android:text="@string/archive" />
+        
+        <Spinner 
+		    android:id="@+id/spnSort"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignParentRight="true"
+		    android:layout_alignBaseline="@id/task_type_display"
+		    android:entries="@array/sort_types" />
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/spnSort"
+            android:layout_alignBaseline="@id/task_type_display"
+            android:textColor="@color/white"
+            android:text="@string/sort" />
+	            
+    </RelativeLayout>
+    
+    <ListView 
+        android:id="@+id/taskList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+	    android:paddingRight="@dimen/activity_horizontal_margin" />
+
+</LinearLayout>

@@ -24,7 +24,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class TaskDetailActivity extends Activity 
-								implements ClaimConfirmDialogFragment.ClaimConfirmDialogListener {
+								implements ClaimConfirmDialogFragment.ClaimConfirmDialogListener,
+										   TaskDeleteDialogFragment.TaskDeleteDialogListener {
 
 	public final static String EXTRA_TASK_ID = "extra_task_id";
 	
@@ -163,9 +164,7 @@ public class TaskDetailActivity extends Activity
 	}
 	
 	@Override
-	public void onDialogPositiveClick(DialogFragment dialog, String newBounty, String comment, boolean toRemoveDue) {
-		DataSource ds = new DataSource(this);
-		ds.open();
+	public void onClaimDialogPositiveClick(DialogFragment dialog, String newBounty, String comment, boolean toRemoveDue) {
 		if(task.getStockType().equals(Task.STOCK_TYPE_LIMITED)){
 			long taskStock = task.getStockNumber();
 			taskStock--;
@@ -211,7 +210,7 @@ public class TaskDetailActivity extends Activity
 		else
 			dueDifference = null;
 				
-		ClaimLog cl = ds.createClaimLog(currentTime, task.getID(), task.getType(), comment, 
+		ClaimLog cl = dataSource.createClaimLog(currentTime, task.getID(), task.getType(), comment, 
 				bounty, balance, task.getBounty() - bounty, dueDifference);
 		
 		task.setTimesClaimed(1 + task.getTimesClaimed());
@@ -221,10 +220,11 @@ public class TaskDetailActivity extends Activity
 			lytDue.setVisibility(View.GONE);
 			lytDueButtons.setVisibility(View.VISIBLE);
 		}
-		ds.updateTask(task);
-		ds.close();
+		dataSource.updateTask(task);
 		
 		txtTimesClaimed.setText(String.valueOf(task.getTimesClaimed() + " " + getResources().getString(R.string.total_claims)));
+		if(task.getTimesClaimed() == 1)
+			btnViewAllClaims.setVisibility(View.VISIBLE);
 		
 		adapter.addTop(cl);
 		adapter.notifyDataSetChanged();
@@ -240,20 +240,32 @@ public class TaskDetailActivity extends Activity
 	}
 	
 	@Override
-	public void onDialogNegativeClick(DialogFragment dialog) {
+	public void onClaimDialogNegativeClick(DialogFragment dialog) {
 		//nothing
 	}
-
-	/**
-	 * Called when user clicks the delete task action. <br/>
-	 * Deletes the task from the database.
-	 */
-	public void deleteTask() {		
+	
+	@Override
+	public void onTaskDeleteDialogPositiveClick(DialogFragment dialog) {
+		dataSource.deleteTask(task);
+		dataSource.close();
+		
+		Toast.makeText(this, task.getName() + " discarded", Toast.LENGTH_SHORT).show();
+		
 		Intent intent = new Intent();
 		intent.putExtra(EXTRA_CHANGE_TYPE, CHANGE_DELETE);
 		setResult(RESULT_OK, intent);
 		
 		super.finish();
+	}
+
+	/**
+	 * Called when user clicks the delete task action. <br/>
+	 * Displays deletion confirmation dialog.
+	 */
+	public void deleteTask() {		
+		
+		DialogFragment dialog = new TaskDeleteDialogFragment();
+		dialog.show(getFragmentManager(), "ClaimConfirmDialogFragment");
 	}
 	
 	/**

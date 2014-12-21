@@ -24,8 +24,8 @@ import android.widget.TextView.OnEditorActionListener;
 public class ClaimConfirmDialogFragment extends DialogFragment {
 
 	public interface ClaimConfirmDialogListener {
-		public void onDialogPositiveClick(DialogFragment dialog, String newBounty, String comment, boolean toRemoveDue);
-		public void onDialogNegativeClick(DialogFragment dialog);
+		public void onClaimDialogPositiveClick(DialogFragment dialog, String newBounty, String comment, boolean toRemoveDue);
+		public void onClaimDialogNegativeClick(DialogFragment dialog);
 	}
 	
 	public final static String FLOAT_BOUNTY = "key_bounty";
@@ -114,7 +114,7 @@ public class ClaimConfirmDialogFragment extends DialogFragment {
 						if(isDue)
 							toRemoveDue = chkRemoveDue.isChecked();
 							
-						mListener.onDialogPositiveClick(ClaimConfirmDialogFragment.this, 
+						mListener.onClaimDialogPositiveClick(ClaimConfirmDialogFragment.this, 
 								editBounty.getText().toString(), 
 								editComment.getText().toString(),
 								toRemoveDue);
@@ -124,7 +124,7 @@ public class ClaimConfirmDialogFragment extends DialogFragment {
 					
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
-						mListener.onDialogNegativeClick(ClaimConfirmDialogFragment.this);		
+						mListener.onClaimDialogNegativeClick(ClaimConfirmDialogFragment.this);		
 					}
 				});
 		

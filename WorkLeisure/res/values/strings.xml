@@ -10,7 +10,7 @@
     <string name="action_add_task">Add Task</string>
     <string name="action_edit">Edit</string>
     <string name="action_undo">Undo</string>
-    <string name="action_delete">Delete</string>
+    <string name="action_delete">Discard</string>
     <string name="action_view_archive">View Archive</string>
     <string name="action_accept">Accept</string>
     <string name="action_cancel">Cancel</string>
@@ -56,7 +56,7 @@
     <string name="add_task">Add Task</string>
     <string name="add_claim_task">Add &amp; Claim Task</string>
     <string name="confirm">Confirm</string>
-    <string name="delete_task">Delete</string>
+    <string name="delete_task">Discard</string>
     <string name="cancel">Never mind!</string>
     <string name="okay">Okay</string>
     <string name="updated_label">"Updated "</string>
@@ -79,7 +79,7 @@
     <string name="comment">Comment</string>
     <string name="dash_break">" - "</string>
     <string name="view_all">View &amp; Edit All Claims</string>
-    <string name="claim_list_instructions">To delete a claim, tap it.</string>
+    <string name="claim_list_instructions">To discard a claim, tap it.</string>
     <string name="graph_title">Hours claimed per day</string>
     <string name="undo">Undo</string>
     <string name="dueItToday">Due it today</string>
@@ -92,5 +92,7 @@
     <string name="total_claims">total claims</string>
     <string name="unlimited">Unlimited</string>
     <string name="claimed">claimed</string>
+    <string name="task_delete_confirm">"Discard task?"</string>
+    <string name="claim_delete_confirm">"Discard claim and refund bounty?"</string>
 
 </resources>
