@@ -5,7 +5,6 @@ import java.util.List;
 import jneickhoff.workleisure.db.DataSource;
 import jneickhoff.workleisure.db.Task;
 import android.os.Bundle;
-import android.os.Handler;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
@@ -15,13 +14,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class TaskListActivity extends Activity {
 	
@@ -116,6 +112,7 @@ public class TaskListActivity extends Activity {
 		Intent i = new Intent(this, EditTaskActivity.class);
 		i.putExtra(EditTaskActivity.EXTRA_EDIT_TYPE, EditTaskActivity.ADD_NEW);
 		i.putExtra(EditTaskActivity.EXTRA_TASK_TYPE, strTaskType);
+		i.putExtra(EditTaskActivity.EXTRA_TASK_ISARCHIVED, displayArchived);
 		startActivityForResult(i, REQ_NEW);
 	}
 	

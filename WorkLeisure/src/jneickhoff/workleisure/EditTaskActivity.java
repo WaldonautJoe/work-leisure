@@ -41,6 +41,9 @@ public class EditTaskActivity extends Activity
 	public static final String EXTRA_TASK_TYPE = "task_type";
 	private String taskType;
 	
+	public static final String EXTRA_TASK_ISARCHIVED = "task_isarchived";
+	private boolean taskIsArchived; //only used for a new task
+	
 	public static final String EXTRA_TASK_ID = "update_task_id";
 	private Task oldTask;
 	
@@ -144,6 +147,12 @@ public class EditTaskActivity extends Activity
 			txtTaskDueDate.setText(DateFormat.getDateFormat(this).format(new Date()));
 			txtTaskDueDate.setEnabled(false);
 			spnTaskImportance.setSelection(1); //set selection to low importance
+			
+			taskIsArchived = extras.getBoolean(EXTRA_TASK_ISARCHIVED);
+			chkTaskArchived.setChecked(taskIsArchived);
+			chkTaskArchived.setEnabled(false);
+			TextView txtTaskArchived = (TextView) findViewById(R.id.txtArchived);
+			txtTaskArchived.setEnabled(false);
 		}
 		else if(editType == EDIT_OLD){
 			long id = extras.getLong(EXTRA_TASK_ID);
