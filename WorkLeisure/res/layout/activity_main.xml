@@ -65,6 +65,13 @@
 	            custom:labelTextSize="14sp"
 	            custom:topDataColor="@color/blue"
 	            custom:bottomDataColor="@color/red" />	        
+	        <Button 
+		        android:id="@+id/btnViewRecentClaims"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:text="@string/view_weeks_claims"
+		        android:onClick="onClick" />
+	        
 	        <LinearLayout
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
@@ -95,43 +102,11 @@
 		    
 		    </LinearLayout>
 		    
-		    <TextView
-		        android:id="@+id/txtDueLateHeader"
+		    <Button
+		        android:id="@+id/btnViewLateUpcomingTasks"
 		        android:layout_width="fill_parent"
 		        android:layout_height="wrap_content"
-		        android:textSize="18sp"
-		        android:textStyle="bold"
-		        android:textColor="@color/red"
-		        android:text="@string/dueLateHeader" />
-		    
-		    <LinearLayout
-		        android:id="@+id/lytDueLateTasks"
-		        android:layout_width="fill_parent"
-		        android:layout_height="wrap_content"
-		        android:paddingBottom="10dp"
-		        android:orientation="vertical" />
-		    
-		    <TextView
-		        android:id="@+id/txtDueSoonHeader"
-		        android:layout_width="fill_parent"
-		        android:layout_height="wrap_content"
-		        android:textSize="18sp"
-		        android:textStyle="bold"
-		        android:textColor="@color/yellow"
-		        android:text="@string/dueSoonHeader" />
-		    
-		    <LinearLayout
-		        android:id="@+id/lytDueSoonTasks"
-		        android:layout_width="fill_parent"
-		        android:layout_height="wrap_content"
-		        android:paddingBottom="10dp"
-		        android:orientation="vertical" />
-		
-		    <Button 
-		        android:id="@+id/btnViewRecentClaims"
-		        android:layout_width="fill_parent"
-		        android:layout_height="wrap_content"
-		        android:text="@string/view_weeks_claims"
+		        android:text="@string/view_late_upcoming_tasks"
 		        android:onClick="onClick" />
 		    
 		</LinearLayout>

@@ -94,5 +94,7 @@
     <string name="claimed">claimed</string>
     <string name="task_delete_confirm">"Discard task?"</string>
     <string name="claim_delete_confirm">"Discard claim and refund bounty?"</string>
+    <string name="title_activity_late_upcoming_tasks">Late and upcoming tasks</string>
+    <string name="view_late_upcoming_tasks">View late &amp; upcoming tasks</string>
 
 </resources>

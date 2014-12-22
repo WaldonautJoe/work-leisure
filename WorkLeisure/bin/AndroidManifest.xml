@@ -42,6 +42,10 @@
             android:name="jneickhoff.workleisure.ClaimRecentActivity"
             android:label="@string/title_activity_claim_recent" >
         </activity>
+        <activity
+            android:name="jneickhoff.workleisure.LateUpcomingTasksActivity"
+            android:label="@string/title_activity_late_upcoming_tasks" >
+        </activity>
     </application>
 
 </manifest>

@@ -13,7 +13,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.Menu;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -22,10 +21,6 @@ public class MainActivity extends Activity {
 	private TextView textBalance;
 	private RelativeLayout lytBalanceWrapper;
 	private MirrorBarGraph workLeisureBarGraph;
-	private TextView txtDueLateHeader;
-	private LinearLayout lytDueLateTasks;
-	private TextView txtDueSoonHeader;
-	private LinearLayout lytDueSoonTasks;
 	private DataSource ds;
 	
 	private final static int GRAPH_DISPLAYED_DAYS = 7;
@@ -38,10 +33,6 @@ public class MainActivity extends Activity {
 		textBalance = (TextView) findViewById(R.id.textBalance);
 		lytBalanceWrapper = (RelativeLayout) findViewById(R.id.lytBalanceWrapper);
 		workLeisureBarGraph = (MirrorBarGraph) findViewById(R.id.workLeisureBarGraph);
-		txtDueLateHeader = (TextView) findViewById(R.id.txtDueLateHeader);
-		lytDueLateTasks = (LinearLayout) findViewById(R.id.lytDueLateTasks);
-		txtDueSoonHeader = (TextView) findViewById(R.id.txtDueSoonHeader);
-		lytDueSoonTasks = (LinearLayout) findViewById(R.id.lytDueSoonTasks);
 		ds = new DataSource(this);
 		updateDisplay();
 	}
@@ -74,6 +65,9 @@ public class MainActivity extends Activity {
 		case R.id.btnViewRecentClaims:
 			displayRecentClaims();
 			break;
+		case R.id.btnViewLateUpcomingTasks:
+			displayLateUpcomingTasks();
+			break;
 		}
 	}
 
@@ -84,7 +78,6 @@ public class MainActivity extends Activity {
 		updateBalanceDisplay();
 		ds.open();
 		updateBalanceGraph();
-		updateRecentDueTasks();		
 		ds.close();
 	}
 	
@@ -165,81 +158,6 @@ public class MainActivity extends Activity {
 	}
 	
 	/**
-	 * Updates the lists of recently due tasks <br/>
-	 * ds must be open prior to calling this method.
-	 */
-	private void updateRecentDueTasks() {
-		Calendar dateToday = Calendar.getInstance();
-		dateToday.set(Calendar.HOUR_OF_DAY, 0);
-		dateToday.set(Calendar.MINUTE, 0);
-		dateToday.set(Calendar.SECOND, 0);
-		dateToday.set(Calendar.MILLISECOND, 0);
-		dateToday.add(Calendar.MILLISECOND, -1);
-		
-		Calendar dateSoon = Calendar.getInstance();
-		dateSoon.set(Calendar.HOUR_OF_DAY, 0);
-		dateSoon.set(Calendar.MINUTE, 0);
-		dateSoon.set(Calendar.SECOND, 0);
-		dateSoon.set(Calendar.MILLISECOND, 0);
-		dateSoon.add(Calendar.DATE, 2);
-		
-		List<Task> lateTasksDue = ds.getRecentDueTasks(null, dateToday);
-		List<Task> soonTasksDue = ds.getRecentDueTasks(dateToday, dateSoon);
-		
-		View.OnClickListener dueTasksClickListener = new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				long taskID = (Long) v.getTag();
-				
-				Intent intent = new Intent(MainActivity.this, TaskDetailActivity.class);
-				intent.putExtra(TaskDetailActivity.EXTRA_TASK_ID, taskID);
-				startActivity(intent);
-			}
-		};
-		
-		if(lateTasksDue.size() > 0) {
-			lytDueLateTasks.removeAllViews();
-			DueTasksArrayAdapter adapter = new DueTasksArrayAdapter(this, lateTasksDue);
-			for(int i = 0; i < adapter.getCount(); i++) {
-				View view = adapter.getView(i, null, null);
-				Task task = adapter.getItem(i);
-				view.setTag(task.getID());
-				view.setOnClickListener(dueTasksClickListener);
-				
-				lytDueLateTasks.addView(view);
-			}
-			
-			txtDueLateHeader.setVisibility(View.VISIBLE);
-			lytDueLateTasks.setVisibility(View.VISIBLE);
-		}
-		else {
-			txtDueLateHeader.setVisibility(View.GONE);
-			lytDueLateTasks.setVisibility(View.GONE);
-		}
-		
-		if(soonTasksDue.size() > 0) {
-			lytDueSoonTasks.removeAllViews();
-			DueTasksArrayAdapter adapter = new DueTasksArrayAdapter(this, soonTasksDue);
-			for(int i = 0; i < adapter.getCount(); i++) {
-				View view = adapter.getView(i, null, null);
-				Task task = adapter.getItem(i);
-				view.setTag(task.getID());
-				view.setOnClickListener(dueTasksClickListener);
-				
-				lytDueSoonTasks.addView(view);
-			}
-				
-			txtDueSoonHeader.setVisibility(View.VISIBLE);
-			lytDueSoonTasks.setVisibility(View.VISIBLE);
-		}
-		else {
-			txtDueSoonHeader.setVisibility(View.GONE);
-			lytDueSoonTasks.setVisibility(View.GONE);
-		}
-	}
-	
-	/**
 	 * Starts activity that displays work tasks
 	 */
 	public void displayWorkTasks() {
@@ -262,6 +180,14 @@ public class MainActivity extends Activity {
 	 */
 	public void displayRecentClaims() {
 		Intent i = new Intent(this, ClaimRecentActivity.class);
+		startActivity(i);
+	}
+	
+	/**
+	 * Starts activity that displays late and upcoming due tasks
+	 */
+	public void displayLateUpcomingTasks() {
+		Intent i = new Intent(this, LateUpcomingTasksActivity.class);
 		startActivity(i);
 	}
 
