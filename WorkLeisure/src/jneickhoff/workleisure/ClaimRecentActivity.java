@@ -11,7 +11,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -20,6 +19,8 @@ import android.widget.TextView;
 
 public class ClaimRecentActivity extends Activity {
 
+	private final static int MAX_METER_VALUE = 8;
+	
 	private DataSource ds;
 	private LinearLayout lytRecentClaims;
 	
@@ -145,10 +146,14 @@ public class ClaimRecentActivity extends Activity {
 								 10);
 			
 			HorizontalMeter workMeter = new HorizontalMeter(this, 
-					workClaimedTime, 12, getResources().getColor(R.color.blue));
+					workClaimedTime, MAX_METER_VALUE, 
+					getResources().getColor(R.color.blue), 
+					getResources().getColor(R.color.blue_light2));
 			workMeter.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 			HorizontalMeter leisMeter = new HorizontalMeter(this, 
-					leisClaimedTime, 12, getResources().getColor(R.color.red));
+					leisClaimedTime, MAX_METER_VALUE, 
+					getResources().getColor(R.color.red), 
+					getResources().getColor(R.color.red_light2));
 			leisMeter.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 			
 			lytBountyMeters.addView(workMeter);

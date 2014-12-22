@@ -10,36 +10,51 @@ import android.view.View;
 public class HorizontalMeter extends View {
 
 	private int color;
+	private int overColor;
 	private float value;
+	private float valueNorm;
+	private float valueOver;
 	private float maxValue;
 	
 	private final static int textSize = 18;
-	private Rect meter;
+	private Rect meterNorm;
+	private Rect meterOver;
 	private Point textPos;
 	
 	private Paint textPaint;
-	private Paint meterPaint;
+	private Paint meterNormPaint;
+	private Paint meterOverPaint;
 	
 	public HorizontalMeter(Context context) {
 		super(context);
 		
 		this.color = context.getResources().getColor(R.color.blue);
 		this.value = 1;
+		this.valueNorm = 1;
+		this.valueOver = 0;
 		this.maxValue = 1;
 		
 		init();
 	}
 	
-	public HorizontalMeter(Context context, float value, float maxValue, int color) {
+	public HorizontalMeter(Context context, float value, float maxValue, int color, int overColor) {
 		super(context);
 		
-		if(value > maxValue)
-			throw new IllegalArgumentException("value must be less than maxValue");
-		//TODO draw symbol if value > maxValue
-		
 		this.color = color;
+		this.overColor = overColor;
 		this.value = value;
 		this.maxValue = maxValue;
+		
+		if(value < maxValue) {
+			this.valueNorm = value;
+			this.valueOver = 0;
+		}
+		else {
+			this.valueNorm = maxValue;
+			this.valueOver = value - maxValue;
+			if(valueOver > maxValue)
+				valueOver = maxValue;
+		}
 		
 		init();
 	}
@@ -49,9 +64,13 @@ public class HorizontalMeter extends View {
 		textPaint.setColor(getContext().getResources().getColor(R.color.light_grey));
 		textPaint.setTextSize(textSize);
 		
-		meterPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		meterPaint.setColor(color);
-		meterPaint.setStyle(Paint.Style.FILL);
+		meterNormPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		meterNormPaint.setColor(color);
+		meterNormPaint.setStyle(Paint.Style.FILL);
+		
+		meterOverPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		meterOverPaint.setColor(overColor);
+		meterOverPaint.setStyle(Paint.Style.FILL);
 	}
 
 	@Override
@@ -73,13 +92,18 @@ public class HorizontalMeter extends View {
 		
 		int textSpace = (int) textPaint.measureText("88.8");
 		int spaceBetween = 5;
-		int meterWidth = (int) ((contentWidth - textSpace - spaceBetween) * (value / maxValue));
+		int meterWidthNorm = (int) ((valueNorm / maxValue) * (contentWidth - textSpace - spaceBetween));
+		int meterWidthOver = (int) ((valueOver / maxValue) * (contentWidth - textSpace - spaceBetween));
 		
 		textPos = new Point(getPaddingLeft() + textSpace - (int) textPaint.measureText(String.format("%.1f",value)), 
 							getPaddingTop() + (contentHeight + textSize)/2 - 3);
-		meter = new Rect(textSpace + spaceBetween,
+		meterNorm = new Rect(textSpace + spaceBetween,
 						 getPaddingTop(), 
-						 textSpace + spaceBetween + meterWidth,
+						 textSpace + spaceBetween + meterWidthNorm,
+						 getPaddingTop() + contentHeight);
+		meterOver = new Rect(textSpace + spaceBetween,
+						 getPaddingTop(), 
+						 textSpace + spaceBetween + meterWidthOver,
 						 getPaddingTop() + contentHeight);
 	}
 	
@@ -88,6 +112,7 @@ public class HorizontalMeter extends View {
 		super.onDraw(canvas);
 		
 		canvas.drawText(String.format("%.1f",value), textPos.x, textPos.y, textPaint);
-		canvas.drawRect(meter, meterPaint);
+		canvas.drawRect(meterNorm, meterNormPaint);
+		canvas.drawRect(meterOver, meterOverPaint);
 	}
 }
