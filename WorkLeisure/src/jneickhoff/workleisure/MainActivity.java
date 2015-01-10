@@ -8,6 +8,7 @@ import jneickhoff.workleisure.db.DataSource;
 import jneickhoff.workleisure.db.Task;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,6 +25,8 @@ public class MainActivity extends Activity {
 	private DataSource ds;
 	
 	private final static int GRAPH_DISPLAYED_DAYS = 7;
+	public final static String LAST_DISLPAY_LATE_UPCOMING_TASKS = "last_display_late_upcoming_tasks";
+	private final static long ACCEPTABLE_DISPLAY_TIME_LAPSE = 600000; //10 minutes
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,19 @@ public class MainActivity extends Activity {
 		workLeisureBarGraph = (MirrorBarGraph) findViewById(R.id.workLeisureBarGraph);
 		ds = new DataSource(this);
 		updateDisplay();
+		
+		SharedPreferences sharedPref = 
+				this.getSharedPreferences(getString(R.string.user_balances), Context.MODE_PRIVATE);
+		
+		long currentTime = Calendar.getInstance().getTimeInMillis();
+		long lastDisplayLateUpcomingTasks = sharedPref.getLong(LAST_DISLPAY_LATE_UPCOMING_TASKS, currentTime - ACCEPTABLE_DISPLAY_TIME_LAPSE);
+		
+		if((currentTime - lastDisplayLateUpcomingTasks) >= ACCEPTABLE_DISPLAY_TIME_LAPSE) {
+			displayLateUpcomingTasksDialog();
+			sharedPref.edit()
+					  .putLong(LAST_DISLPAY_LATE_UPCOMING_TASKS, currentTime)
+					  .commit();
+		}
 	}
 	
 	@Override
@@ -189,6 +205,11 @@ public class MainActivity extends Activity {
 	public void displayLateUpcomingTasks() {
 		Intent i = new Intent(this, LateUpcomingTasksActivity.class);
 		startActivity(i);
+	}
+	
+	public void displayLateUpcomingTasksDialog() {
+		DialogFragment dialog = new LateUpcomingDialogFragment();
+		dialog.show(getFragmentManager(), "LateUpcomingDialogFragment");
 	}
 
 }
