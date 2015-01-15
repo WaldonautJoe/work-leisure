@@ -15,13 +15,18 @@ public class HorizontalMeter extends View {
 	private float valueNorm;
 	private float valueOver;
 	private float maxValue;
+	private boolean isMaxDisplayed;
+	private boolean isBackgroundPainted;
 	
 	private final static int textSize = 18;
+	private Rect meterBackground;
 	private Rect meterNorm;
 	private Rect meterOver;
 	private Point textPos;
+	private Point textPos2;
 	
 	private Paint textPaint;
+	private Paint meterBackgroundPaint;
 	private Paint meterNormPaint;
 	private Paint meterOverPaint;
 	
@@ -33,17 +38,22 @@ public class HorizontalMeter extends View {
 		this.valueNorm = 1;
 		this.valueOver = 0;
 		this.maxValue = 1;
+		this.isMaxDisplayed = false;
+		this.isBackgroundPainted = false;
 		
 		init();
 	}
 	
-	public HorizontalMeter(Context context, float value, float maxValue, int color, int overColor) {
+	public HorizontalMeter(Context context, float value, float maxValue, boolean isMaxDisplayed, 
+			int color, int overColor, boolean isBackgroundPainted) {
 		super(context);
 		
 		this.color = color;
 		this.overColor = overColor;
 		this.value = value;
 		this.maxValue = maxValue;
+		this.isMaxDisplayed = isMaxDisplayed;
+		this.isBackgroundPainted = isBackgroundPainted;
 		
 		if(value < maxValue) {
 			this.valueNorm = value;
@@ -63,6 +73,10 @@ public class HorizontalMeter extends View {
 		textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		textPaint.setColor(getContext().getResources().getColor(R.color.light_grey));
 		textPaint.setTextSize(textSize);
+		
+		meterBackgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		meterBackgroundPaint.setColor(getContext().getResources().getColor(R.color.light_grey));
+		meterBackgroundPaint.setStyle(Paint.Style.FILL);
 		
 		meterNormPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		meterNormPaint.setColor(color);
@@ -92,19 +106,35 @@ public class HorizontalMeter extends View {
 		
 		int textSpace = (int) textPaint.measureText("88.8");
 		int spaceBetween = 5;
-		int meterWidthNorm = (int) ((valueNorm / maxValue) * (contentWidth - textSpace - spaceBetween));
-		int meterWidthOver = (int) ((valueOver / maxValue) * (contentWidth - textSpace - spaceBetween));
+		int meterWidthBackground, meterWidthNorm, meterWidthOver;
+		if(isMaxDisplayed) {
+			meterWidthBackground = (int) ((maxValue - valueNorm) / maxValue * (contentWidth - textSpace * 2 - spaceBetween * 2));
+			meterWidthNorm = (int) ((valueNorm / maxValue) * (contentWidth - textSpace * 2 - spaceBetween * 2));
+			meterWidthOver = (int) ((valueOver / maxValue) * (contentWidth - textSpace * 2 - spaceBetween * 2));
+			
+			textPos2 = new Point(getPaddingLeft() + textSpace * 2 + spaceBetween * 2 + meterWidthNorm + meterWidthBackground - (int) textPaint.measureText(String.format("%.1f", maxValue)),
+								 getPaddingTop() + (contentHeight + textSize)/2 - 3);
+		}
+		else {
+			meterWidthBackground = (int) ((maxValue - valueNorm) / maxValue * (contentWidth - textSpace - spaceBetween));
+			meterWidthNorm = (int) ((valueNorm / maxValue) * (contentWidth - textSpace - spaceBetween));
+			meterWidthOver = (int) ((valueOver / maxValue) * (contentWidth - textSpace - spaceBetween));
+		}		
 		
 		textPos = new Point(getPaddingLeft() + textSpace - (int) textPaint.measureText(String.format("%.1f",value)), 
 							getPaddingTop() + (contentHeight + textSize)/2 - 3);
+		meterBackground = new Rect(textSpace + spaceBetween + meterWidthNorm,
+								   getPaddingTop(),
+								   textSpace + spaceBetween + meterWidthNorm + meterWidthBackground,
+								   getPaddingTop() + contentHeight);
 		meterNorm = new Rect(textSpace + spaceBetween,
-						 getPaddingTop(), 
-						 textSpace + spaceBetween + meterWidthNorm,
-						 getPaddingTop() + contentHeight);
+						 	 getPaddingTop(), 
+						 	 textSpace + spaceBetween + meterWidthNorm,
+						 	 getPaddingTop() + contentHeight);
 		meterOver = new Rect(textSpace + spaceBetween,
-						 getPaddingTop(), 
-						 textSpace + spaceBetween + meterWidthOver,
-						 getPaddingTop() + contentHeight);
+						 	 getPaddingTop(), 
+						 	 textSpace + spaceBetween + meterWidthOver,
+						 	 getPaddingTop() + contentHeight);
 	}
 	
 	@Override
@@ -112,6 +142,10 @@ public class HorizontalMeter extends View {
 		super.onDraw(canvas);
 		
 		canvas.drawText(String.format("%.1f",value), textPos.x, textPos.y, textPaint);
+		if(isMaxDisplayed)
+			canvas.drawText(String.format("%.1f", maxValue), textPos2.x, textPos2.y, textPaint);
+		if(isBackgroundPainted)
+			canvas.drawRect(meterBackground, meterBackgroundPaint);
 		canvas.drawRect(meterNorm, meterNormPaint);
 		canvas.drawRect(meterOver, meterOverPaint);
 	}

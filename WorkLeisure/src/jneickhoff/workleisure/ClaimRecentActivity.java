@@ -146,14 +146,16 @@ public class ClaimRecentActivity extends Activity {
 								 10);
 			
 			HorizontalMeter workMeter = new HorizontalMeter(this, 
-					workClaimedTime, MAX_METER_VALUE, 
+					workClaimedTime, MAX_METER_VALUE, false,
 					getResources().getColor(R.color.blue), 
-					getResources().getColor(R.color.blue_light2));
+					getResources().getColor(R.color.blue_light2),
+					false);
 			workMeter.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 			HorizontalMeter leisMeter = new HorizontalMeter(this, 
-					leisClaimedTime, MAX_METER_VALUE, 
+					leisClaimedTime, MAX_METER_VALUE, false, 
 					getResources().getColor(R.color.red), 
-					getResources().getColor(R.color.red_light2));
+					getResources().getColor(R.color.red_light2),
+					false);
 			leisMeter.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 			
 			lytBountyMeters.addView(workMeter);
