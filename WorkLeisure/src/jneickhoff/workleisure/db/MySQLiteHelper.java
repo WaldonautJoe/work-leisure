@@ -39,11 +39,17 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	public static final String COL_CLAIM_BOUNTY_DEVIATION = "ClaimBountyDeviation";
 	public static final String COL_CLAIM_DUE_DIFFERENCE = "ClaimDueDifference";
 	
+	public static final String TAB_GOAL = "Goal";
+	public static final String COL_GOAL_ID = "GoalID";
+	public static final String COL_GOAL_BOUNTY_TARGET = "GoalBountyTarget";
+	public static final String COL_GOAL_DATE_START = "GoalDateStart";
+	public static final String COL_GOAL_DATE_END = "GoalDateEnd";
+	
 	public static final int SQLITE_TRUE = 1;
 	public static final int SQLITE_FALSE = 0;
 	
 	private static final String DATABASE_NAME = "workleisure.db";
-	private static final int DATABASE_VERSION = 7;
+	private static final int DATABASE_VERSION = 8;
 	
 	private Context context;
 	
@@ -73,6 +79,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 			+ COL_CLAIM_BOUNTY_DEVIATION + " real, "
 			+ COL_CLAIM_DUE_DIFFERENCE + " integer);";
 	
+	private static final String CREATE_TAB_GOAL = "create table " + TAB_GOAL + "("
+			+ COL_GOAL_ID + " integer primary key autoincrement, "
+			+ COL_TASK_ID + " integer, "
+			+ COL_GOAL_BOUNTY_TARGET + " real, "
+			+ COL_GOAL_DATE_START + " integer, "
+			+ COL_GOAL_DATE_END + " integer);";
+	
 	public MySQLiteHelper (Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		this.context = context;
@@ -82,6 +95,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase database) {
 		database.execSQL(CREATE_TAB_TASK);
 		database.execSQL(CREATE_TAB_CLAIM_LOG);
+		database.execSQL(CREATE_TAB_GOAL);
 	}
 	
 	@Override
@@ -146,11 +160,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 			ContentValues dueDifferenceValues = new ContentValues();
 			dueDifferenceValues.putNull(COL_CLAIM_DUE_DIFFERENCE);
 			db.update(TAB_CLAIM_LOG, dueDifferenceValues, COL_CLAIM_DUE_DIFFERENCE + " = 0", null);
+			
+		case 7:
+			db.execSQL(CREATE_TAB_GOAL);
+			
 			break;
 		}
 		
-		//db.execSQL("DROP TABLE IF EXISTS " + TAB_TASK);
-		//onCreate(db);
 	}
 			
 }

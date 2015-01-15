@@ -28,10 +28,10 @@ public class DataSource {
 				MySQLiteHelper.COL_TASK_IMPORTANCE,
 				MySQLiteHelper.COL_TASK_DATE_UPDATED,
 				MySQLiteHelper.COL_TASK_IS_DUE,
-				MySQLiteHelper.COL_TASK_DATE_DUE 
+				MySQLiteHelper.COL_TASK_DATE_DUE
 		};
 		
-		private String[] claimLogCollumns = {
+		private String[] claimLogColumns = {
 				MySQLiteHelper.COL_CLAIM_ID,
 				MySQLiteHelper.COL_CLAIM_DATE,
 				MySQLiteHelper.COL_TASK_ID,
@@ -41,6 +41,14 @@ public class DataSource {
 				MySQLiteHelper.COL_CLAIM_UPDATED_BALANCE,
 				MySQLiteHelper.COL_CLAIM_BOUNTY_DEVIATION,
 				MySQLiteHelper.COL_CLAIM_DUE_DIFFERENCE 
+		};
+		
+		private String[] goalColumns = {
+				MySQLiteHelper.COL_GOAL_ID,
+				MySQLiteHelper.COL_TASK_ID,
+				MySQLiteHelper.COL_GOAL_BOUNTY_TARGET,
+				MySQLiteHelper.COL_GOAL_DATE_START,
+				MySQLiteHelper.COL_GOAL_DATE_END
 		};
 		
 		
@@ -335,7 +343,7 @@ public class DataSource {
 				values.put(MySQLiteHelper.COL_CLAIM_DUE_DIFFERENCE, dueDifference);
 			
 			long insertID = database.insert(MySQLiteHelper.TAB_CLAIM_LOG, null, values);
-			Cursor cursor = database.query(MySQLiteHelper.TAB_CLAIM_LOG, claimLogCollumns,
+			Cursor cursor = database.query(MySQLiteHelper.TAB_CLAIM_LOG, claimLogColumns,
 					MySQLiteHelper.COL_CLAIM_ID + " = " + insertID, null, null, null, null);
 			cursor.moveToFirst();
 			ClaimLog claimLog = cursorToClaimLog(cursor);
@@ -395,7 +403,7 @@ public class DataSource {
 			else
 				selection = MySQLiteHelper.COL_TASK_ID + " is not null";
 			
-			Cursor cursor = database.query(MySQLiteHelper.TAB_CLAIM_LOG, claimLogCollumns, 
+			Cursor cursor = database.query(MySQLiteHelper.TAB_CLAIM_LOG, claimLogColumns, 
 					selection, null, null, null, MySQLiteHelper.COL_CLAIM_DATE + " desc");
 			
 			cursor.moveToFirst();
@@ -447,7 +455,7 @@ public class DataSource {
 			if(selection.length() == 0)
 				selection = null;
 			
-			Cursor cursor = database.query(MySQLiteHelper.TAB_CLAIM_LOG, claimLogCollumns, 
+			Cursor cursor = database.query(MySQLiteHelper.TAB_CLAIM_LOG, claimLogColumns, 
 					selection, null, null, null, MySQLiteHelper.COL_CLAIM_DATE + " desc");
 			
 			cursor.moveToFirst();
@@ -483,7 +491,7 @@ public class DataSource {
 		public List<ClaimLog> getAllClaimLogs(long taskID, Integer limit) {
 			List<ClaimLog> claimLogs = new ArrayList<ClaimLog>();
 			
-			Cursor cursor = database.query(MySQLiteHelper.TAB_CLAIM_LOG, claimLogCollumns, 
+			Cursor cursor = database.query(MySQLiteHelper.TAB_CLAIM_LOG, claimLogColumns, 
 					MySQLiteHelper.COL_TASK_ID + " = " + taskID, null, null, null, 
 					MySQLiteHelper.COL_CLAIM_DATE + " desc");
 			
@@ -517,7 +525,7 @@ public class DataSource {
 		public ClaimLog getClaimLog(long claimID) {
 			ClaimLog claimLog = new ClaimLog();
 			
-			Cursor cursor = database.query(MySQLiteHelper.TAB_CLAIM_LOG, claimLogCollumns, 
+			Cursor cursor = database.query(MySQLiteHelper.TAB_CLAIM_LOG, claimLogColumns, 
 					MySQLiteHelper.COL_CLAIM_ID + " = " + claimID, null, null, null, 
 					MySQLiteHelper.COL_CLAIM_DATE);
 			
