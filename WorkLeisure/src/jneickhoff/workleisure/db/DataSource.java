@@ -160,6 +160,8 @@ public class DataSource {
 			long id = task.getID();
 			//database.delete(MySQLiteHelper.TAB_CLAIM_LOG,
 			//		MySQLiteHelper.COL_TASK_ID + " = " + id, null);
+			database.delete(MySQLiteHelper.TAB_GOAL, 
+					MySQLiteHelper.COL_TASK_ID + " = " + id, null);
 			ContentValues values = new ContentValues();
 			values.putNull(MySQLiteHelper.COL_TASK_ID);
 			database.update(MySQLiteHelper.TAB_CLAIM_LOG, values, 
@@ -482,6 +484,52 @@ public class DataSource {
 		}
 		
 		/**
+		 * Query list of claim logs in database for a specific task; ordered by claim date; set limit to null to return all claims
+		 * @param claimsAfterDate oldest age of claims to return
+		 * @param claimsBeforeDate newest age of claims to return
+		 * @param limit max number of claims to return, set to null to have no limit
+		 * @param retNullTaskID whether to return claims whose task has been deleted
+		 * @return list of claim logs
+		 */
+		public List<ClaimLog> getAllClaimLogs(long taskID, Calendar claimsAfterDate, Calendar claimsBeforeDate, 
+				Integer limit, boolean retNullTaskID) {
+			List<ClaimLog> claimLogs = new ArrayList<ClaimLog>();
+			String selection = MySQLiteHelper.COL_TASK_ID + " = " + taskID;
+			
+			if(!retNullTaskID)
+				selection += " AND " + MySQLiteHelper.COL_TASK_ID + " is not null";
+			if(claimsAfterDate != null)
+				selection += " AND " + MySQLiteHelper.COL_CLAIM_DATE + " >= " + claimsAfterDate.getTimeInMillis();
+			if(claimsBeforeDate != null)
+				selection += " AND " + MySQLiteHelper.COL_CLAIM_DATE + " < " + claimsBeforeDate.getTimeInMillis();
+						
+			Cursor cursor = database.query(MySQLiteHelper.TAB_CLAIM_LOG, claimLogColumns, 
+					selection, null, null, null, MySQLiteHelper.COL_CLAIM_DATE + " desc");
+			
+			cursor.moveToFirst();
+			if(limit == null) {
+				while(!cursor.isAfterLast()) {
+					ClaimLog claimLog = cursorToClaimLog(cursor);
+					claimLogs.add(claimLog);
+					cursor.moveToNext();
+				}
+			}
+			else {
+				int i = 0;
+				while(!cursor.isAfterLast() && i < limit) {
+					ClaimLog claimLog = cursorToClaimLog(cursor);
+					claimLogs.add(claimLog);
+					cursor.moveToNext();
+					i++;
+				}
+			}
+			
+			cursor.close();
+			
+			return claimLogs;
+		}
+		
+		/**
 		 * Query list of all claim logs in database for specific task; ordered by claim date
 		 * 
 		 * @param taskID ID of task of which to query logs
@@ -556,5 +604,95 @@ public class DataSource {
 				claimLog.setDueDifference(cursor.getLong(8));
 			
 			return claimLog;
+		}
+		
+		public Goal createGoal(long taskID, float bountyTarget, Calendar startDate, Calendar endDate) {
+			ContentValues values = new ContentValues();
+			values.put(MySQLiteHelper.COL_TASK_ID, taskID);
+			values.put(MySQLiteHelper.COL_GOAL_BOUNTY_TARGET, bountyTarget);
+			values.put(MySQLiteHelper.COL_GOAL_DATE_START, startDate.getTimeInMillis());
+			values.put(MySQLiteHelper.COL_GOAL_DATE_END, endDate.getTimeInMillis());
+			
+			long insertID = database.insert(MySQLiteHelper.TAB_GOAL, null, values);
+			Cursor cursor = database.query(MySQLiteHelper.TAB_GOAL, goalColumns,
+					MySQLiteHelper.COL_GOAL_ID + " = " + insertID, null, null, null, null);
+			cursor.moveToFirst();
+			Goal goal = cursorToGoal(cursor);
+			cursor.close();
+			
+			List<ClaimLog> claims = getAllClaimLogs(goal.getTaskID(), goal.getDateStart(), goal.getDateEnd(), null, false);
+			for(ClaimLog claim : claims) {
+				goal.addBountyProgress(claim.getBounty());
+				goal.addClaimDate(claim.getClaimDate());
+			}
+			
+			return goal;
+		}
+		
+		public void updateGoal(Goal goal) {
+			ContentValues values = new ContentValues();
+			values.put(MySQLiteHelper.COL_TASK_ID, goal.getTaskID());
+			values.put(MySQLiteHelper.COL_GOAL_BOUNTY_TARGET, goal.getBountyTarget());
+			values.put(MySQLiteHelper.COL_GOAL_DATE_START, goal.getDateStart().getTimeInMillis());
+			values.put(MySQLiteHelper.COL_GOAL_DATE_END, goal.getDateEnd().getTimeInMillis());
+			
+			database.update(MySQLiteHelper.TAB_GOAL, values, 
+					MySQLiteHelper.COL_GOAL_ID + " = " + goal.getId(), null);
+		}
+		
+		public void deleteGoal(Goal goal) {
+			database.delete(MySQLiteHelper.TAB_GOAL, 
+					MySQLiteHelper.COL_GOAL_ID + " = " + goal.getId(), null);
+		}
+		
+		public Goal getGoal(long goalID) {
+			Cursor cursor = database.query(MySQLiteHelper.TAB_GOAL, goalColumns,
+					MySQLiteHelper.COL_GOAL_ID + " = " + goalID, null, null, null, null);
+			cursor.moveToFirst();
+			Goal goal = cursorToGoal(cursor);
+			cursor.close();
+			
+			List<ClaimLog> claims = getAllClaimLogs(goal.getTaskID(), goal.getDateStart(), goal.getDateEnd(), null, false);
+			for(ClaimLog claim : claims) {
+				goal.addBountyProgress(claim.getBounty());
+				goal.addClaimDate(claim.getClaimDate());
+			}
+			
+			return goal;
+		}
+		
+		public List<Goal> getAllGoalsForTask(long taskID) {
+			List<Goal> goalList = new ArrayList<Goal>();
+			
+			Cursor cursor = database.query(MySQLiteHelper.TAB_GOAL, goalColumns, 
+					MySQLiteHelper.COL_TASK_ID + " = " + taskID, null, null, null, 
+					MySQLiteHelper.COL_GOAL_DATE_END + " desc");
+			cursor.moveToFirst();
+			while(!cursor.isAfterLast()) {
+				Goal goal = cursorToGoal(cursor);
+				
+				List<ClaimLog> claims = getAllClaimLogs(goal.getTaskID(), goal.getDateStart(), goal.getDateEnd(), null, false);
+				for(ClaimLog claim : claims) {
+					goal.addBountyProgress(claim.getBounty());
+					goal.addClaimDate(claim.getClaimDate());
+				}
+				
+				goalList.add(goal);
+				cursor.moveToNext();
+			}
+			cursor.close();
+			
+			return goalList;
+		}
+
+		private Goal cursorToGoal(Cursor cursor) {
+			Goal goal = new Goal();
+			goal.setId(cursor.getLong(0));
+			goal.setTaskID(cursor.getLong(1));
+			goal.setBountyTarget(cursor.getFloat(2));
+			goal.setDateStart(cursor.getLong(3));
+			goal.setDateEnd(cursor.getLong(4));
+			
+			return goal;
 		}
 }

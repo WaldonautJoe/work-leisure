@@ -35,6 +35,7 @@ public class TaskDetailActivity extends Activity
 	
 	private final static int REQ_EDIT = 10;
 	private final static int REQ_VIEW_CLAIMS = 20;
+	private final static int REQ_VIEW_GOALS = 30;
 	
 	private Task task;
 	private DateFormat dateFormat;
@@ -159,6 +160,9 @@ public class TaskDetailActivity extends Activity
 					View view = adapter.getView(i, null, null);
 					listLatestClaims.addView(view);
 				}
+			}
+			else if(requestCode == REQ_VIEW_GOALS) {
+				//TODO update current goals
 			}
 		}
 	}
@@ -327,12 +331,18 @@ public class TaskDetailActivity extends Activity
 			dialog.show(getFragmentManager(), "ClaimConfirmDialogFragment");
 			break;
 			
+		case R.id.btnViewBountyGoals:
+			Intent intentGoals = new Intent(this, BountyGoalListActivity.class);
+			intentGoals.putExtra(BountyGoalListActivity.EXTRA_TASK_ID, task.getID());
+			startActivityForResult(intentGoals, REQ_VIEW_GOALS);
+			break;
+			
 		case R.id.btnViewAllClaims:
-			Intent i = new Intent(this, ClaimListActivity.class);
-			i.putExtra(ClaimListActivity.EXTRA_TASK_ID, task.getID());
-			i.putExtra(ClaimListActivity.EXTRA_TASK_NAME, task.getName());
-			i.putExtra(ClaimListActivity.EXTRA_TASK_TYPE, task.getType());
-			startActivityForResult(i, REQ_VIEW_CLAIMS);
+			Intent intentViewClaims = new Intent(this, ClaimListActivity.class);
+			intentViewClaims.putExtra(ClaimListActivity.EXTRA_TASK_ID, task.getID());
+			intentViewClaims.putExtra(ClaimListActivity.EXTRA_TASK_NAME, task.getName());
+			intentViewClaims.putExtra(ClaimListActivity.EXTRA_TASK_TYPE, task.getType());
+			startActivityForResult(intentViewClaims, REQ_VIEW_CLAIMS);
 			break;
 		}
 	}

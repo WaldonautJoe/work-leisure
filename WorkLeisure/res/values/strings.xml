@@ -79,7 +79,7 @@
     <string name="comment">Comment</string>
     <string name="dash_break">" - "</string>
     <string name="view_all">View &amp; Edit All Claims</string>
-    <string name="claim_list_instructions">To discard a claim, tap it.</string>
+    <string name="claim_list_instructions">To discard a claim, tap it</string>
     <string name="graph_title">Hours claimed per day</string>
     <string name="undo">Undo</string>
     <string name="dueItToday">Due it today</string>
@@ -96,5 +96,19 @@
     <string name="claim_delete_confirm">"Discard claim and refund bounty?"</string>
     <string name="title_activity_late_upcoming_tasks">Late and upcoming tasks</string>
     <string name="view_late_upcoming_tasks">View late &amp; upcoming tasks</string>
+    <string name="title_activity_bounty_goal_list">Bounty Goal List</string>
+    <string name="set_bounty_goal">Set bounty goal</string>
+    <string name="edit">Edit</string>
+    <string name="current_bounty_goal">Current bounty goal</string>
+    <string name="goal_met">Goal met!</string>
+    <string name="goal_miss">Goal miss!</string>
+    <string name="view_bounty_goals">View bounty goals</string>
+    <string name="bounty_target">Bounty target</string>
+    <string name="start_date">Start date</string>
+    <string name="end_date">End date</string>
+    <string name="abandon">Abandon</string>
+    <string name="abandon_goal_q">"Abandon goal?"</string>
+    <string name="delete_goal_q">"Discard goal?"</string>
+    <string name="to_discard_tap_goal">To discard a goal, tap it</string>
 
 </resources>

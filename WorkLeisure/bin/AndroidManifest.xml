@@ -46,6 +46,10 @@
             android:name="jneickhoff.workleisure.LateUpcomingTasksActivity"
             android:label="@string/title_activity_late_upcoming_tasks" >
         </activity>
+        <activity
+            android:name="jneickhoff.workleisure.BountyGoalListActivity"
+            android:label="@string/title_activity_bounty_goal_list" >
+        </activity>
     </application>
 
 </manifest>
