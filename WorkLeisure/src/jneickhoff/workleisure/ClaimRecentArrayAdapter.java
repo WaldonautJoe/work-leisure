@@ -86,12 +86,10 @@ public class ClaimRecentArrayAdapter extends ArrayAdapter<ClaimLog>{
 		if(clExt.taskType.equals(Task.TYPE_WORK)) {
 			txtTaskType.setText(r.getString(R.string.work));
 			txtTaskType.setBackgroundColor(r.getColor(R.color.blue));
-			txtClaimBounty.setBackgroundColor(r.getColor(R.color.blue));
 		}
 		else if(clExt.taskType.equals(Task.TYPE_LEISURE)) {
 			txtTaskType.setText(r.getString(R.string.leisure));
 			txtTaskType.setBackgroundColor(r.getColor(R.color.red));
-			txtClaimBounty.setBackgroundColor(r.getColor(R.color.red));
 		}
 		
 		txtClaimComment.setText(clExt.claimLog.getComment());

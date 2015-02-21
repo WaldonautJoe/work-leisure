@@ -44,7 +44,7 @@ public class TaskArrayAdapter extends ArrayAdapter<Task>{
 			txtTaskImportance.setBackgroundColor(res.getColor(R.color.light_grey));
 		}
 		if(task.isDue()) {
-			txtTaskDateDue.setText(" " + DateFormat.getDateFormat(context).format(task.getDateDue()));
+			txtTaskDateDue.setText(DateFormat.getDateFormat(context).format(task.getDateDue()));
 			
 			Calendar dateDue = Calendar.getInstance();
 			dateDue.setTime(task.getDateDue());
