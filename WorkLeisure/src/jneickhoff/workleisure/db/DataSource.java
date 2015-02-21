@@ -684,6 +684,61 @@ public class DataSource {
 			
 			return goalList;
 		}
+		
+		/**
+		 * 
+		 * @param taskID
+		 * @return goal or null if no current goal
+		 */
+		public Goal getCurrentGoalForTask(long taskID) {
+			Goal goal;
+			long currentDate = Calendar.getInstance().getTimeInMillis();
+			
+			Cursor cursor = database.query(MySQLiteHelper.TAB_GOAL, goalColumns, 
+					MySQLiteHelper.COL_TASK_ID + " = " + taskID + " AND " +
+					MySQLiteHelper.COL_GOAL_DATE_END + " > " + currentDate, null, null, null, null);
+			
+			cursor.moveToFirst();
+			if(!cursor.isAfterLast()) {
+				goal = cursorToGoal(cursor);
+				
+				List<ClaimLog> claims = getAllClaimLogs(goal.getTaskID(), goal.getDateStart(), goal.getDateEnd(), null, false);
+				for(ClaimLog claim : claims) {
+					goal.addBountyProgress(claim.getBounty());
+					goal.addClaimDate(claim.getClaimDate());
+				}
+			}
+			else
+				goal = null;
+			
+			cursor.close();
+			return goal;
+		}
+		
+		public List<Goal> getAllCurrentGoals() {
+			List<Goal> goalList = new ArrayList<Goal>();
+			long currentDate = Calendar.getInstance().getTimeInMillis();
+			
+			Cursor cursor = database.query(MySQLiteHelper.TAB_GOAL, goalColumns, 
+					MySQLiteHelper.COL_GOAL_DATE_END + " > " + currentDate, null, null, null, 
+					MySQLiteHelper.COL_GOAL_DATE_END + " desc");
+			cursor.moveToFirst();
+			while(!cursor.isAfterLast()) {
+				Goal goal = cursorToGoal(cursor);
+				
+				List<ClaimLog> claims = getAllClaimLogs(goal.getTaskID(), goal.getDateStart(), goal.getDateEnd(), null, false);
+				for(ClaimLog claim : claims) {
+					goal.addBountyProgress(claim.getBounty());
+					goal.addClaimDate(claim.getClaimDate());
+				}
+				
+				goalList.add(goal);
+				cursor.moveToNext();
+			}
+			cursor.close();
+			
+			return goalList;
+		}
 
 		private Goal cursorToGoal(Cursor cursor) {
 			Goal goal = new Goal();

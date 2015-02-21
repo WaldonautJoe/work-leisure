@@ -9,14 +9,25 @@
        <attr name="topDataColor" format="color" />
        <attr name="bottomDataColor" format="color" />
    </declare-styleable>
+   <attr name="backgroundColor" format="color" />
+   <attr name="isBackgroundPainted" format="boolean" />
    <declare-styleable name="HorizontalMeter">
        <attr name="color" format="color" />
        <attr name="overColor" format="color" />
        <attr name="textColor" format="color" />
-       <attr name="backgroundColor" format="color" />
-       <attr name="isBackgroundPainted" format="boolean" />
-       <attr name="value" format="float" />
-       <attr name="maxValue" format="float" />
+       <attr name="backgroundColor" />
+       <attr name="isBackgroundPainted" />
+       <attr name="value" format="float"/>
+       <attr name="maxValue" format = "float"/>
        <attr name="isMaxDisplayed" format="boolean" />
+   </declare-styleable>
+   <declare-styleable name="NotchedHorizontalMeter">
+       <attr name="progressColor" format="color" />
+       <attr name="notchColor" format="color" />
+       <attr name="backgroundColor" />
+       <attr name="isBackgroundPainted" />
+       <attr name="progressValueInt" format="integer"/>
+       <attr name="minValueInt" format="integer" />
+       <attr name="maxValueInt" format="integer"/>
    </declare-styleable>
 </resources>

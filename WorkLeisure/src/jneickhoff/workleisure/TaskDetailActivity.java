@@ -7,6 +7,7 @@ import java.util.List;
 
 import jneickhoff.workleisure.db.ClaimLog;
 import jneickhoff.workleisure.db.DataSource;
+import jneickhoff.workleisure.db.Goal;
 import jneickhoff.workleisure.db.Task;
 import android.os.Bundle;
 import android.app.Activity;
@@ -52,6 +53,12 @@ public class TaskDetailActivity extends Activity
 	private TextView txtStock;
 	private LinearLayout lytDueButtons;
 	private Button btnClaimTask;
+	private LinearLayout lytCurrentGoal;
+	private HorizontalMeter metBountyCurrentGoal;
+	private NotchedHorizontalMeter metTimeCurrentGoal;
+	private TextView txtCurStartDate;
+	private TextView txtCurEndDate;
+	
 	private LinearLayout listLatestClaims;
 	private TextView txtTimesClaimed;
 	private Button btnViewAllClaims;
@@ -82,16 +89,31 @@ public class TaskDetailActivity extends Activity
 		txtStock = (TextView) findViewById(R.id.txtStock);
 		lytDueButtons = (LinearLayout) findViewById(R.id.lytDueButtons);
 		btnClaimTask = (Button) findViewById(R.id.btnClaimTask);
+		lytCurrentGoal = (LinearLayout) findViewById(R.id.lytCurrentGoal);
+		metBountyCurrentGoal = (HorizontalMeter) findViewById(R.id.metCurrentGoal);
+		metTimeCurrentGoal = (NotchedHorizontalMeter) findViewById(R.id.metTimeCurrentGoal);
+		txtCurStartDate = (TextView) findViewById(R.id.txtCurStartDate);
+		txtCurEndDate = (TextView) findViewById(R.id.txtCurEndDate);
 		listLatestClaims = (LinearLayout) findViewById(R.id.listLatestClaims);
 		txtTimesClaimed = (TextView) findViewById(R.id.txtTimesClaimed);
 		btnViewAllClaims = (Button) findViewById(R.id.btnViewAllClaims);
 		
-		updateDisplay();
-		
-		if(task.getType().equals(Task.TYPE_WORK))
+		if(task.getType().equals(Task.TYPE_WORK)) {
 			lytHeader.setBackgroundColor(getResources().getColor(R.color.blue));
-		else
+			metBountyCurrentGoal.setColors(getResources().getColor(R.color.blue), 
+					getResources().getColor(R.color.blue_light2));
+			metTimeCurrentGoal.setColors(getResources().getColor(R.color.blue_light2), 
+					getResources().getColor(R.color.blue));
+		}
+		else {
 			lytHeader.setBackgroundColor(getResources().getColor(R.color.red));
+			metBountyCurrentGoal.setColors(getResources().getColor(R.color.red), 
+					getResources().getColor(R.color.red_light2));
+			metTimeCurrentGoal.setColors(getResources().getColor(R.color.red_light2), 
+					getResources().getColor(R.color.red));
+		}
+		
+		updateDisplay();
 		
 		List<ClaimLog> claims = dataSource.getAllClaimLogs(task.getID(), ClaimSimpleArrayAdapter.MAX_LIST_SIZE);
 		adapter = new ClaimSimpleArrayAdapter(this, claims);
@@ -138,12 +160,11 @@ public class TaskDetailActivity extends Activity
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if(resultCode == RESULT_OK) {
 			if(requestCode == REQ_EDIT) {
-				DataSource dataSource = new DataSource(this);
 				dataSource.open();
 				task = dataSource.getTask(task.getID());
-				dataSource.close();
 				
 				updateDisplay();
+				dataSource.close();
 				
 				Intent intent = new Intent();
 				intent.putExtra(EXTRA_CHANGE_TYPE, CHANGE_EDIT);
@@ -163,6 +184,22 @@ public class TaskDetailActivity extends Activity
 			}
 			else if(requestCode == REQ_VIEW_GOALS) {
 				//TODO update current goals
+				dataSource.open();
+				Goal goal = dataSource.getCurrentGoalForTask(task.getID());
+				dataSource.close();
+				if(goal == null) {
+					lytCurrentGoal.setVisibility(View.GONE);
+				}
+				else {	
+					metBountyCurrentGoal.setValue(goal.getBountyProgress(), goal.getBountyTarget());
+					metTimeCurrentGoal.setValue(Calendar.getInstance().getTimeInMillis(), 
+							goal.getDateStart().getTimeInMillis(), 
+							goal.getDateEnd().getTimeInMillis());
+					metTimeCurrentGoal.setNotchValues(goal.getClaimDateList());
+					txtCurStartDate.setText(dateFormat.format(goal.getDateStart().getTime()));
+					txtCurEndDate.setText(dateFormat.format(goal.getDateEnd().getTime()));
+					lytCurrentGoal.setVisibility(View.VISIBLE);
+				}
 			}
 		}
 	}
@@ -235,6 +272,15 @@ public class TaskDetailActivity extends Activity
 		listLatestClaims.addView(adapter.getView(0, null, null), 0);
 		if(listLatestClaims.getChildCount() > ClaimSimpleArrayAdapter.MAX_LIST_SIZE)
 			listLatestClaims.removeViewAt(ClaimSimpleArrayAdapter.MAX_LIST_SIZE);
+		
+		Goal goal = dataSource.getCurrentGoalForTask(task.getID());
+		if(goal != null) {
+			metBountyCurrentGoal.setValue(goal.getBountyProgress(), goal.getBountyTarget());
+			metTimeCurrentGoal.setValue(Calendar.getInstance().getTimeInMillis(), 
+					goal.getDateStart().getTimeInMillis(), 
+					goal.getDateEnd().getTimeInMillis());
+			metTimeCurrentGoal.setNotchValues(goal.getClaimDateList());
+		}
 		
 		Intent intent = new Intent();
 		intent.putExtra(EXTRA_CHANGE_TYPE, CHANGE_EDIT);
@@ -407,7 +453,21 @@ public class TaskDetailActivity extends Activity
 		else {
 			btnViewAllClaims.setVisibility(View.VISIBLE);
 		}
-			
+		
+		Goal goal = dataSource.getCurrentGoalForTask(task.getID());
+		if(goal == null) {
+			lytCurrentGoal.setVisibility(View.GONE);
+		}
+		else {
+			metBountyCurrentGoal.setValue(goal.getBountyProgress(), goal.getBountyTarget());
+			metTimeCurrentGoal.setValue(Calendar.getInstance().getTimeInMillis(), 
+					goal.getDateStart().getTimeInMillis(), 
+					goal.getDateEnd().getTimeInMillis());
+			metTimeCurrentGoal.setNotchValues(goal.getClaimDateList());
+			txtCurStartDate.setText(dateFormat.format(goal.getDateStart().getTime()));
+			txtCurEndDate.setText(dateFormat.format(goal.getDateEnd().getTime()));
+			lytCurrentGoal.setVisibility(View.VISIBLE);
+		}
 	}
 
 }

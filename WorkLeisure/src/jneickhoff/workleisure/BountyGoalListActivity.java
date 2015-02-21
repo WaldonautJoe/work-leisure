@@ -10,7 +10,6 @@ import jneickhoff.workleisure.db.Task;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
@@ -38,7 +37,8 @@ public class BountyGoalListActivity extends Activity
 	private LinearLayout lytHeader;
 	private TextView txtName;
 	private LinearLayout lytCurrentGoal;
-	private HorizontalMeter metCurrentGoal;
+	private HorizontalMeter metBountyCurrentGoal;
+	private NotchedHorizontalMeter metTimeCurrentGoal;
 	private TextView txtCurStartDate;
 	private TextView txtCurEndDate;
 	private Button btnSetBountyGoal;
@@ -56,7 +56,8 @@ public class BountyGoalListActivity extends Activity
 		lytHeader = (LinearLayout) findViewById(R.id.lytHeader);
 		txtName = (TextView) findViewById(R.id.txtName);
 		lytCurrentGoal = (LinearLayout) findViewById(R.id.lytCurrentGoal);
-		metCurrentGoal = (HorizontalMeter) findViewById(R.id.metCurrentGoal);
+		metBountyCurrentGoal = (HorizontalMeter) findViewById(R.id.metCurrentGoal);
+		metTimeCurrentGoal = (NotchedHorizontalMeter) findViewById(R.id.metTimeCurrentGoal);
 		txtCurStartDate = (TextView) findViewById(R.id.txtCurStartDate);
 		txtCurEndDate = (TextView) findViewById(R.id.txtCurEndDate);
 		btnSetBountyGoal = (Button) findViewById(R.id.btnSetBountyGoal);
@@ -76,20 +77,27 @@ public class BountyGoalListActivity extends Activity
 		
 		if(task.getType().equals(Task.TYPE_WORK)) {
 			lytHeader.setBackgroundColor(getResources().getColor(R.color.blue));
-			metCurrentGoal.setColors(getResources().getColor(R.color.blue), 
+			metBountyCurrentGoal.setColors(getResources().getColor(R.color.blue), 
 					getResources().getColor(R.color.blue_light2));
+			metTimeCurrentGoal.setColors(getResources().getColor(R.color.blue_light2), 
+					getResources().getColor(R.color.blue));
 		}
 		else {
 			lytHeader.setBackgroundColor(getResources().getColor(R.color.red));
-			metCurrentGoal.setColors(getResources().getColor(R.color.red), 
+			metBountyCurrentGoal.setColors(getResources().getColor(R.color.red), 
 					getResources().getColor(R.color.red_light2));
+			metTimeCurrentGoal.setColors(getResources().getColor(R.color.red_light2), 
+					getResources().getColor(R.color.red));
 		}
 		
 		if(goals.size() > 0 && goals.get(0).getDateEnd().after(Calendar.getInstance())) {
 			isCurrentGoal = true;
 			currentGoal = goals.get(0);
 			goals.remove(0);
-			metCurrentGoal.setValue(currentGoal.getBountyProgress(), currentGoal.getBountyTarget());
+			metBountyCurrentGoal.setValue(currentGoal.getBountyProgress(), currentGoal.getBountyTarget());
+			metTimeCurrentGoal.setValue(Calendar.getInstance().getTimeInMillis(), 
+					currentGoal.getDateStart().getTimeInMillis(), currentGoal.getDateEnd().getTimeInMillis());
+			metTimeCurrentGoal.setNotchValues(currentGoal.getClaimDateList());
 			txtCurStartDate.setText(dateFormat.format(currentGoal.getDateStart().getTime()));
 			txtCurEndDate.setText(dateFormat.format(currentGoal.getDateEnd().getTime()));
 			lytCurrentGoal.setVisibility(View.VISIBLE);
@@ -160,7 +168,10 @@ public class BountyGoalListActivity extends Activity
 			currentGoal = goal;
 			
 			isCurrentGoal = true;
-			metCurrentGoal.setValue(currentGoal.getBountyProgress(), currentGoal.getBountyTarget());
+			metBountyCurrentGoal.setValue(currentGoal.getBountyProgress(), currentGoal.getBountyTarget());
+			metTimeCurrentGoal.setValue(Calendar.getInstance().getTimeInMillis(), 
+					currentGoal.getDateStart().getTimeInMillis(), currentGoal.getDateEnd().getTimeInMillis());
+			metTimeCurrentGoal.setNotchValues(currentGoal.getClaimDateList());
 			txtCurStartDate.setText(dateFormat.format(currentGoal.getDateStart().getTime()));
 			txtCurEndDate.setText(dateFormat.format(currentGoal.getDateEnd().getTime()));
 			lytCurrentGoal.setVisibility(View.VISIBLE);
@@ -172,6 +183,8 @@ public class BountyGoalListActivity extends Activity
 //			adapter.add(goal);
 			adapter.notifyDataSetChanged();
 		}
+		
+		setResult(RESULT_OK);
 	}
 	
 	/**
@@ -192,6 +205,7 @@ public class BountyGoalListActivity extends Activity
 						lytCurrentGoal.setVisibility(View.GONE);
 						btnSetBountyGoal.setVisibility(View.VISIBLE);
 						lytEditButtons.setVisibility(View.GONE);
+						setResult(RESULT_OK);
 					}
 				})
 				.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

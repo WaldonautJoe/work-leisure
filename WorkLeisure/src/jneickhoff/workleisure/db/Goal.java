@@ -46,6 +46,7 @@ public class Goal {
 	
 	public void addClaimDate(Date claimDate) {
 		Calendar calClaimDate = Calendar.getInstance();
+		calClaimDate.setTime(claimDate);
 		claimDateList.add(calClaimDate);
 	}
 

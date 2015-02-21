@@ -15,10 +15,19 @@
         android:id="@+id/metBounty"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="3dp"
         custom:color="@color/white"
         custom:overColor="@color/black"
         custom:isMaxDisplayed="true"
         custom:isBackgroundPainted="true" />
+    
+    <jneickhoff.workleisure.NotchedHorizontalMeter 
+        android:id="@+id/metTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        custom:progressColor="@color/white"
+        custom:backgroundColor="@color/black"
+        custom:isBackgroundPainted="true"/>
     
     <RelativeLayout
         android:layout_width="match_parent"

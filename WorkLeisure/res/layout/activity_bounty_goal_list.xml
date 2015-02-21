@@ -51,12 +51,20 @@
                  android:id="@+id/metCurrentGoal"
                  android:layout_width="match_parent"
                  android:layout_height="wrap_content"
+                 android:paddingBottom="3dp"
                  custom:color="@color/white"
                  custom:overColor="@color/black"
                  custom:textColor="@color/white"
                  custom:backgroundColor="@color/white"
                  custom:isBackgroundPainted="true"
                  custom:isMaxDisplayed="true" />
+            
+            <jneickhoff.workleisure.NotchedHorizontalMeter 
+                android:id="@+id/metTimeCurrentGoal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                custom:backgroundColor="@color/white"
+                custom:isBackgroundPainted="true"/>
             
             <RelativeLayout
                 android:layout_width="match_parent"
