@@ -111,6 +111,13 @@
 		        android:text="@string/view_late_upcoming_tasks"
 		        android:onClick="onClick" />
 		    
+		    <Button
+		        android:id="@+id/btnViewCurrentGoals"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:text="@string/view_current_goals"
+		        android:onClick="onClick" />
+		    
 		</LinearLayout>
 	        
 	</LinearLayout>

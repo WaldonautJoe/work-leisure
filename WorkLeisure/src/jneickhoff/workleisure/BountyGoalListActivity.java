@@ -32,7 +32,7 @@ public class BountyGoalListActivity extends Activity
 	private List<Goal> goals;
 	private boolean isCurrentGoal;
 	private Goal currentGoal;
-	private BountyGoalArrayAdapter adapter;
+	private BountyGoalHistoryArrayAdapter adapter;
 	
 	private LinearLayout lytHeader;
 	private TextView txtName;
@@ -111,7 +111,7 @@ public class BountyGoalListActivity extends Activity
 			lytEditButtons.setVisibility(View.GONE);
 		}
 		
-		adapter = new BountyGoalArrayAdapter(this, goals, task.getType());
+		adapter = new BountyGoalHistoryArrayAdapter(this, goals, task.getType());
 		
 		ListView goalList = (ListView) findViewById(R.id.listBountyGoals);
 		goalList.setAdapter(adapter);

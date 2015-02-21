@@ -84,6 +84,9 @@ public class MainActivity extends Activity {
 		case R.id.btnViewLateUpcomingTasks:
 			displayLateUpcomingTasks();
 			break;
+		case R.id.btnViewCurrentGoals:
+			displayCurrentGoals();
+			break;
 		}
 	}
 
@@ -204,6 +207,14 @@ public class MainActivity extends Activity {
 	 */
 	public void displayLateUpcomingTasks() {
 		Intent i = new Intent(this, LateUpcomingTasksActivity.class);
+		startActivity(i);
+	}
+	
+	/**
+	 * Starts activity that displays currently started bounty goals
+	 */
+	public void displayCurrentGoals(){
+		Intent i = new Intent(this, CurrentGoalListActivity.class);
 		startActivity(i);
 	}
 	

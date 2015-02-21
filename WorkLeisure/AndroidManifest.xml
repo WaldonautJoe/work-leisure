@@ -50,6 +50,10 @@
             android:name="jneickhoff.workleisure.BountyGoalListActivity"
             android:label="@string/title_activity_bounty_goal_list" >
         </activity>
+        <activity
+            android:name="jneickhoff.workleisure.CurrentGoalListActivity"
+            android:label="@string/title_activity_current_goal_list" >
+        </activity>
     </application>
 
 </manifest>

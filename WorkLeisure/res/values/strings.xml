@@ -111,5 +111,8 @@
     <string name="delete_goal_q">"Discard goal?"</string>
     <string name="to_discard_tap_goal">To discard a goal, tap it</string>
     <string name="goals">Goals</string>
+    <string name="title_activity_current_goal_list">Current Goal List</string>
+    <string name="view_current_goals">View current goals</string>
+    <string name="no_goal_set">No goal set</string>
 
 </resources>

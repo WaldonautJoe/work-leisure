@@ -6,7 +6,7 @@
     android:orientation="vertical" >
     
     <TextView
-        android:id="@+id/txtGoalMet"
+        android:id="@+id/txtGoalName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp" />
@@ -18,6 +18,7 @@
         android:paddingBottom="3dp"
         custom:color="@color/white"
         custom:overColor="@color/black"
+        custom:backgroundColor="@color/light_grey"
         custom:isMaxDisplayed="true"
         custom:isBackgroundPainted="true" />
     
@@ -26,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         custom:progressColor="@color/white"
-        custom:backgroundColor="@color/black"
+        custom:backgroundColor="@color/light_grey"
         custom:isBackgroundPainted="true"/>
     
     <RelativeLayout
