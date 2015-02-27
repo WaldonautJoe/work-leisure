@@ -237,14 +237,14 @@ public class DataSource {
 					+ ", " + MySQLiteHelper.COL_TASK_NAME;
 			
 			if(tasksAfterDate != null && tasksBeforeDate != null) {
-				selection = MySQLiteHelper.COL_TASK_DATE_DUE + " > ?"
+				selection = MySQLiteHelper.COL_TASK_DATE_DUE + " >= ?"
 						+ " AND " + MySQLiteHelper.COL_TASK_DATE_DUE + " < ?";
 				selectionArgs = new String[2];
 				selectionArgs[0] = String.valueOf(tasksAfterDate.getTimeInMillis());
 				selectionArgs[1] = String.valueOf(tasksBeforeDate.getTimeInMillis());
 			}
 			else if(tasksAfterDate != null) {
-				selection = MySQLiteHelper.COL_TASK_DATE_DUE + " > ?";
+				selection = MySQLiteHelper.COL_TASK_DATE_DUE + " >= ?";
 				selectionArgs = new String[1];
 				selectionArgs[0] = String.valueOf(tasksAfterDate.getTimeInMillis());
 			}

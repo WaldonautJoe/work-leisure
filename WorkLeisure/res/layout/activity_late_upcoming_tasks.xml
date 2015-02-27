@@ -11,7 +11,17 @@
 	    android:paddingTop="@dimen/activity_vertical_margin"
 	    android:orientation="vertical" >
 	    
+	    <TextView
+	        android:id="@+id/txtNoDueTasks"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:paddingLeft="@dimen/activity_horizontal_margin"
+		    android:paddingRight="@dimen/activity_horizontal_margin"
+	        android:textSize="18sp"
+	        android:text="@string/no_due_tasks"/>
+	    
 	    <LinearLayout
+	        android:id="@+id/lytDueLateHeader"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -22,7 +32,6 @@
 		    android:background="@color/red" >
 	    
 		    <TextView
-		        android:id="@+id/txtDueLateHeader"
 		        android:layout_width="fill_parent"
 		        android:layout_height="wrap_content"
 		        android:textSize="18sp"
@@ -41,6 +50,7 @@
 	        android:orientation="vertical" />
 	    
 	    <LinearLayout
+	        android:id="@+id/lytDueSoonHeader"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -51,7 +61,6 @@
 		    android:background="@color/yellow" >
 		    
 		    <TextView
-		        android:id="@+id/txtDueSoonHeader"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:textSize="18sp"
@@ -62,6 +71,35 @@
 	    
 	    <LinearLayout
 	        android:id="@+id/lytDueSoonTasks"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:paddingLeft="@dimen/activity_horizontal_margin"
+		    android:paddingRight="@dimen/activity_horizontal_margin"
+	        android:paddingBottom="10dp"
+	        android:orientation="vertical" />
+	    
+	    <LinearLayout
+	        android:id="@+id/lytDueSomedayHeader"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:paddingLeft="@dimen/activity_horizontal_margin"
+		    android:paddingRight="@dimen/activity_horizontal_margin"
+		    android:paddingTop="5dp"
+		    android:layout_marginBottom="5dp"
+		    android:orientation="vertical"
+		    android:background="@color/blue" >
+		    
+		    <TextView
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textSize="18sp"
+		        android:textColor="@color/white"
+		        android:text="@string/dueSomedayHeader" />
+		    
+	    </LinearLayout>
+	    
+	    <LinearLayout
+	        android:id="@+id/lytDueSomedayTasks"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:paddingLeft="@dimen/activity_horizontal_margin"

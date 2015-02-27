@@ -15,10 +15,13 @@ import android.widget.TextView;
 
 public class LateUpcomingTasksActivity extends Activity {
 
-	private TextView txtDueLateHeader;
+	private TextView txtNoDueTasks;
+	private LinearLayout lytDueLateHeader;
 	private LinearLayout lytDueLateTasks;
-	private TextView txtDueSoonHeader;
+	private LinearLayout lytDueSoonHeader;
 	private LinearLayout lytDueSoonTasks;
+	private LinearLayout lytDueSomedayHeader;
+	private LinearLayout lytDueSomedayTasks;
 	private DataSource ds;
 	
 	@Override
@@ -26,10 +29,13 @@ public class LateUpcomingTasksActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_late_upcoming_tasks);
 		
-		txtDueLateHeader = (TextView) findViewById(R.id.txtDueLateHeader);
+		txtNoDueTasks = (TextView) findViewById(R.id.txtNoDueTasks);
+		lytDueLateHeader = (LinearLayout) findViewById(R.id.lytDueLateHeader);
 		lytDueLateTasks = (LinearLayout) findViewById(R.id.lytDueLateTasks);
-		txtDueSoonHeader = (TextView) findViewById(R.id.txtDueSoonHeader);
+		lytDueSoonHeader = (LinearLayout) findViewById(R.id.lytDueSoonHeader);
 		lytDueSoonTasks = (LinearLayout) findViewById(R.id.lytDueSoonTasks);
+		lytDueSomedayHeader = (LinearLayout) findViewById(R.id.lytDueSomedayHeader);
+		lytDueSomedayTasks = (LinearLayout) findViewById(R.id.lytDueSomedayTasks);
 		ds = new DataSource(this);
 	}
 
@@ -69,6 +75,7 @@ public class LateUpcomingTasksActivity extends Activity {
 		
 		List<Task> lateTasksDue = ds.getRecentDueTasks(null, dateToday);
 		List<Task> soonTasksDue = ds.getRecentDueTasks(dateToday, dateSoon);
+		List<Task> somedayTasksDue = ds.getRecentDueTasks(dateSoon, null);
 		
 		View.OnClickListener dueTasksClickListener = new View.OnClickListener() {
 			
@@ -82,44 +89,80 @@ public class LateUpcomingTasksActivity extends Activity {
 			}
 		};
 		
-		if(lateTasksDue.size() > 0) {
-			lytDueLateTasks.removeAllViews();
-			DueTasksArrayAdapter adapter = new DueTasksArrayAdapter(this, lateTasksDue);
-			for(int i = 0; i < adapter.getCount(); i++) {
-				View view = adapter.getView(i, null, null);
-				Task task = adapter.getItem(i);
-				view.setTag(task.getID());
-				view.setOnClickListener(dueTasksClickListener);
+		if(lateTasksDue.size() == 0 && soonTasksDue.size() == 0 && somedayTasksDue.size() == 0) {
+			txtNoDueTasks.setVisibility(View.VISIBLE);
+			
+			lytDueLateHeader.setVisibility(View.GONE);
+			lytDueLateTasks.setVisibility(View.GONE);
+			
+			lytDueSoonHeader.setVisibility(View.GONE);
+			lytDueSoonTasks.setVisibility(View.GONE);
+			
+			lytDueSomedayHeader.setVisibility(View.GONE);
+			lytDueSomedayTasks.setVisibility(View.GONE);
+		}
+		else {
+			txtNoDueTasks.setVisibility(View.GONE);
+			
+			if(lateTasksDue.size() > 0) {
+				lytDueLateTasks.removeAllViews();
+				DueTasksArrayAdapter adapter = new DueTasksArrayAdapter(this, lateTasksDue);
+				for(int i = 0; i < adapter.getCount(); i++) {
+					View view = adapter.getView(i, null, null);
+					Task task = adapter.getItem(i);
+					view.setTag(task.getID());
+					view.setOnClickListener(dueTasksClickListener);
+					
+					lytDueLateTasks.addView(view);
+				}
 				
-				lytDueLateTasks.addView(view);
+				lytDueLateHeader.setVisibility(View.VISIBLE);
+				lytDueLateTasks.setVisibility(View.VISIBLE);
+			}
+			else {
+				lytDueLateHeader.setVisibility(View.GONE);
+				lytDueLateTasks.setVisibility(View.GONE);
 			}
 			
-			txtDueLateHeader.setVisibility(View.VISIBLE);
-			lytDueLateTasks.setVisibility(View.VISIBLE);
-		}
-		else {
-			txtDueLateHeader.setVisibility(View.GONE);
-			lytDueLateTasks.setVisibility(View.GONE);
-		}
-		
-		if(soonTasksDue.size() > 0) {
-			lytDueSoonTasks.removeAllViews();
-			DueTasksArrayAdapter adapter = new DueTasksArrayAdapter(this, soonTasksDue);
-			for(int i = 0; i < adapter.getCount(); i++) {
-				View view = adapter.getView(i, null, null);
-				Task task = adapter.getItem(i);
-				view.setTag(task.getID());
-				view.setOnClickListener(dueTasksClickListener);
-				
-				lytDueSoonTasks.addView(view);
+			if(soonTasksDue.size() > 0) {
+				lytDueSoonTasks.removeAllViews();
+				DueTasksArrayAdapter adapter = new DueTasksArrayAdapter(this, soonTasksDue);
+				for(int i = 0; i < adapter.getCount(); i++) {
+					View view = adapter.getView(i, null, null);
+					Task task = adapter.getItem(i);
+					view.setTag(task.getID());
+					view.setOnClickListener(dueTasksClickListener);
+					
+					lytDueSoonTasks.addView(view);
+				}
+					
+				lytDueSoonHeader.setVisibility(View.VISIBLE);
+				lytDueSoonTasks.setVisibility(View.VISIBLE);
 			}
+			else {
+				lytDueSoonHeader.setVisibility(View.GONE);
+				lytDueSoonTasks.setVisibility(View.GONE);
+			}
+			
+			if(somedayTasksDue.size() > 0) {
+				lytDueSomedayTasks.removeAllViews();
+				DueTasksArrayAdapter adapter = new DueTasksArrayAdapter(this, somedayTasksDue);
+				for(int i = 0; i < adapter.getCount(); i++) {
+					View view = adapter.getView(i, null, null);
+					Task task = adapter.getItem(i);
+					view.setTag(task.getID());
+					view.setOnClickListener(dueTasksClickListener);
+					
+					lytDueSomedayTasks.addView(view);
+				}
 				
-			txtDueSoonHeader.setVisibility(View.VISIBLE);
-			lytDueSoonTasks.setVisibility(View.VISIBLE);
-		}
-		else {
-			txtDueSoonHeader.setVisibility(View.GONE);
-			lytDueSoonTasks.setVisibility(View.GONE);
+				lytDueSomedayHeader.setVisibility(View.VISIBLE);
+				lytDueSomedayTasks.setVisibility(View.VISIBLE);
+			}
+			else {
+				lytDueSomedayHeader.setVisibility(View.GONE);
+				lytDueSomedayTasks.setVisibility(View.GONE);
+			}
 		}
 	}
 }

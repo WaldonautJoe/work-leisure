@@ -80,13 +80,15 @@
     <string name="dash_break">" - "</string>
     <string name="view_all">View &amp; edit all claims</string>
     <string name="claim_list_instructions">To discard a claim, tap it</string>
-    <string name="graph_title">Hours claimed per day</string>
+    <string name="graph_title">Bounty claimed per day</string>
     <string name="undo">Undo</string>
     <string name="dueItToday">Due it today</string>
     <string name="dueItTomorrow">Due it tomorrow</string>
     <string name="removeDue">Remove due date</string>
     <string name="dueLateHeader">Some tasks are a bit late!</string>
     <string name="dueSoonHeader">Some tasks are due soon!</string>
+    <string name="dueSomedayHeader">Some tasks are due someday!</string>
+    <string name="no_due_tasks">No tasks are due</string>
     <string name="title_activity_claim_recent">Recent Claims</string>
     <string name="view_weeks_claims">View week\'s claims</string>
     <string name="total_claims">total claims</string>
@@ -94,8 +96,8 @@
     <string name="claimed">claimed</string>
     <string name="task_delete_confirm">"Discard task?"</string>
     <string name="claim_delete_confirm">"Discard claim and refund bounty?"</string>
-    <string name="title_activity_late_upcoming_tasks">Late and upcoming tasks</string>
-    <string name="view_late_upcoming_tasks">View late &amp; upcoming tasks</string>
+    <string name="title_activity_late_upcoming_tasks">Due tasks</string>
+    <string name="view_late_upcoming_tasks">View due tasks</string>
     <string name="title_activity_bounty_goal_list">Bounty Goal List</string>
     <string name="set_bounty_goal">Set bounty goal</string>
     <string name="edit">Edit</string>
@@ -113,6 +115,6 @@
     <string name="goals">Goals</string>
     <string name="title_activity_current_goal_list">Current Goal List</string>
     <string name="view_current_goals">View current goals</string>
-    <string name="no_goal_set">No goal set</string>
+    <string name="no_goal_set">No goals are set</string>
 
 </resources>
