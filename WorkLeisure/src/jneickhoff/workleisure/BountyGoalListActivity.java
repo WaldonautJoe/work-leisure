@@ -179,6 +179,11 @@ public class BountyGoalListActivity extends Activity
 			lytEditButtons.setVisibility(View.VISIBLE);
 		}
 		else {
+			isCurrentGoal = false;
+			lytCurrentGoal.setVisibility(View.GONE);
+			btnSetBountyGoal.setVisibility(View.VISIBLE);
+			lytEditButtons.setVisibility(View.GONE);
+			
 			goals.add(goal);
 //			adapter.add(goal);
 			adapter.notifyDataSetChanged();
