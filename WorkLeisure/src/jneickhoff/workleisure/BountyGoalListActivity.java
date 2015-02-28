@@ -163,6 +163,7 @@ public class BountyGoalListActivity extends Activity
 			goal = new Goal(currentGoal.getId(), currentGoal.getTaskID(), currentGoal.getBountyProgress(), 
 					bountyTarget, startDate, endDate, currentGoal.getClaimDateList()); 
 			ds.updateGoal(goal);
+			goal = ds.getGoal(goal.getId()); //updates claim date list
 		}
 		ds.close();
 		
@@ -186,7 +187,6 @@ public class BountyGoalListActivity extends Activity
 			lytEditButtons.setVisibility(View.GONE);
 			
 			goals.add(goal);
-//			adapter.add(goal);
 			adapter.notifyDataSetChanged();
 		}
 		
