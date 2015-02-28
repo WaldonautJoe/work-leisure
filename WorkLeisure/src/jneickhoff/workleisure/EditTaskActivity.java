@@ -51,6 +51,8 @@ public class EditTaskActivity extends Activity
 	
 	private static final String UNNAMED_TASK = "Unnamed Task";
 	
+	private static final String LONG_DUE_DATE = "long_due_date";
+	
 	private LinearLayout lytHeader;
 	private EditText editTaskName;
 	private CheckBox chkTaskArchived;
@@ -187,6 +189,11 @@ public class EditTaskActivity extends Activity
 				spnStockType.setSelection(1);
 			editTaskStock.setText(String.valueOf(oldTask.getStockNumber()));
 		}
+		
+		if(savedInstanceState != null) {
+			taskDueDate.setTime(savedInstanceState.getLong(LONG_DUE_DATE));
+			txtTaskDueDate.setText(DateFormat.getDateFormat(this).format(taskDueDate));
+		}
 	}
 
 	@Override
@@ -194,6 +201,13 @@ public class EditTaskActivity extends Activity
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.edit_task, menu);
 		return true;
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+	
+		savedInstanceState.putLong(LONG_DUE_DATE, taskDueDate.getTime());
 	}
 	
 	@Override
