@@ -32,6 +32,9 @@ public class SetGoalDialogFragment extends DialogFragment {
 	public final static String LONG_END_DATE = "key_end_date";
 	private Calendar endDate;
 	
+	private final static String LONG_EDITED_START_DATE = "long_edited_start_date";
+	private final static String LONG_EDITED_END_DATE = "long_edited_end_date";
+	
 	private SetGoalDialogListener mListener;
 	private DateFormat dateFormat;
 	private EditText editBountyTarget;
@@ -82,6 +85,11 @@ public class SetGoalDialogFragment extends DialogFragment {
 			editBountyTarget.setText(Float.toString(bountyTarget));
 		}
 		
+		if(savedInstanceState != null) {
+			startDate.setTimeInMillis(savedInstanceState.getLong(LONG_EDITED_START_DATE));
+			endDate.setTimeInMillis(savedInstanceState.getLong(LONG_EDITED_END_DATE));
+		}
+		
 		txtStartDate.setText(dateFormat.format(startDate.getTime()));
 		txtEndDate.setText(dateFormat.format(endDate.getTime()));
 		
@@ -129,6 +137,14 @@ public class SetGoalDialogFragment extends DialogFragment {
 				});
 		
 		return builder.create();
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+	
+		savedInstanceState.putLong(LONG_EDITED_START_DATE, startDate.getTimeInMillis());
+		savedInstanceState.putLong(LONG_EDITED_END_DATE, endDate.getTimeInMillis());
 	}
 	
 	private DatePickerDialog.OnDateSetListener mStartDateListener = new DatePickerDialog.OnDateSetListener() {
