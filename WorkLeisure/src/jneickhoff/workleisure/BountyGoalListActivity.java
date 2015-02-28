@@ -10,6 +10,7 @@ import jneickhoff.workleisure.db.Task;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
@@ -30,7 +31,6 @@ public class BountyGoalListActivity extends Activity
 	
 	private DateFormat dateFormat;
 	private List<Goal> goals;
-	private boolean isCurrentGoal;
 	private Goal currentGoal;
 	private BountyGoalHistoryArrayAdapter adapter;
 	
@@ -91,7 +91,6 @@ public class BountyGoalListActivity extends Activity
 		}
 		
 		if(goals.size() > 0 && goals.get(0).getDateEnd().after(Calendar.getInstance())) {
-			isCurrentGoal = true;
 			currentGoal = goals.get(0);
 			goals.remove(0);
 			metBountyCurrentGoal.setValue(currentGoal.getBountyProgress(), currentGoal.getBountyTarget());
@@ -105,7 +104,7 @@ public class BountyGoalListActivity extends Activity
 			lytEditButtons.setVisibility(View.VISIBLE);
 		}
 		else {
-			isCurrentGoal = false;
+			currentGoal = null;
 			lytCurrentGoal.setVisibility(View.GONE);
 			btnSetBountyGoal.setVisibility(View.VISIBLE);
 			lytEditButtons.setVisibility(View.GONE);
@@ -139,8 +138,11 @@ public class BountyGoalListActivity extends Activity
 		case R.id.btnAbandon:
 			abandonCurrentGoal();
 			break;
-		case R.id.btnEditGoal:
+		case R.id.btnEdit:
 			displayEditGoalDialog();
+			break;
+		case R.id.btnEndNow:
+			endCurrentGoal();
 			break;
 		case R.id.btnSetBountyGoal:
 			displaySetNewGoalDialog();
@@ -167,7 +169,6 @@ public class BountyGoalListActivity extends Activity
 		if(goal.getDateEnd().after(Calendar.getInstance())) {
 			currentGoal = goal;
 			
-			isCurrentGoal = true;
 			metBountyCurrentGoal.setValue(currentGoal.getBountyProgress(), currentGoal.getBountyTarget());
 			metTimeCurrentGoal.setValue(Calendar.getInstance().getTimeInMillis(), 
 					currentGoal.getDateStart().getTimeInMillis(), currentGoal.getDateEnd().getTimeInMillis());
@@ -179,7 +180,7 @@ public class BountyGoalListActivity extends Activity
 			lytEditButtons.setVisibility(View.VISIBLE);
 		}
 		else {
-			isCurrentGoal = false;
+			currentGoal = null;
 			lytCurrentGoal.setVisibility(View.GONE);
 			btnSetBountyGoal.setVisibility(View.VISIBLE);
 			lytEditButtons.setVisibility(View.GONE);
@@ -206,20 +207,14 @@ public class BountyGoalListActivity extends Activity
 						ds.open();
 						ds.deleteGoal(currentGoal);
 						ds.close();
-						isCurrentGoal = false;
+						currentGoal = null;
 						lytCurrentGoal.setVisibility(View.GONE);
 						btnSetBountyGoal.setVisibility(View.VISIBLE);
 						lytEditButtons.setVisibility(View.GONE);
 						setResult(RESULT_OK);
 					}
 				})
-				.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						//nothing
-					}
-				})
+				.setNegativeButton(R.string.cancel, null)
 				.create()
 				.show();
 	}
@@ -234,6 +229,35 @@ public class BountyGoalListActivity extends Activity
 		DialogFragment dialog = new SetGoalDialogFragment();
 		dialog.setArguments(bundle);
 		dialog.show(getFragmentManager(), "SetGoalDialogFragment");
+	}
+	
+	private void endCurrentGoal() {
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(R.string.end_now_q)
+			   .setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						DataSource ds = new DataSource(BountyGoalListActivity.this);
+						ds.open();
+						currentGoal.setDateEnd(Calendar.getInstance());
+						ds.updateGoal(currentGoal);
+						ds.close();
+						
+						goals.add(currentGoal);
+						adapter.notifyDataSetChanged();
+						
+						currentGoal = null;
+						lytCurrentGoal.setVisibility(View.GONE);
+						btnSetBountyGoal.setVisibility(View.VISIBLE);
+						lytEditButtons.setVisibility(View.GONE);
+						setResult(RESULT_OK);
+					}
+				})
+				.setNegativeButton(R.string.cancel, null)
+				.create()
+				.show();
 	}
 	
 	private void displaySetNewGoalDialog() {
@@ -259,13 +283,7 @@ public class BountyGoalListActivity extends Activity
 						deleteSelectedGoal();
 					}
 				})
-				.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						//nothing
-					}
-				});
+				.setNegativeButton(R.string.cancel, null);
 		return builder.create();
 	}
 	

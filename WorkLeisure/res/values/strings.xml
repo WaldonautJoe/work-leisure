@@ -109,7 +109,7 @@
     <string name="start_date">Start date</string>
     <string name="end_date">End date</string>
     <string name="abandon">Abandon</string>
-    <string name="abandon_goal_q">"Abandon goal?"</string>
+    <string name="abandon_goal_q">"Abandon current goal?"</string>
     <string name="delete_goal_q">"Discard goal?"</string>
     <string name="to_discard_tap_goal">To discard a goal, tap it</string>
     <string name="goals">Goals</string>
@@ -119,5 +119,7 @@
     <string name="forward_slash">"/"</string>
     <string name="goalsDueSoonHeader">Some goals are due soon!</string>
     <string name="goal">Goal</string>
+    <string name="end_now">End now</string>
+    <string name="end_now_q">"End current goal now?"</string>
 
 </resources>

@@ -99,7 +99,7 @@
             android:orientation="horizontal" >
             
         	<Button
-	            android:id="@+id/btnEditGoal"
+	            android:id="@+id/btnEdit"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:text="@string/edit"
@@ -110,6 +110,13 @@
         	    android:layout_width="wrap_content"
         	    android:layout_height="wrap_content"
         	    android:text="@string/abandon"
+        	    android:onClick="onClick" />
+        	
+        	<Button
+        	    android:id="@+id/btnEndNow"
+        	    android:layout_width="wrap_content"
+        	    android:layout_height="wrap_content"
+        	    android:text="@string/end_now"
         	    android:onClick="onClick" />
         	
        	</LinearLayout>
