@@ -41,7 +41,7 @@
                 android:paddingLeft="2dp"
                 android:paddingRight="2dp"
                 android:visibility="gone"
-                android:background="@color/green"
+                android:background="@color/purple"
                 android:textColor="@color/white"
                 android:text="@string/goal" />
 		

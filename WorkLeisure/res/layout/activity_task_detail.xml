@@ -203,7 +203,7 @@
 	        android:paddingTop="5dp"
 	        android:layout_marginBottom="5dp"
 	        android:orientation="vertical" 
-	        android:background="@color/green">
+	        android:background="@color/purple">
 	        
 	        <TextView
 	            android:layout_width="wrap_content"
