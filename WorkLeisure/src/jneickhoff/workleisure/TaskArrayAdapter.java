@@ -29,6 +29,7 @@ public class TaskArrayAdapter extends ArrayAdapter<Task>{
 		View rowView = inflater.inflate(R.layout.row_task, parent, false);
 		TextView txtTaskName = (TextView) rowView.findViewById(R.id.txtTaskName);
 		TextView txtTaskImportance = (TextView) rowView.findViewById(R.id.txtTaskImportance);
+		TextView txtTaskCurGoal = (TextView) rowView.findViewById(R.id.txtTaskCurGoal);
 		TextView txtTaskDateDue = (TextView) rowView.findViewById(R.id.txtTaskDateDue);
 		TextView txtTaskBounty = (TextView) rowView.findViewById(R.id.txtTaskBounty);
 		Task task = values.get(position);
@@ -43,6 +44,10 @@ public class TaskArrayAdapter extends ArrayAdapter<Task>{
 			txtTaskImportance.setText(res.getString(R.string.low));
 			txtTaskImportance.setBackgroundColor(res.getColor(R.color.light_grey));
 		}
+		if(task.getCurrentGoal() != null)
+			txtTaskCurGoal.setVisibility(View.VISIBLE);
+		else
+			txtTaskCurGoal.setVisibility(View.GONE);
 		if(task.isDue()) {
 			txtTaskDateDue.setText(DateFormat.getDateFormat(context).format(task.getDateDue()));
 			

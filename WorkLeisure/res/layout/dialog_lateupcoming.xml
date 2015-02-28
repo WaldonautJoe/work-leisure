@@ -47,7 +47,7 @@
 	        android:layout_height="wrap_content"
 	        android:textSize="18sp"
 	        android:textStyle="bold"
-	        android:textColor="@color/blue"
+	        android:textColor="@color/green"
 	        android:text="@string/goalsDueSoonHeader" />
 	    
 	    <LinearLayout

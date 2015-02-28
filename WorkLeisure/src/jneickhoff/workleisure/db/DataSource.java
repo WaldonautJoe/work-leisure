@@ -113,6 +113,7 @@ public class DataSource {
 					MySQLiteHelper.COL_TASK_ID + " = " + insertId, null, null, null, null);
 			cursor.moveToFirst();
 			Task newTask = cursorToTask(cursor);
+			newTask.setCurrentGoal(null);
 			cursor.close();
 			
 			return newTask;
@@ -183,6 +184,7 @@ public class DataSource {
 			cursor.moveToFirst();
 			while(!cursor.isAfterLast()) {
 				Task task = cursorToTask(cursor);
+				task.setCurrentGoal(getCurrentGoalForTask(task.getID()));
 				tasks.add(task);
 				cursor.moveToNext();
 			}
@@ -220,6 +222,7 @@ public class DataSource {
 			cursor.moveToFirst();
 			while(!cursor.isAfterLast()) {
 				Task task = cursorToTask(cursor);
+				task.setCurrentGoal(getCurrentGoalForTask(task.getID()));
 				tasks.add(task);
 				cursor.moveToNext();
 			}
@@ -262,7 +265,9 @@ public class DataSource {
 			cursor.moveToFirst();
 			while(!cursor.isAfterLast()) {
 				//task[1] = DateFormat.getDateFormat(context).format(dateDue.getTime());
-				tasksDue.add(cursorToTask(cursor));
+				Task task = cursorToTask(cursor);
+				task.setCurrentGoal(getCurrentGoalForTask(task.getID()));
+				tasksDue.add(task);
 				cursor.moveToNext();
 			}
 			cursor.close();
@@ -281,6 +286,7 @@ public class DataSource {
 			
 			cursor.moveToFirst();
 			Task task = cursorToTask(cursor);
+			task.setCurrentGoal(getCurrentGoalForTask(task.getID()));
 			cursor.close();
 			
 			return task;

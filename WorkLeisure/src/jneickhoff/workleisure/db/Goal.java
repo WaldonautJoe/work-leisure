@@ -36,6 +36,59 @@ public class Goal {
 		this.claimDateList = new ArrayList<Calendar>(claimDateList);
 	}
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Float.floatToIntBits(bountyProgress);
+		result = prime * result + Float.floatToIntBits(bountyTarget);
+		result = prime * result
+				+ ((claimDateList == null) ? 0 : claimDateList.hashCode());
+		result = prime * result + ((dateEnd == null) ? 0 : dateEnd.hashCode());
+		result = prime * result
+				+ ((dateStart == null) ? 0 : dateStart.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + (int) (taskID ^ (taskID >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Goal other = (Goal) obj;
+		if (Float.floatToIntBits(bountyProgress) != Float
+				.floatToIntBits(other.bountyProgress))
+			return false;
+		if (Float.floatToIntBits(bountyTarget) != Float
+				.floatToIntBits(other.bountyTarget))
+			return false;
+		if (claimDateList == null) {
+			if (other.claimDateList != null)
+				return false;
+		} else if (!claimDateList.equals(other.claimDateList))
+			return false;
+		if (dateEnd == null) {
+			if (other.dateEnd != null)
+				return false;
+		} else if (!dateEnd.equals(other.dateEnd))
+			return false;
+		if (dateStart == null) {
+			if (other.dateStart != null)
+				return false;
+		} else if (!dateStart.equals(other.dateStart))
+			return false;
+		if (id != other.id)
+			return false;
+		if (taskID != other.taskID)
+			return false;
+		return true;
+	}
+
 	public void addBountyProgress(float bounty) {
 		bountyProgress += bounty;
 	}

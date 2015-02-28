@@ -39,7 +39,7 @@ public class TaskDetailActivity extends Activity
 	private final static int REQ_VIEW_GOALS = 30;
 	
 	private Task task;
-	private Goal currentGoal;
+//	private Goal currentGoal;
 	private DateFormat dateFormat;
 	private DataSource dataSource;
 	
@@ -75,7 +75,6 @@ public class TaskDetailActivity extends Activity
 		dataSource = new DataSource(this);
 		dataSource.open();
 		task = dataSource.getTask(id);
-		currentGoal = null;
 		
 		dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
 		
@@ -186,7 +185,6 @@ public class TaskDetailActivity extends Activity
 				}
 			}
 			else if(requestCode == REQ_VIEW_GOALS) {
-				//TODO update current goals
 				dataSource.open();
 				updateCurrentGoal();
 				dataSource.close();
@@ -354,13 +352,13 @@ public class TaskDetailActivity extends Activity
 			bundle.putFloat(ClaimConfirmDialogFragment.FLOAT_BOUNTY, task.getBounty());
 			bundle.putString(ClaimConfirmDialogFragment.STRING_TASKTYPE, task.getType());
 			bundle.putBoolean(ClaimConfirmDialogFragment.BOOLEAN_ISDUE, task.isDue());
-			if(currentGoal == null)
+			if(task.getCurrentGoal() == null)
 				bundle.putBoolean(ClaimConfirmDialogFragment.BOOLEAN_ISCURRENTGOAL, false);
 			else
 			{
 				bundle.putBoolean(ClaimConfirmDialogFragment.BOOLEAN_ISCURRENTGOAL, true);
-				bundle.putFloat(ClaimConfirmDialogFragment.FLOAT_CURRENTGOALPROGRESS, currentGoal.getBountyProgress());
-				bundle.putFloat(ClaimConfirmDialogFragment.FLOAT_CURRENTGOALTARGET, currentGoal.getBountyTarget());
+				bundle.putFloat(ClaimConfirmDialogFragment.FLOAT_CURRENTGOALPROGRESS, task.getCurrentGoal().getBountyProgress());
+				bundle.putFloat(ClaimConfirmDialogFragment.FLOAT_CURRENTGOALTARGET, task.getCurrentGoal().getBountyTarget());
 			}
 			
 			DialogFragment dialog = new ClaimConfirmDialogFragment();
@@ -449,12 +447,14 @@ public class TaskDetailActivity extends Activity
 	}
 	
 	/**
-	 * updates the current goal and its display \n
+	 * updates the current goal and its display <br/>
 	 * dataSource must be open
 	 */
 	private void updateCurrentGoal() {
-		currentGoal = dataSource.getCurrentGoalForTask(task.getID());
-		if(currentGoal == null) {
+		Goal currentGoal = dataSource.getCurrentGoalForTask(task.getID());
+		task.setCurrentGoal(currentGoal);
+		
+		if(task.getCurrentGoal() == null) {
 			lytCurrentGoal.setVisibility(View.GONE);
 		}
 		else {

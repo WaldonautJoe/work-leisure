@@ -349,7 +349,7 @@ public class EditTaskActivity extends Activity
 		case EDIT_OLD:
 			Task newTask = new Task(oldTask.getID(), taskName, taskType, taskDesc, taskBounty, 
 					taskStockType, taskStockNum, oldTask.getTimesClaimed(), taskIsArchived, 
-					taskImportance, oldTask.getDateUpdated(), taskIsDue, taskDueDate);
+					taskImportance, oldTask.getDateUpdated(), taskIsDue, taskDueDate, oldTask.getCurrentGoal());
 			
 			if(newTask.equals(oldTask)) {
 				Toast.makeText(this, "No changes made", Toast.LENGTH_SHORT).show();

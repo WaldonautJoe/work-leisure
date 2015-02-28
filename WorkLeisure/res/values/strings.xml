@@ -118,5 +118,6 @@
     <string name="no_goal_set">No goals are set</string>
     <string name="forward_slash">"/"</string>
     <string name="goalsDueSoonHeader">Some goals are due soon!</string>
+    <string name="goal">Goal</string>
 
 </resources>

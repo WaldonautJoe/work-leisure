@@ -24,6 +24,7 @@ public class Task {
 	private Date dateUpdated;
 	private boolean isDue;
 	private Date dateDue;
+	private Goal currentGoal;
 	
 	public final static int COMPARE_IMPORTANCE = 0;
 	public final static int COMPARE_ALPHA = 1;
@@ -36,7 +37,7 @@ public class Task {
 	
 	public Task(long id, String name, String type, String desc, float bounty, 
 			String stockType, long stockNumber, long timesClaimed, boolean isArchived, 
-			String importance, Date dateUpdated, boolean isDue, Date dateDue) {
+			String importance, Date dateUpdated, boolean isDue, Date dateDue, Goal currentGoal) {
 		this.id = id;
 		this.name = name;
 		if(type.equals(TYPE_WORK) || type.equals(TYPE_LEISURE))
@@ -59,13 +60,16 @@ public class Task {
 		this.dateUpdated = dateUpdated;
 		this.isDue = isDue;
 		this.dateDue = dateDue;
+		this.currentGoal = currentGoal;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + Float.floatToIntBits(bounty);
+		result = prime * result
+				+ ((currentGoal == null) ? 0 : currentGoal.hashCode());
 		result = prime * result + ((dateDue == null) ? 0 : dateDue.hashCode());
 		result = prime * result
 				+ ((dateUpdated == null) ? 0 : dateUpdated.hashCode());
@@ -94,6 +98,11 @@ public class Task {
 			return false;
 		Task other = (Task) obj;
 		if (Float.floatToIntBits(bounty) != Float.floatToIntBits(other.bounty))
+			return false;
+		if (currentGoal == null) {
+			if (other.currentGoal != null)
+				return false;
+		} else if (!currentGoal.equals(other.currentGoal))
 			return false;
 		if (dateDue == null) {
 			if (other.dateDue != null)
@@ -235,7 +244,7 @@ public class Task {
 
 				@Override
 				public int compare(Task lhs, Task rhs) {
-					//Importance, is due, due date, updated, name
+					//Importance, is due, due date, has goal, goal end date, updated, name
 					int lhsImp, rhsImp;
 					if(lhs.getImportance().equals(Task.IMPORTANCE_HIGH))
 						lhsImp = 0;
@@ -258,6 +267,15 @@ public class Task {
 						int intCmp = lhs.getDateDue().compareTo(rhs.getDateDue());
 						if(intCmp != 0)
 							return intCmp;
+					}
+					else if(lhs.getCurrentGoal() != null && rhs.getCurrentGoal() == null)
+						return -1;
+					else if(lhs.getCurrentGoal() == null && rhs.getCurrentGoal() != null)
+						return 1;
+					else if(lhs.getCurrentGoal() != null && rhs.getCurrentGoal() != null) {
+						int intCmpDateEnd = lhs.getCurrentGoal().getDateEnd().compareTo(rhs.getCurrentGoal().getDateEnd());
+						if(intCmpDateEnd != 0)
+							return intCmpDateEnd;
 					}
 					int intCmp = lhs.getDateUpdated().compareTo(rhs.getDateUpdated()); 
 					if(intCmp != 0)
@@ -469,6 +487,14 @@ public class Task {
 	 */
 	public void setDateDue(Date dateDue) {
 		this.dateDue = dateDue;
+	}
+	
+	public Goal getCurrentGoal() {
+		return currentGoal;
+	}
+	
+	public void setCurrentGoal(Goal currentGoal) {
+		this.currentGoal = currentGoal;
 	}
 	
 }
