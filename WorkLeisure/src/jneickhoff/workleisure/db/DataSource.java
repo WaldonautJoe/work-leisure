@@ -716,11 +716,25 @@ public class DataSource {
 		}
 		
 		public List<Goal> getAllCurrentGoals() {
+			List<Goal> goalList = getAllGoalsEndingBetween(Calendar.getInstance(), null);
+			
+			return goalList;
+		}
+		
+		public List<Goal> getAllGoalsEndingBetween(Calendar afterThisDate, Calendar beforeThisDate) {
 			List<Goal> goalList = new ArrayList<Goal>();
-			long currentDate = Calendar.getInstance().getTimeInMillis();
+			
+			String selection = "";
+			if(afterThisDate != null)
+				selection += MySQLiteHelper.COL_GOAL_DATE_END + " > " + afterThisDate.getTimeInMillis();
+			if(afterThisDate != null && beforeThisDate != null)
+				selection += " AND ";
+			if(beforeThisDate != null)
+				selection += MySQLiteHelper.COL_GOAL_DATE_END + " < " + beforeThisDate.getTimeInMillis();
+			
 			
 			Cursor cursor = database.query(MySQLiteHelper.TAB_GOAL, goalColumns, 
-					MySQLiteHelper.COL_GOAL_DATE_END + " > " + currentDate, null, null, null, 
+					selection, null, null, null, 
 					MySQLiteHelper.COL_GOAL_DATE_END + " desc");
 			cursor.moveToFirst();
 			while(!cursor.isAfterLast()) {

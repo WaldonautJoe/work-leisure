@@ -1,9 +1,11 @@
 package jneickhoff.workleisure;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import jneickhoff.workleisure.db.DataSource;
+import jneickhoff.workleisure.db.Goal;
 import jneickhoff.workleisure.db.Task;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -28,6 +30,8 @@ public class LateUpcomingDialogFragment extends DialogFragment {
 		LinearLayout lytDueLateTasks = (LinearLayout) view.findViewById(R.id.lytDueLateTasks);
 		TextView txtDueSoonHeader = (TextView) view.findViewById(R.id.txtDueSoonHeader);
 		LinearLayout lytDueSoonTasks = (LinearLayout) view.findViewById(R.id.lytDueSoonTasks);
+		TextView txtGoalsDueSoonHeader = (TextView) view.findViewById(R.id.txtGoalsDueSoonHeader);
+		LinearLayout lytDueSoonGoals = (LinearLayout) view.findViewById(R.id.lytDueSoonGoals);
 		
 		Calendar dateToday = Calendar.getInstance();
 		dateToday.set(Calendar.HOUR_OF_DAY, 0);
@@ -47,9 +51,15 @@ public class LateUpcomingDialogFragment extends DialogFragment {
 		ds.open();
 		List<Task> lateTasksDue = ds.getRecentDueTasks(null, dateToday);
 		List<Task> soonTasksDue = ds.getRecentDueTasks(dateToday, dateSoon);
+		List<Goal> soonGoalsDue = ds.getAllGoalsEndingBetween(Calendar.getInstance(), dateSoon);
+		List<String> soonGoalsDueNames = new ArrayList<String>();
+		for(Goal goal : soonGoalsDue) {
+			Task task = ds.getTask(goal.getTaskID());
+			soonGoalsDueNames.add(task.getName());
+		}
 		ds.close();
 		
-		if(lateTasksDue.size() == 0 && soonTasksDue.size() == 0)
+		if(lateTasksDue.size() == 0 && soonTasksDue.size() == 0 && soonGoalsDueNames.size() == 0)
 			this.dismiss();
 		
 		if(lateTasksDue.size() > 0) {
@@ -76,6 +86,19 @@ public class LateUpcomingDialogFragment extends DialogFragment {
 		else {
 			txtDueSoonHeader.setVisibility(View.GONE);
 			lytDueSoonTasks.setVisibility(View.GONE);
+		}
+		
+		if(soonGoalsDueNames.size() > 0) {
+			for(int i = 0; i < soonGoalsDueNames.size(); i++) {
+				TextView txtTask = new TextView(getActivity());
+				txtTask.setText("\u2022 " + soonGoalsDueNames.get(i));
+				
+				lytDueSoonGoals.addView(txtTask);
+			}
+		}
+		else {
+			txtGoalsDueSoonHeader.setVisibility(View.GONE);
+			lytDueSoonGoals.setVisibility(View.GONE);
 		}
 		
 		builder.setView(view)
