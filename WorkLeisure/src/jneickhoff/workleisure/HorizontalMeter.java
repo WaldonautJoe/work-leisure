@@ -186,6 +186,7 @@ public class HorizontalMeter extends View {
 	public void setColors(int color, int overColor) {
 		meterNormPaint.setColor(color);
 		meterOverPaint.setColor(overColor);
+		invalidate();
 	}
 	
 	public void setValue(float value) {
@@ -208,6 +209,7 @@ public class HorizontalMeter extends View {
 		}
 		
 		onDataChanged();
+		invalidate();
 	}
 	
 	@Override

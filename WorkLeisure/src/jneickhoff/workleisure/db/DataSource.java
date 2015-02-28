@@ -692,11 +692,11 @@ public class DataSource {
 		 */
 		public Goal getCurrentGoalForTask(long taskID) {
 			Goal goal;
-			long currentDate = Calendar.getInstance().getTimeInMillis();
+			long currentTime = Calendar.getInstance().getTimeInMillis();
 			
 			Cursor cursor = database.query(MySQLiteHelper.TAB_GOAL, goalColumns, 
 					MySQLiteHelper.COL_TASK_ID + " = " + taskID + " AND " +
-					MySQLiteHelper.COL_GOAL_DATE_END + " > " + currentDate, null, null, null, null);
+					MySQLiteHelper.COL_GOAL_DATE_END + " > " + currentTime, null, null, null, null);
 			
 			cursor.moveToFirst();
 			if(!cursor.isAfterLast()) {

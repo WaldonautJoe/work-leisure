@@ -116,5 +116,6 @@
     <string name="title_activity_current_goal_list">Current Goal List</string>
     <string name="view_current_goals">View current goals</string>
     <string name="no_goal_set">No goals are set</string>
+    <string name="forward_slash">"/"</string>
 
 </resources>

@@ -174,6 +174,7 @@ public class NotchedHorizontalMeter extends View {
 	public void setColors(int progressColor, int notchColor) {
 		meterProgressPaint.setColor(progressColor);
 		meterNotchPaint.setColor(notchColor);
+		invalidate();
 	}
 	
 	public void setValue(long value) {
@@ -195,6 +196,7 @@ public class NotchedHorizontalMeter extends View {
 		}
 		
 		onDataChanged();
+		invalidate();
 	}
 	
 	public void setNotchValues(List<Calendar> notchList) {
@@ -202,6 +204,7 @@ public class NotchedHorizontalMeter extends View {
 		this.notchList.addAll(notchList);
 		
 		onDataChanged();
+		invalidate();
 	}
 	
 	@Override

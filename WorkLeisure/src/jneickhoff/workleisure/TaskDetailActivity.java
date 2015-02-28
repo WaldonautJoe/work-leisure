@@ -39,6 +39,7 @@ public class TaskDetailActivity extends Activity
 	private final static int REQ_VIEW_GOALS = 30;
 	
 	private Task task;
+	private Goal currentGoal;
 	private DateFormat dateFormat;
 	private DataSource dataSource;
 	
@@ -74,6 +75,7 @@ public class TaskDetailActivity extends Activity
 		dataSource = new DataSource(this);
 		dataSource.open();
 		task = dataSource.getTask(id);
+		currentGoal = null;
 		
 		dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
 		
@@ -173,6 +175,7 @@ public class TaskDetailActivity extends Activity
 			else if(requestCode == REQ_VIEW_CLAIMS) {
 				dataSource.open();
 				List<ClaimLog> claims = dataSource.getAllClaimLogs(task.getID(), ClaimSimpleArrayAdapter.MAX_LIST_SIZE);
+				updateCurrentGoal();
 				dataSource.close();
 				adapter.clear();
 				adapter.addAll(claims);
@@ -185,21 +188,8 @@ public class TaskDetailActivity extends Activity
 			else if(requestCode == REQ_VIEW_GOALS) {
 				//TODO update current goals
 				dataSource.open();
-				Goal goal = dataSource.getCurrentGoalForTask(task.getID());
+				updateCurrentGoal();
 				dataSource.close();
-				if(goal == null) {
-					lytCurrentGoal.setVisibility(View.GONE);
-				}
-				else {	
-					metBountyCurrentGoal.setValue(goal.getBountyProgress(), goal.getBountyTarget());
-					metTimeCurrentGoal.setValue(Calendar.getInstance().getTimeInMillis(), 
-							goal.getDateStart().getTimeInMillis(), 
-							goal.getDateEnd().getTimeInMillis());
-					metTimeCurrentGoal.setNotchValues(goal.getClaimDateList());
-					txtCurStartDate.setText(dateFormat.format(goal.getDateStart().getTime()));
-					txtCurEndDate.setText(dateFormat.format(goal.getDateEnd().getTime()));
-					lytCurrentGoal.setVisibility(View.VISIBLE);
-				}
 			}
 		}
 	}
@@ -273,14 +263,7 @@ public class TaskDetailActivity extends Activity
 		if(listLatestClaims.getChildCount() > ClaimSimpleArrayAdapter.MAX_LIST_SIZE)
 			listLatestClaims.removeViewAt(ClaimSimpleArrayAdapter.MAX_LIST_SIZE);
 		
-		Goal goal = dataSource.getCurrentGoalForTask(task.getID());
-		if(goal != null) {
-			metBountyCurrentGoal.setValue(goal.getBountyProgress(), goal.getBountyTarget());
-			metTimeCurrentGoal.setValue(Calendar.getInstance().getTimeInMillis(), 
-					goal.getDateStart().getTimeInMillis(), 
-					goal.getDateEnd().getTimeInMillis());
-			metTimeCurrentGoal.setNotchValues(goal.getClaimDateList());
-		}
+		updateCurrentGoal();
 		
 		Intent intent = new Intent();
 		intent.putExtra(EXTRA_CHANGE_TYPE, CHANGE_EDIT);
@@ -371,6 +354,14 @@ public class TaskDetailActivity extends Activity
 			bundle.putFloat(ClaimConfirmDialogFragment.FLOAT_BOUNTY, task.getBounty());
 			bundle.putString(ClaimConfirmDialogFragment.STRING_TASKTYPE, task.getType());
 			bundle.putBoolean(ClaimConfirmDialogFragment.BOOLEAN_ISDUE, task.isDue());
+			if(currentGoal == null)
+				bundle.putBoolean(ClaimConfirmDialogFragment.BOOLEAN_ISCURRENTGOAL, false);
+			else
+			{
+				bundle.putBoolean(ClaimConfirmDialogFragment.BOOLEAN_ISCURRENTGOAL, true);
+				bundle.putFloat(ClaimConfirmDialogFragment.FLOAT_CURRENTGOALPROGRESS, currentGoal.getBountyProgress());
+				bundle.putFloat(ClaimConfirmDialogFragment.FLOAT_CURRENTGOALTARGET, currentGoal.getBountyTarget());
+			}
 			
 			DialogFragment dialog = new ClaimConfirmDialogFragment();
 			dialog.setArguments(bundle);
@@ -454,18 +445,26 @@ public class TaskDetailActivity extends Activity
 			btnViewAllClaims.setVisibility(View.VISIBLE);
 		}
 		
-		Goal goal = dataSource.getCurrentGoalForTask(task.getID());
-		if(goal == null) {
+		updateCurrentGoal();
+	}
+	
+	/**
+	 * updates the current goal and its display \n
+	 * dataSource must be open
+	 */
+	private void updateCurrentGoal() {
+		currentGoal = dataSource.getCurrentGoalForTask(task.getID());
+		if(currentGoal == null) {
 			lytCurrentGoal.setVisibility(View.GONE);
 		}
 		else {
-			metBountyCurrentGoal.setValue(goal.getBountyProgress(), goal.getBountyTarget());
+			metBountyCurrentGoal.setValue(currentGoal.getBountyProgress(), currentGoal.getBountyTarget());
 			metTimeCurrentGoal.setValue(Calendar.getInstance().getTimeInMillis(), 
-					goal.getDateStart().getTimeInMillis(), 
-					goal.getDateEnd().getTimeInMillis());
-			metTimeCurrentGoal.setNotchValues(goal.getClaimDateList());
-			txtCurStartDate.setText(dateFormat.format(goal.getDateStart().getTime()));
-			txtCurEndDate.setText(dateFormat.format(goal.getDateEnd().getTime()));
+					currentGoal.getDateStart().getTimeInMillis(), 
+					currentGoal.getDateEnd().getTimeInMillis());
+			metTimeCurrentGoal.setNotchValues(currentGoal.getClaimDateList());
+			txtCurStartDate.setText(dateFormat.format(currentGoal.getDateStart().getTime()));
+			txtCurEndDate.setText(dateFormat.format(currentGoal.getDateEnd().getTime()));
 			lytCurrentGoal.setVisibility(View.VISIBLE);
 		}
 	}

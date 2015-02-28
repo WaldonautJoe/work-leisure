@@ -18,6 +18,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -34,11 +35,19 @@ public class ClaimConfirmDialogFragment extends DialogFragment {
 	private String taskType;
 	public final static String BOOLEAN_ISDUE = "key_isdue";
 	private boolean isDue;
+	public final static String BOOLEAN_ISCURRENTGOAL = "key_iscurrentgoal";
+	private boolean isCurrentGoal;
+	public final static String FLOAT_CURRENTGOALPROGRESS = "key_currentgoalprogress";
+	private float currentGoalProgress;
+	public final static String FLOAT_CURRENTGOALTARGET = "key_currentgoaltarget";
+	private float currentGoalTarget;
 	
 	public final static String STRING_TXTNEWBALANCE = "string_txtNewBalance";
 	
 	private ClaimConfirmDialogListener mListener;
 	private TextView txtNewBalance;
+	private RelativeLayout lytCurGoal;
+	private TextView txtNewGoalProgress;
 	private float balance;
 	private EditText editBounty;
 	private EditText editComment;
@@ -64,6 +73,10 @@ public class ClaimConfirmDialogFragment extends DialogFragment {
 		View view = inflater.inflate(R.layout.dialog_claim, null);
 		TextView txtOldBalance = (TextView) view.findViewById(R.id.txtOldBalance);
 		txtNewBalance = (TextView) view.findViewById(R.id.txtNewBalance);
+		lytCurGoal = (RelativeLayout) view.findViewById(R.id.lytCurGoal);
+		TextView txtOldGoalProgress = (TextView) view.findViewById(R.id.txtOldGoalProgress);
+		txtNewGoalProgress = (TextView) view.findViewById(R.id.txtNewGoalProgress);
+		TextView txtGoalTarget = (TextView) view.findViewById(R.id.txtGoalTarget);
 		editBounty = (EditText) view.findViewById(R.id.editBounty);
 		editComment = (EditText) view.findViewById(R.id.editComment);
 		lytRemoveDue = (LinearLayout) view.findViewById(R.id.lytRemoveDue);
@@ -75,6 +88,9 @@ public class ClaimConfirmDialogFragment extends DialogFragment {
 		originalBounty = arguments.getFloat(FLOAT_BOUNTY);
 		taskType = arguments.getString(STRING_TASKTYPE);
 		isDue = arguments.getBoolean(BOOLEAN_ISDUE);
+		isCurrentGoal = arguments.getBoolean(BOOLEAN_ISCURRENTGOAL);
+		currentGoalProgress = arguments.getFloat(FLOAT_CURRENTGOALPROGRESS, 0f);
+		currentGoalTarget = arguments.getFloat(FLOAT_CURRENTGOALTARGET, 0f);
 		
 		if(taskType.equals(Task.TYPE_LEISURE))
 			originalBounty *= -1;
@@ -83,7 +99,17 @@ public class ClaimConfirmDialogFragment extends DialogFragment {
 			lytRemoveDue.setVisibility(View.VISIBLE);
 		
 		txtOldBalance.setText(String.format("%.1f", balance));
+		
+		if(isCurrentGoal) {
+			txtOldGoalProgress.setText(String.format("%.1f", currentGoalProgress));
+			txtGoalTarget.setText(String.format("%.1f", currentGoalTarget));
+		}
+		else {
+			lytCurGoal.setVisibility(View.GONE);
+		}
+		
 		updateNewBalanceDisplay();
+		
 		editBounty.setOnEditorActionListener(new OnEditorActionListener() {
 			
 			@Override
@@ -163,5 +189,8 @@ public class ClaimConfirmDialogFragment extends DialogFragment {
 		}
 		
 		txtNewBalance.setText(String.format("%.1f", balance + bounty));
+		if(isCurrentGoal) {
+			txtNewGoalProgress.setText(String.format("%.1f", currentGoalProgress + bounty));
+		}
 	}
 }
