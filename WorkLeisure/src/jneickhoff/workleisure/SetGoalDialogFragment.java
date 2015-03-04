@@ -119,7 +119,9 @@ public class SetGoalDialogFragment extends DialogFragment {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
 						
-						if(editBountyTarget.getText().length() == 0)
+						String strBounty = editBountyTarget.getText().toString();
+						
+						if(strBounty.equals("") || strBounty.equals("."))
 							bountyTarget = 0;
 						else
 							bountyTarget = Float.valueOf(editBountyTarget.getText().toString());
