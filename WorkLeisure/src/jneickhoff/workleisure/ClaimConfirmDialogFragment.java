@@ -92,9 +92,6 @@ public class ClaimConfirmDialogFragment extends DialogFragment {
 		currentGoalProgress = arguments.getFloat(FLOAT_CURRENTGOALPROGRESS, 0f);
 		currentGoalTarget = arguments.getFloat(FLOAT_CURRENTGOALTARGET, 0f);
 		
-		if(taskType.equals(Task.TYPE_LEISURE))
-			originalBounty *= -1;
-		
 		if(isDue)
 			lytRemoveDue.setVisibility(View.VISIBLE);
 		
@@ -184,11 +181,13 @@ public class ClaimConfirmDialogFragment extends DialogFragment {
 		else {
 			bounty = Float.parseFloat(bountyText);
 			editBounty.setText(String.format("%.1f", bounty)); //correct format of bounty
-			if(taskType.equals(Task.TYPE_LEISURE))
-				bounty *= -1;
 		}
 		
-		txtNewBalance.setText(String.format("%.1f", balance + bounty));
+		if(taskType.equals(Task.TYPE_WORK))
+			txtNewBalance.setText(String.format("%.1f", balance + bounty));
+		else
+			txtNewBalance.setText(String.format("%.1f", balance - bounty));
+		
 		if(isCurrentGoal) {
 			txtNewGoalProgress.setText(String.format("%.1f", currentGoalProgress + bounty));
 		}
