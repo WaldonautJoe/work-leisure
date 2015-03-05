@@ -9,15 +9,22 @@ import jneickhoff.workleisure.db.Goal;
 import jneickhoff.workleisure.db.Task;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.text.format.DateFormat;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class GoalClaimListActivity extends Activity {
 
-	public final static String EXTRA_GOAL_ID = "extra_goal_id";
+	public final static String LONG_GOAL_ID_EXTRA = "long_goal_id_extra";
+	public final static String BOOLEAN_DELETE_OK_EXTRA = "boolean_delete_ok_extra";
 	private Goal goal;
 	
 	@Override
@@ -25,7 +32,7 @@ public class GoalClaimListActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_goal_claim_list);
 		
-		long goalId = getIntent().getExtras().getLong(EXTRA_GOAL_ID);
+		long goalId = getIntent().getExtras().getLong(LONG_GOAL_ID_EXTRA);
 		
 		DataSource ds = new DataSource(this);
 		ds.open();
@@ -80,6 +87,49 @@ public class GoalClaimListActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.goal_claim_list, menu);
 		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()) {
+		case R.id.action_delete:
+			showDeleteGoalDialog();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	private void showDeleteGoalDialog() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(R.string.delete_goal_q)
+			   .setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
+				
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						deleteGoal();
+					}
+				})
+				.setNegativeButton(R.string.cancel, null)
+				.create()
+				.show();
+	}
+	
+	/**
+	 * Set flag for parent activity to delete goal
+	 */
+	private void deleteGoal() {
+		DataSource ds = new DataSource(this);
+		ds.open();
+		ds.deleteGoal(goal);
+		ds.close();
+		
+		Toast.makeText(this, getResources().getString(R.string.goal_discarded), Toast.LENGTH_SHORT).show();
+		
+		Intent i = new Intent();
+		i.putExtra(BOOLEAN_DELETE_OK_EXTRA, true);
+		setResult(RESULT_OK, i);
+		finish();
 	}
 
 }

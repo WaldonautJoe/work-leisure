@@ -44,7 +44,10 @@ public class BountyGoalListActivity extends Activity
 	private Button btnSetBountyGoal;
 	private LinearLayout lytEditButtons;
 	
-	private int positionToDelete;
+	private int selectedPosition;
+	
+	private final static int REQ_VIEWGOALCLAIMS_FROMLIST = 10;
+	private final static int REQ_VIEWGOALCLAIMS_FROMCUR = 20;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +144,30 @@ public class BountyGoalListActivity extends Activity
 		case R.id.btnSetBountyGoal:
 			displaySetNewGoalDialog();
 			break;
+		}
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(resultCode == RESULT_OK) {
+			switch(requestCode){
+			case REQ_VIEWGOALCLAIMS_FROMLIST:
+				if(data.getBooleanExtra(GoalClaimListActivity.BOOLEAN_DELETE_OK_EXTRA, false)) {
+					Goal goal = adapter.getItem(selectedPosition);
+					adapter.remove(goal);
+					adapter.notifyDataSetChanged();
+				}
+				break;
+			case REQ_VIEWGOALCLAIMS_FROMCUR:
+				if(data.getBooleanExtra(GoalClaimListActivity.BOOLEAN_DELETE_OK_EXTRA, false)) {
+					currentGoal = null;
+					lytCurrentGoal.setVisibility(View.GONE);
+					btnSetBountyGoal.setVisibility(View.VISIBLE);
+					lytEditButtons.setVisibility(View.GONE);
+					setResult(RESULT_OK);
+				}
+				break;
+			}
 		}
 	}
 
@@ -270,10 +297,11 @@ public class BountyGoalListActivity extends Activity
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
 				Goal goal = adapter.getItem(position);
+				selectedPosition = position;
 				
 				Intent i = new Intent(BountyGoalListActivity.this, GoalClaimListActivity.class);
-				i.putExtra(GoalClaimListActivity.EXTRA_GOAL_ID, goal.getId());
-				startActivity(i);
+				i.putExtra(GoalClaimListActivity.LONG_GOAL_ID_EXTRA, goal.getId());
+				startActivityForResult(i, REQ_VIEWGOALCLAIMS_FROMLIST);
 			}
 		};
 	}
@@ -284,8 +312,8 @@ public class BountyGoalListActivity extends Activity
 			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(BountyGoalListActivity.this, GoalClaimListActivity.class);
-				i.putExtra(GoalClaimListActivity.EXTRA_GOAL_ID, currentGoal.getId());
-				startActivity(i);
+				i.putExtra(GoalClaimListActivity.LONG_GOAL_ID_EXTRA, currentGoal.getId());
+				startActivityForResult(i, REQ_VIEWGOALCLAIMS_FROMCUR);
 			}
 		};
 	}
@@ -300,7 +328,7 @@ public class BountyGoalListActivity extends Activity
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				positionToDelete = position;
+				selectedPosition = position;
 				
 				getDeleteGoalConfirmDialog().show();
 			}
@@ -329,7 +357,7 @@ public class BountyGoalListActivity extends Activity
 	 * Delete goal in adapter indicated by positionToDelete
 	 */
 	private void deleteSelectedGoal() {
-		Goal goal = adapter.getItem(positionToDelete);
+		Goal goal = adapter.getItem(selectedPosition);
 		DataSource ds = new DataSource(this);
 		ds.open();
 		ds.deleteGoal(goal);
