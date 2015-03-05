@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class BountyGoalListActivity extends Activity
 									implements SetGoalDialogFragment.SetGoalDialogListener {
@@ -179,11 +180,13 @@ public class BountyGoalListActivity extends Activity
 		ds.open();
 		if(isNewGoal) {
 			goal = ds.createGoal(taskID, bountyTarget, startDate, endDate);
+			Toast.makeText(this, getResources().getString(R.string.goal_started), Toast.LENGTH_SHORT).show();
 		}
 		else {
 			goal = new Goal(currentGoal.getId(), currentGoal.getTaskID(), currentGoal.getBountyProgress(), 
 					bountyTarget, startDate, endDate, currentGoal.getClaimDateList()); 
 			ds.updateGoal(goal);
+			Toast.makeText(this, getResources().getString(R.string.goal_updated), Toast.LENGTH_SHORT).show();
 			goal = ds.getGoal(goal.getId()); //updates claim date list
 		}
 		ds.close();

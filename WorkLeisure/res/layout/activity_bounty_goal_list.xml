@@ -137,7 +137,7 @@
         android:layout_height="wrap_content"
     	android:paddingLeft="@dimen/activity_horizontal_margin"
    		android:paddingRight="@dimen/activity_horizontal_margin"
-        android:text="@string/to_discard_tap_goal"
+        android:text="@string/to_view_claims_tap_goal"
         android:textSize="12sp" />
     
     <ListView

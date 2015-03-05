@@ -111,7 +111,7 @@
     <string name="abandon">Abandon</string>
     <string name="abandon_goal_q">"Abandon current goal?"</string>
     <string name="delete_goal_q">"Discard goal?"</string>
-    <string name="to_discard_tap_goal">To discard a goal, tap it</string>
+    <string name="to_view_claims_tap_goal">To view all claims made during goal, tap it</string>
     <string name="goals">Goals</string>
     <string name="title_activity_current_goal_list">Current Goal List</string>
     <string name="view_current_goals">View current goals</string>
@@ -123,5 +123,8 @@
     <string name="end_now_q">"End current goal now?"</string>
     <string name="title_activity_goal_claim_list">Goal Claim List</string>
     <string name="goal_discarded">Goal discarded</string>
+    <string name="goal_started">Goal started</string>
+    <string name="goal_updated">Goal updated</string>
+    <string name="to_view_details_tap">To view task details, tap task name</string>
 
 </resources>
