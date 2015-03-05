@@ -69,6 +69,7 @@ public class GoalClaimListActivity extends Activity {
 		metBountyProgress.setValue(goal.getBountyProgress(), goal.getBountyTarget());
 		metTime.setValue(Calendar.getInstance().getTimeInMillis(), 
 				goal.getDateStart().getTimeInMillis(), goal.getDateEnd().getTimeInMillis());
+		metTime.setNotchValues(goal.getClaimDateList());
 		
 		txtName.setText(goalTask.getName());
 		if(goal.getBountyProgress() >= goal.getBountyTarget())
