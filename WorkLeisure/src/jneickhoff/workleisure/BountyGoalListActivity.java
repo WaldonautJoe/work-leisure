@@ -10,10 +10,10 @@ import jneickhoff.workleisure.db.Task;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -115,15 +115,9 @@ public class BountyGoalListActivity extends Activity
 		ListView goalList = (ListView) findViewById(R.id.listBountyGoals);
 		goalList.setAdapter(adapter);
 		
-		goalList.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				positionToDelete = position;
-				
-				getDeleteGoalConfirmDialog().show();
-			}
-		});
+		goalList.setOnItemClickListener(getViewGoalClaimsClickListener());
+		lytCurrentGoal.setOnClickListener(getCurrentGoalClickListener());
+//		goalList.setOnItemClickListener(getDeleteGoalClickListener());
 	}
 
 	@Override
@@ -267,6 +261,50 @@ public class BountyGoalListActivity extends Activity
 		DialogFragment dialog = new SetGoalDialogFragment();
 		dialog.setArguments(bundle);
 		dialog.show(getFragmentManager(), "SetGoalDialogFragment");
+	}
+	
+	private OnItemClickListener getViewGoalClaimsClickListener() {
+		return new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position,
+					long id) {
+				Goal goal = adapter.getItem(position);
+				
+				Intent i = new Intent(BountyGoalListActivity.this, GoalClaimListActivity.class);
+				i.putExtra(GoalClaimListActivity.EXTRA_GOAL_ID, goal.getId());
+				startActivity(i);
+			}
+		};
+	}
+	
+	private View.OnClickListener getCurrentGoalClickListener() {
+		return new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(BountyGoalListActivity.this, GoalClaimListActivity.class);
+				i.putExtra(GoalClaimListActivity.EXTRA_GOAL_ID, currentGoal.getId());
+				startActivity(i);
+			}
+		};
+	}
+	
+	/**
+	 * Return click listener that displays dialog confirming deletion of selected goal and 
+	 * deletes goal upon confirmation
+	 * @return click listener
+	 */
+	private OnItemClickListener getDeleteGoalClickListener(){
+		return new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				positionToDelete = position;
+				
+				getDeleteGoalConfirmDialog().show();
+			}
+		};
 	}
 	
 	/**

@@ -121,5 +121,6 @@
     <string name="goal">Goal</string>
     <string name="end_now">End now</string>
     <string name="end_now_q">"End current goal now?"</string>
+    <string name="title_activity_goal_claim_list">Goal Claim List</string>
 
 </resources>

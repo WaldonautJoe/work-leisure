@@ -54,6 +54,10 @@
             android:name="jneickhoff.workleisure.CurrentGoalListActivity"
             android:label="@string/title_activity_current_goal_list" >
         </activity>
+        <activity
+            android:name="jneickhoff.workleisure.GoalClaimListActivity"
+            android:label="@string/title_activity_goal_claim_list" >
+        </activity>
     </application>
 
 </manifest>

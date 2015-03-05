@@ -39,7 +39,6 @@ public class TaskDetailActivity extends Activity
 	private final static int REQ_VIEW_GOALS = 30;
 	
 	private Task task;
-//	private Goal currentGoal;
 	private DateFormat dateFormat;
 	private DataSource dataSource;
 	
