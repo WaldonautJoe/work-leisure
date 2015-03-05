@@ -227,17 +227,32 @@ public class HorizontalMeter extends View {
 		int spaceBetween = 5;
 		int meterWidthBackground, meterWidthNorm, meterWidthOver;
 		if(isMaxDisplayed) {
-			meterWidthBackground = (int) ((maxValue - valueNorm) / maxValue * (contentWidth - textSpace * 2 - spaceBetween * 2));
-			meterWidthNorm = (int) ((valueNorm / maxValue) * (contentWidth - textSpace * 2 - spaceBetween * 2));
-			meterWidthOver = (int) ((valueOver / maxValue) * (contentWidth - textSpace * 2 - spaceBetween * 2));
+			if(maxValue == 0) {
+				meterWidthBackground = 0;
+				meterWidthNorm = contentWidth - textSpace * 2 - spaceBetween * 2;
+				meterWidthOver = contentWidth - textSpace * 2 - spaceBetween * 2;
+			}
+			else {
+				
+				meterWidthBackground = (int) ((maxValue - valueNorm) / maxValue * (contentWidth - textSpace * 2 - spaceBetween * 2));
+				meterWidthNorm = (int) ((valueNorm / maxValue) * (contentWidth - textSpace * 2 - spaceBetween * 2));
+				meterWidthOver = (int) ((valueOver / maxValue) * (contentWidth - textSpace * 2 - spaceBetween * 2));
+			}
 			
 			textPos2 = new Point(getPaddingLeft() + textSpace * 2 + spaceBetween * 2 + meterWidthNorm + meterWidthBackground - (int) textPaint.measureText(String.format("%.1f", maxValue)),
 								 getPaddingTop() + (contentHeight + textSize)/2 - 3);
 		}
 		else {
-			meterWidthBackground = (int) ((maxValue - valueNorm) / maxValue * (contentWidth - textSpace - spaceBetween));
-			meterWidthNorm = (int) ((valueNorm / maxValue) * (contentWidth - textSpace - spaceBetween));
-			meterWidthOver = (int) ((valueOver / maxValue) * (contentWidth - textSpace - spaceBetween));
+			if(maxValue == 0) {
+				meterWidthBackground = 0;
+				meterWidthNorm = contentWidth - textSpace - spaceBetween;
+				meterWidthOver = contentWidth - textSpace - spaceBetween;
+			}
+			else {
+				meterWidthBackground = (int) ((maxValue - valueNorm) / maxValue * (contentWidth - textSpace - spaceBetween));
+				meterWidthNorm = (int) ((valueNorm / maxValue) * (contentWidth - textSpace - spaceBetween));
+				meterWidthOver = (int) ((valueOver / maxValue) * (contentWidth - textSpace - spaceBetween));
+			}
 		}		
 		
 		textPos = new Point(getPaddingLeft() + textSpace - (int) textPaint.measureText(String.format("%.1f",value)), 
