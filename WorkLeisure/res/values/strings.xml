@@ -128,5 +128,7 @@
     <string name="to_view_details_tap">To view task details, tap task name</string>
     <string name="dif_bounty1">"Different bounty ("</string>
     <string name="dif_bounty2">" default)"</string>
+    <string name="action_reset_balance">Reset balance</string>
+    <string name="reset_balance_q">"Reset balance to 0.0?"</string>
 
 </resources>

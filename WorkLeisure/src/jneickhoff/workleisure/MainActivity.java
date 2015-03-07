@@ -8,11 +8,14 @@ import jneickhoff.workleisure.db.DataSource;
 import jneickhoff.workleisure.db.Task;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -64,6 +67,20 @@ public class MainActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()){
+		case R.id.action_reset_balance:
+			confirmResetBalance();
+			return true;
+		case R.id.action_settings:
+			
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);	
+		}
 	}
 	
 	/**
@@ -221,6 +238,32 @@ public class MainActivity extends Activity {
 	public void displayLateUpcomingTasksDialog() {
 		DialogFragment dialog = new LateUpcomingDialogFragment();
 		dialog.show(getFragmentManager(), "LateUpcomingDialogFragment");
+	}
+	
+	private void confirmResetBalance() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(R.string.reset_balance_q)
+			   .setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
+				
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						resetBalance();
+					}
+				})
+			   .setNegativeButton(R.string.cancel, null)
+			   .create()
+			   .show();
+	}
+	
+	private void resetBalance() {
+		SharedPreferences sharedPref = 
+				this.getSharedPreferences(getString(R.string.user_balances), Context.MODE_PRIVATE);
+		
+		sharedPref.edit()
+				  .putFloat(getString(R.string.default_balance), 0.0f)
+				  .commit();
+		
+		updateBalanceDisplay();
 	}
 
 }
