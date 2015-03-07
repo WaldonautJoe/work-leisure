@@ -139,10 +139,14 @@ public class EditTaskActivity extends Activity
 		taskType = extras.getString(EXTRA_TASK_TYPE);
 		editType = extras.getInt(EXTRA_EDIT_TYPE);
 		
-		if(taskType.equals(Task.TYPE_WORK))
+		if(taskType.equals(Task.TYPE_WORK)) {
 			lytHeader.setBackgroundColor(getResources().getColor(R.color.blue));
-		else
+			editTaskName.setHintTextColor(getResources().getColor(R.color.blue_light3));
+		}
+		else {
 			lytHeader.setBackgroundColor(getResources().getColor(R.color.red));
+			editTaskName.setHintTextColor(getResources().getColor(R.color.red_light3));
+		}
 		
 		if(editType == ADD_NEW) {
 			taskDueDate = new Date();

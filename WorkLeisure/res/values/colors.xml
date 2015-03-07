@@ -3,9 +3,11 @@
     <color name="blue">#33B5E5</color>
     <color name="blue_light">#59C3EB</color>
     <color name="blue_light2">#87D4F2</color>
+    <color name="blue_light3">#B7E7FA</color>
     <color name="red">#F53385</color>
     <color name="red_light">#F85C9E</color>
     <color name="red_light2">#FA8CBA</color>
+    <color name="red_light3">#FDBDD8</color>
  <!-- FF1975 E533B5 FF4444 FF19FF -->
  	<color name="purple">#AA66CC</color>
  	<color name="green">#99CC00</color>
