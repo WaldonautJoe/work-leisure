@@ -34,6 +34,9 @@ public class BountyGoalListActivity extends Activity
 	private List<Goal> goals;
 	private Goal currentGoal;
 	private BountyGoalHistoryArrayAdapter adapter;
+	private boolean isCurrentGoalUpdated;
+	private static final String KEY_IS_CURRENT_GOAL_UPDATED = "key_is_current_goal_updated";
+	public static final String EXTRA_IS_CURRENT_GOAL_UPDATED = "extra_is_current_goal_updated";
 	
 	private LinearLayout lytHeader;
 	private TextView txtName;
@@ -122,6 +125,31 @@ public class BountyGoalListActivity extends Activity
 		goalList.setOnItemClickListener(getViewGoalClaimsClickListener());
 		lytCurrentGoal.setOnClickListener(getCurrentGoalClickListener());
 //		goalList.setOnItemClickListener(getDeleteGoalClickListener());
+		
+		if(savedInstanceState != null) {
+			isCurrentGoalUpdated = savedInstanceState.getBoolean(KEY_IS_CURRENT_GOAL_UPDATED);
+		}
+		else {
+			isCurrentGoalUpdated = false;
+		}
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+		
+		savedInstanceState.putBoolean(KEY_IS_CURRENT_GOAL_UPDATED, isCurrentGoalUpdated);
+	}
+	
+	@Override
+	public void finish() {
+		if(isCurrentGoalUpdated) {
+			Intent data = new Intent();
+			data.putExtra(EXTRA_IS_CURRENT_GOAL_UPDATED, isCurrentGoalUpdated);
+			setResult(RESULT_OK, data);
+		}
+		
+		super.finish();
 	}
 
 	@Override
@@ -165,7 +193,8 @@ public class BountyGoalListActivity extends Activity
 					lytCurrentGoal.setVisibility(View.GONE);
 					btnSetBountyGoal.setVisibility(View.VISIBLE);
 					lytEditButtons.setVisibility(View.GONE);
-					setResult(RESULT_OK);
+
+					isCurrentGoalUpdated = true;
 				}
 				break;
 			}
@@ -214,7 +243,7 @@ public class BountyGoalListActivity extends Activity
 			adapter.notifyDataSetChanged();
 		}
 		
-		setResult(RESULT_OK);
+		isCurrentGoalUpdated = true;
 	}
 	
 	/**
@@ -235,7 +264,7 @@ public class BountyGoalListActivity extends Activity
 						lytCurrentGoal.setVisibility(View.GONE);
 						btnSetBountyGoal.setVisibility(View.VISIBLE);
 						lytEditButtons.setVisibility(View.GONE);
-						setResult(RESULT_OK);
+						isCurrentGoalUpdated = true;
 					}
 				})
 				.setNegativeButton(R.string.cancel, null)
@@ -276,7 +305,7 @@ public class BountyGoalListActivity extends Activity
 						lytCurrentGoal.setVisibility(View.GONE);
 						btnSetBountyGoal.setVisibility(View.VISIBLE);
 						lytEditButtons.setVisibility(View.GONE);
-						setResult(RESULT_OK);
+						isCurrentGoalUpdated = true;
 					}
 				})
 				.setNegativeButton(R.string.cancel, null)

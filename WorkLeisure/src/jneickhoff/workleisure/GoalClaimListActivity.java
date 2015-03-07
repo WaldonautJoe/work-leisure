@@ -117,7 +117,7 @@ public class GoalClaimListActivity extends Activity {
 	}
 	
 	/**
-	 * Set flag for parent activity to delete goal
+	 * Set flag for parent activity to remove references to goal
 	 */
 	private void deleteGoal() {
 		DataSource ds = new DataSource(this);

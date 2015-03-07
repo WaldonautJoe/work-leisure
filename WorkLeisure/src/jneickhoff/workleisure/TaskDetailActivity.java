@@ -28,19 +28,21 @@ public class TaskDetailActivity extends Activity
 								implements ClaimConfirmDialogFragment.ClaimConfirmDialogListener,
 										   TaskDeleteDialogFragment.TaskDeleteDialogListener {
 
-	public final static String EXTRA_TASK_ID = "extra_task_id";
+	public static final String EXTRA_TASK_ID = "extra_task_id";
 	
 	public static final String EXTRA_CHANGE_TYPE = "extra_change_type";
 	public static final int CHANGE_EDIT = 10;
 	public static final int CHANGE_DELETE = 20;
 	
-	private final static int REQ_EDIT = 10;
-	private final static int REQ_VIEW_CLAIMS = 20;
-	private final static int REQ_VIEW_GOALS = 30;
+	private static final int REQ_EDIT = 10;
+	private static final int REQ_VIEW_CLAIMS = 20;
+	private static final int REQ_VIEW_GOALS = 30;
 	
 	private Task task;
 	private DateFormat dateFormat;
 	private DataSource dataSource;
+	private boolean isTaskEdited;
+	private static final String KEY_IS_TASK_EDITED = "is_task_edited";
 	
 	private TextView txtName;
 	private TextView txtDateUpdated;
@@ -58,7 +60,6 @@ public class TaskDetailActivity extends Activity
 	private NotchedHorizontalMeter metTimeCurrentGoal;
 	private TextView txtCurStartDate;
 	private TextView txtCurEndDate;
-	
 	private LinearLayout listLatestClaims;
 	private TextView txtTimesClaimed;
 	private Button btnViewAllClaims;
@@ -121,6 +122,14 @@ public class TaskDetailActivity extends Activity
 			View view = adapter.getView(i, null, null);
 			listLatestClaims.addView(view);
 		}
+		
+		if(savedInstanceState != null) {
+			isTaskEdited = savedInstanceState.getBoolean(KEY_IS_TASK_EDITED);
+		}
+		else
+		{
+			isTaskEdited = false;
+		}
 	}
 	
 	@Override
@@ -133,6 +142,24 @@ public class TaskDetailActivity extends Activity
 	public void onPause() {
 		dataSource.close();
 		super.onPause();
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+		
+		savedInstanceState.putBoolean(KEY_IS_TASK_EDITED, isTaskEdited);
+	}
+	
+	@Override
+	public void finish(){
+		if(isTaskEdited) {
+			Intent intent = new Intent();
+			intent.putExtra(EXTRA_CHANGE_TYPE, CHANGE_EDIT);
+			setResult(RESULT_OK, intent);
+		}
+		
+		super.finish();
 	}
 
 	@Override
@@ -166,27 +193,39 @@ public class TaskDetailActivity extends Activity
 				updateDisplay();
 				dataSource.close();
 				
-				Intent intent = new Intent();
-				intent.putExtra(EXTRA_CHANGE_TYPE, CHANGE_EDIT);
-				setResult(RESULT_OK, intent);
+				isTaskEdited = true;
 			}
 			else if(requestCode == REQ_VIEW_CLAIMS) {
-				dataSource.open();
-				List<ClaimLog> claims = dataSource.getAllClaimLogs(task.getID(), ClaimSimpleArrayAdapter.MAX_LIST_SIZE);
-				updateCurrentGoal();
-				dataSource.close();
-				adapter.clear();
-				adapter.addAll(claims);
-				listLatestClaims.removeAllViews();
-				for(int i = 0; i < adapter.getCount(); i++) {
-					View view = adapter.getView(i, null, null);
-					listLatestClaims.addView(view);
+				boolean isClaimDeleted = data.getBooleanExtra(ClaimListActivity.EXTRA_IS_CLAIM_DELETED, false);
+				
+				if(isClaimDeleted) {
+					dataSource.open();
+					List<ClaimLog> claims = dataSource.getAllClaimLogs(task.getID(), ClaimSimpleArrayAdapter.MAX_LIST_SIZE);
+					task = dataSource.getTask(task.getID()); //update times claimed
+					updateCurrentGoal();
+					dataSource.close();
+					
+					adapter.clear();
+					adapter.addAll(claims);
+					listLatestClaims.removeAllViews();
+					for(int i = 0; i < adapter.getCount(); i++) {
+						View view = adapter.getView(i, null, null);
+						listLatestClaims.addView(view);
+					}
+					
+					txtTimesClaimed.setText(task.getTimesClaimed() + " " + getResources().getString(R.string.total_claims));
+					if(task.getTimesClaimed() == 0) {
+						btnViewAllClaims.setVisibility(View.GONE);
+					}
 				}
 			}
 			else if(requestCode == REQ_VIEW_GOALS) {
-				dataSource.open();
-				updateCurrentGoal();
-				dataSource.close();
+				boolean isCurrentGoalUpdated = data.getBooleanExtra(BountyGoalListActivity.EXTRA_IS_CURRENT_GOAL_UPDATED, false);
+				if(isCurrentGoalUpdated) {
+					dataSource.open();
+					updateCurrentGoal();
+					dataSource.close();
+				}
 			}
 		}
 	}
@@ -262,9 +301,7 @@ public class TaskDetailActivity extends Activity
 		
 		updateCurrentGoal();
 		
-		Intent intent = new Intent();
-		intent.putExtra(EXTRA_CHANGE_TYPE, CHANGE_EDIT);
-		setResult(RESULT_OK, intent);
+		isTaskEdited = true;
 		
 		Toast.makeText(this, task.getName() + " " + getResources().getString(R.string.claimed), Toast.LENGTH_SHORT).show();
 	}
@@ -324,9 +361,7 @@ public class TaskDetailActivity extends Activity
 			dataSource.updateTask(task);
 			updateDisplay();
 			
-			Intent intent = new Intent();
-			intent.putExtra(EXTRA_CHANGE_TYPE, CHANGE_EDIT);
-			setResult(RESULT_OK, intent);
+			isTaskEdited = true;
 			break;
 			
 		case R.id.btnDueTomorrow:
@@ -341,9 +376,7 @@ public class TaskDetailActivity extends Activity
 			dataSource.updateTask(task);
 			updateDisplay();
 			
-			Intent intent2 = new Intent();
-			intent2.putExtra(EXTRA_CHANGE_TYPE, CHANGE_EDIT);
-			setResult(RESULT_OK, intent2);
+			isTaskEdited = true;
 			break;
 			
 		case R.id.btnClaimTask:
