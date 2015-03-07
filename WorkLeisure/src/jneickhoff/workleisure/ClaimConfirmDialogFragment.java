@@ -91,6 +91,9 @@ public class ClaimConfirmDialogFragment extends DialogFragment {
 		isCurrentGoal = arguments.getBoolean(BOOLEAN_ISCURRENTGOAL);
 		currentGoalProgress = arguments.getFloat(FLOAT_CURRENTGOALPROGRESS, 0f);
 		currentGoalTarget = arguments.getFloat(FLOAT_CURRENTGOALTARGET, 0f);
+		editBounty.setHint(getResources().getString(R.string.dif_bounty1) 
+				+ String.format("%.1f", originalBounty) 
+				+ getResources().getString(R.string.dif_bounty2));
 		
 		if(isDue)
 			lytRemoveDue.setVisibility(View.VISIBLE);
