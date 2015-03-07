@@ -73,7 +73,12 @@ public class SetGoalDialogFragment extends DialogFragment {
 			bountyTarget = 0;
 			startDate = Calendar.getInstance();
 			endDate = Calendar.getInstance();
+			endDate.set(Calendar.HOUR_OF_DAY, 0);
+			endDate.set(Calendar.MINUTE, 0);
+			endDate.set(Calendar.SECOND, 0);
+			endDate.set(Calendar.MILLISECOND, 0);
 			endDate.add(Calendar.DATE, 7);
+			endDate.add(Calendar.MILLISECOND, -1);
 		}
 		else {
 			bountyTarget = arguments.getFloat(FLOAT_BOUNTY_TARGET);
@@ -167,7 +172,8 @@ public class SetGoalDialogFragment extends DialogFragment {
 		public void onDateSet(DatePicker view, int year, int monthOfYear,
 				int dayOfMonth) {
 			endDate.clear();
-			endDate.set(year, monthOfYear, dayOfMonth);
+			endDate.set(year, monthOfYear, dayOfMonth + 1);
+			endDate.add(Calendar.MILLISECOND, -1);
 			
 			txtEndDate.setText(dateFormat.format(endDate.getTime()));
 		}
