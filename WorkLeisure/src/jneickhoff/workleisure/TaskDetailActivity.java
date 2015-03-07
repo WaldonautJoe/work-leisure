@@ -225,6 +225,7 @@ public class TaskDetailActivity extends Activity
 					dataSource.open();
 					updateCurrentGoal();
 					dataSource.close();
+					isTaskEdited = true;
 				}
 			}
 		}
