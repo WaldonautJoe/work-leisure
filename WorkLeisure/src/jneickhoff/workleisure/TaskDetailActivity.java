@@ -198,7 +198,7 @@ public class TaskDetailActivity extends Activity
 				isTaskEdited = true;
 			}
 			else if(requestCode == REQ_VIEW_CLAIMS) {
-				boolean isClaimDeleted = data.getBooleanExtra(ClaimListActivity.EXTRA_IS_CLAIM_DELETED, false);
+				boolean isClaimDeleted = data.getBooleanExtra(ClaimListActivity.IS_CLAIM_DELETED_EXTRA, false);
 				
 				if(isClaimDeleted) {
 					dataSource.open();

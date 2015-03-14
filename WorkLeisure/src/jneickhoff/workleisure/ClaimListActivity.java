@@ -2,14 +2,14 @@ package jneickhoff.workleisure;
 
 import java.util.List;
 
-import jneickhoff.workleisure.ClaimDeleteDialogFragment.ClaimDeleteDialogListener;
 import jneickhoff.workleisure.db.ClaimLog;
 import jneickhoff.workleisure.db.DataSource;
 import jneickhoff.workleisure.db.Task;
 import android.os.Bundle;
 import android.app.Activity;
-import android.app.DialogFragment;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.Menu;
@@ -21,8 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ClaimListActivity extends Activity
-  							   implements ClaimDeleteDialogListener{
+public class ClaimListActivity extends Activity {
 
 	public static final String EXTRA_TASK_ID = "extra_task_id";
 	public static final String EXTRA_TASK_NAME = "extra_task_name";
@@ -30,10 +29,10 @@ public class ClaimListActivity extends Activity
 	
 	private DataSource ds;
 	private ClaimSimpleArrayAdapter adapter;
-	private int selectedPosition;
 	private boolean isClaimDeleted;
-	private static final String KEY_IS_CLAIM_DELETED = "key_is_claim_deleted";
-	public static final String EXTRA_IS_CLAIM_DELETED = "extra_is_claim_deleted";
+	public static final String IS_CLAIM_DELETED_EXTRA = "extra_is_claim_deleted";
+	
+	private static final String IS_CLAIM_DELETED_KEY = "is_claim_deleted_key";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,29 +45,25 @@ public class ClaimListActivity extends Activity
 		String taskType = extras.getString(EXTRA_TASK_TYPE);
 		
 		TextView txtTaskName = (TextView) findViewById(R.id.txtTaskName);
-		txtTaskName.setText(taskName);
+		LinearLayout lytHeader = (LinearLayout) findViewById(R.id.lytHeader);
+		ListView claimList = (ListView) findViewById(R.id.claimList);
 		
-		if(taskType.equals(Task.TYPE_WORK)) {
-			LinearLayout lytHeader = (LinearLayout) findViewById(R.id.lytHeader);
+		txtTaskName.setText(taskName);
+		if(taskType.equals(Task.TYPE_WORK))
 			lytHeader.setBackgroundColor(getResources().getColor(R.color.blue));
-		}
-		else {
-			LinearLayout lytHeader = (LinearLayout) findViewById(R.id.lytHeader);
+		else
 			lytHeader.setBackgroundColor(getResources().getColor(R.color.red));
-		}
 		
 		ds = new DataSource(this);
 		ds.open();
+		
 		List<ClaimLog> list = ds.getAllClaimLogs(taskID, null);
-		
 		adapter = new ClaimSimpleArrayAdapter(this, list);
-		ListView claimList = (ListView) findViewById(R.id.claimList);
 		claimList.setAdapter(adapter);
-		
-		claimList.setOnItemClickListener(GetClaimListener());
+		claimList.setOnItemClickListener(getClaimListener());
 		
 		if(savedInstanceState != null)
-			isClaimDeleted = savedInstanceState.getBoolean(KEY_IS_CLAIM_DELETED);
+			isClaimDeleted = savedInstanceState.getBoolean(IS_CLAIM_DELETED_KEY);
 		else
 			isClaimDeleted = false;
 	}
@@ -96,14 +91,14 @@ public class ClaimListActivity extends Activity
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
 		
-		savedInstanceState.putBoolean(KEY_IS_CLAIM_DELETED, isClaimDeleted);
+		savedInstanceState.putBoolean(IS_CLAIM_DELETED_KEY, isClaimDeleted);
 	}
 	
 	@Override
 	public void finish() {
 		if(isClaimDeleted) {
 			Intent data = new Intent();
-			data.putExtra(EXTRA_IS_CLAIM_DELETED, isClaimDeleted);
+			data.putExtra(IS_CLAIM_DELETED_EXTRA, isClaimDeleted);
 			setResult(RESULT_OK, data);
 		}
 		
@@ -114,22 +109,42 @@ public class ClaimListActivity extends Activity
 	 * Listener that queries user for confirmation when a claim is tapped
 	 * @return listener
 	 */
-	private OnItemClickListener GetClaimListener() {
+	private OnItemClickListener getClaimListener() {
 		return new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
-				DialogFragment dialog = new ClaimDeleteDialogFragment();
-				selectedPosition = position;
-				dialog.show(getFragmentManager(), "ClaimDeleteDialogFragment");
+				confirmClaimDelete(position);
 			}
 		};
 	}
+	
+	/**
+	 * Display dialog to confirm deletion
+	 * @param selectedPosition position of claim to delete within list
+	 */
+	private void confirmClaimDelete(final int selectedPosition) {
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(R.string.claim_delete_confirm)
+			   .setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						deleteClaim(selectedPosition);
+					}
+				})
+			   .setNegativeButton(R.string.cancel, null)
+			   .create()
+			   .show();
+	}
 
-	//from ClaimDeleteDialogListener
-	@Override
-	public void onDialogPositiveClick(DialogFragment dialog) {
+	/**
+	 * Delete claim from list and database
+	 * @param selectedPosition position of claim to delete within list
+	 */
+	private void deleteClaim(int selectedPosition) {
 		ClaimLog cl = adapter.getItem(selectedPosition);
 		Task task = ds.getTask(cl.getTaskID());
 		
