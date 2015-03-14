@@ -1,5 +1,6 @@
 package jneickhoff.workleisure.db;
 
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 
@@ -21,9 +22,9 @@ public class Task {
 	private String importance;
 		public final static String IMPORTANCE_LOW = "L";
 		public final static String IMPORTANCE_HIGH = "H";
-	private Date dateUpdated;
+	private Calendar dateUpdated;
 	private boolean isDue;
-	private Date dateDue;
+	private Calendar dateDue;
 	private Goal currentGoal;
 	
 	public final static int COMPARE_IMPORTANCE = 0;
@@ -37,7 +38,7 @@ public class Task {
 	
 	public Task(long id, String name, String type, String desc, float bounty, 
 			String stockType, long stockNumber, long timesClaimed, boolean isArchived, 
-			String importance, Date dateUpdated, boolean isDue, Date dateDue, Goal currentGoal) {
+			String importance, Calendar dateUpdated, boolean isDue, Calendar dateDue, Goal currentGoal) {
 		this.id = id;
 		this.name = name;
 		if(type.equals(TYPE_WORK) || type.equals(TYPE_LEISURE))
@@ -450,21 +451,21 @@ public class Task {
 	/**
 	 * @return the date updated
 	 */
-	public Date getDateUpdated() {
+	public Calendar getDateUpdated() {
 		return dateUpdated;
 	}
 
 	/**
 	 * @param dateUpdated the update date to set
 	 */
-	public void setDateUpdated(Date dateUpdated) {
+	public void setDateUpdated(Calendar dateUpdated) {
 		this.dateUpdated = dateUpdated;
 	}
 
 	/**
 	 * @return the date due
 	 */
-	public Date getDateDue() {
+	public Calendar getDateDue() {
 		return dateDue;
 	}
 	
@@ -485,7 +486,7 @@ public class Task {
 	/**
 	 * @param dateDue the due date to set
 	 */
-	public void setDateDue(Date dateDue) {
+	public void setDateDue(Calendar dateDue) {
 		this.dateDue = dateDue;
 	}
 	

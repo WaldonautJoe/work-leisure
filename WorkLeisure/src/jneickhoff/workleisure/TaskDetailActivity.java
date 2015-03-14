@@ -253,7 +253,7 @@ public class TaskDetailActivity extends Activity
 			
 			txtStock.setText(String.valueOf(taskStock));
 		}
-		Date currentTime = Calendar.getInstance().getTime();
+		Calendar currentTime = Calendar.getInstance();
 		
 		float bounty;
 		if(newBounty.length() == 0)
@@ -282,13 +282,13 @@ public class TaskDetailActivity extends Activity
 			currentDate.set(Calendar.MINUTE, 0);
 			currentDate.set(Calendar.SECOND, 0);
 			currentDate.set(Calendar.MILLISECOND, 0);
-			dueDifference = task.getDateDue().getTime() - currentDate.getTimeInMillis();
+			dueDifference = task.getDateDue().getTimeInMillis() - currentDate.getTimeInMillis();
 			dueDifference = dueDifference / (1000*60*60*24);
 		}
 		else
 			dueDifference = null;
 				
-		ClaimLog cl = dataSource.createClaimLog(currentTime, task.getID(), task.getType(), comment, 
+		ClaimLog cl = dataSource.createClaimLog(currentTime.getTime(), task.getID(), task.getType(), comment, 
 				bounty, balance, task.getBounty() - bounty, dueDifference);
 		
 		task.setTimesClaimed(1 + task.getTimesClaimed());
@@ -371,7 +371,7 @@ public class TaskDetailActivity extends Activity
 			dateToday.set(Calendar.SECOND, 0);
 			dateToday.set(Calendar.MILLISECOND, 0);
 			task.setDue(true);;
-			task.setDateDue(dateToday.getTime());
+			task.setDateDue(dateToday);
 			dataSource.updateTask(task);
 			updateDisplay();
 			
@@ -386,7 +386,7 @@ public class TaskDetailActivity extends Activity
 			dateTomorrow.set(Calendar.MILLISECOND, 0);
 			dateTomorrow.add(Calendar.DATE, 1);
 			task.setDue(true);
-			task.setDateDue(dateTomorrow.getTime());
+			task.setDateDue(dateTomorrow);
 			dataSource.updateTask(task);
 			updateDisplay();
 			
@@ -436,14 +436,14 @@ public class TaskDetailActivity extends Activity
 	
 	private void updateDisplay() {
 		txtName.setText(task.getName());
-		txtDateUpdated.setText(dateFormat.format(task.getDateUpdated()));
+		txtDateUpdated.setText(dateFormat.format(task.getDateUpdated().getTime()));
 		if(task.isDue()) {
-			txtDateDue.setText(dateFormat.format(task.getDateDue()));
+			txtDateDue.setText(dateFormat.format(task.getDateDue().getTime()));
 			Calendar dateDue = Calendar.getInstance();
-			dateDue.setTime(task.getDateDue());
+			dateDue.setTimeInMillis(task.getDateDue().getTimeInMillis());
 			dateDue.add(Calendar.DATE, 1);
 			Calendar dateBoundary = Calendar.getInstance();
-			dateBoundary.setTime(task.getDateDue());
+			dateBoundary.setTimeInMillis(task.getDateDue().getTimeInMillis());
 			dateBoundary.add(Calendar.DAY_OF_MONTH, -1);
 			if(Calendar.getInstance().after(dateDue)) {
 				txtDateDue.setTextColor(getResources().getColor(R.color.red));

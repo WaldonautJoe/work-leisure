@@ -1,17 +1,15 @@
 package jneickhoff.workleisure;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import jneickhoff.workleisure.db.DataSource;
 import jneickhoff.workleisure.db.Task;
 import android.os.Bundle;
 import android.app.Activity;
-import android.app.DatePickerDialog.OnDateSetListener;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.app.DialogFragment;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,8 +26,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class EditTaskActivity extends Activity
-							  implements OnDateSetListener{
+public class EditTaskActivity extends Activity {
 
 	public static final String EXTRA_EDIT_TYPE = "edit_type";
 	public static final int ADD_NEW = 10;
@@ -62,7 +59,7 @@ public class EditTaskActivity extends Activity
 	private Spinner spnStockType;
 	private EditText editTaskStock;
 	
-	private Date taskDueDate;
+	private Calendar taskDueDate;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,8 +82,7 @@ public class EditTaskActivity extends Activity
 			
 			@Override
 			public void onClick(View v) {
-				DialogFragment newFragment = new DatePickerDialogFragment();
-				newFragment.show(getFragmentManager(), "date_dialog");
+				pickDueDate();
 				
 			}
 		});
@@ -146,8 +142,8 @@ public class EditTaskActivity extends Activity
 		}
 		
 		if(editType == ADD_NEW) {
-			taskDueDate = new Date();
-			txtTaskDueDate.setText(DateFormat.getDateFormat(this).format(new Date()));
+			taskDueDate = Calendar.getInstance();
+			txtTaskDueDate.setText(DateFormat.getDateFormat(this).format(taskDueDate.getTime()));
 			spnTaskImportance.setSelection(1); //set selection to low importance
 			
 			taskIsArchived = extras.getBoolean(EXTRA_TASK_ISARCHIVED);
@@ -173,12 +169,13 @@ public class EditTaskActivity extends Activity
 			
 			if(oldTask.isDue()) {
 				chkTaskDue.setChecked(true);
-				taskDueDate = oldTask.getDateDue();
-				txtTaskDueDate.setText(DateFormat.getDateFormat(this).format(taskDueDate));
+				taskDueDate = Calendar.getInstance();
+				taskDueDate.setTimeInMillis(oldTask.getDateDue().getTimeInMillis());
+				txtTaskDueDate.setText(DateFormat.getDateFormat(this).format(taskDueDate.getTime()));
 			}
 			else {
-				taskDueDate = new Date();
-				txtTaskDueDate.setText(DateFormat.getDateFormat(this).format(taskDueDate));
+				taskDueDate = Calendar.getInstance();
+				txtTaskDueDate.setText(DateFormat.getDateFormat(this).format(taskDueDate.getTime()));
 			}
 			editTaskDesc.setText(oldTask.getDesc());
 			editTaskBounty.setText(String.valueOf(oldTask.getBounty()));
@@ -190,8 +187,8 @@ public class EditTaskActivity extends Activity
 		}
 		
 		if(savedInstanceState != null) {
-			taskDueDate.setTime(savedInstanceState.getLong(LONG_DUE_DATE));
-			txtTaskDueDate.setText(DateFormat.getDateFormat(this).format(taskDueDate));
+			taskDueDate.setTimeInMillis(savedInstanceState.getLong(LONG_DUE_DATE));
+			txtTaskDueDate.setText(DateFormat.getDateFormat(this).format(taskDueDate.getTime()));
 		}
 	}
 
@@ -206,7 +203,7 @@ public class EditTaskActivity extends Activity
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
 	
-		savedInstanceState.putLong(LONG_DUE_DATE, taskDueDate.getTime());
+		savedInstanceState.putLong(LONG_DUE_DATE, taskDueDate.getTimeInMillis());
 	}
 	
 	@Override
@@ -249,14 +246,6 @@ public class EditTaskActivity extends Activity
 			}
 			
 		};
-	}
-	
-	@Override
-	public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-		Calendar calendar = new GregorianCalendar(year, monthOfYear, dayOfMonth);
-		chkTaskDue.setChecked(true);
-		taskDueDate = calendar.getTime();
-		txtTaskDueDate.setText(DateFormat.getDateFormat(this).format(taskDueDate));
 	}
 	
 	@Override
@@ -338,7 +327,7 @@ public class EditTaskActivity extends Activity
 				setResult(RESULT_CANCELED, intent);
 			}
 			else {
-				newTask.setDateUpdated(Calendar.getInstance().getTime());
+				newTask.setDateUpdated(Calendar.getInstance());
 				
 				DataSource dataSource = new DataSource(this);
 				dataSource.open();
@@ -372,6 +361,27 @@ public class EditTaskActivity extends Activity
 			Toast.makeText(this, "Changes abandoned", Toast.LENGTH_SHORT).show();
 		setResult(RESULT_CANCELED);
 		super.finish();
+	}
+	
+	private void pickDueDate() {
+		DatePickerDialog dialog = new DatePickerDialog(this, getDueDateSetListener(), 
+				taskDueDate.get(Calendar.YEAR),
+				taskDueDate.get(Calendar.MONTH),
+				taskDueDate.get(Calendar.DAY_OF_MONTH));
+		dialog.show();
+	}
+	
+	private DatePickerDialog.OnDateSetListener getDueDateSetListener() {
+		
+		return new DatePickerDialog.OnDateSetListener() {
+			
+			@Override
+			public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+				taskDueDate = new GregorianCalendar(year, monthOfYear, dayOfMonth);
+				chkTaskDue.setChecked(true);
+				txtTaskDueDate.setText(DateFormat.getDateFormat(EditTaskActivity.this).format(taskDueDate.getTime()));
+			}
+		};
 	}
 
 }

@@ -28,8 +28,6 @@ public class ClaimRecentArrayAdapter extends ArrayAdapter<ClaimLog>{
 		}
 	}
 	
-//	public final static int MAX_LIST_SIZE = 5;
-	
 	private Context context;
 	private List<ClaimLogExt> values;
 	
@@ -48,8 +46,6 @@ public class ClaimRecentArrayAdapter extends ArrayAdapter<ClaimLog>{
 		ds.close();
 	}
 	
-	//TODO disable or override nonfunctional methods
-	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -63,7 +59,7 @@ public class ClaimRecentArrayAdapter extends ArrayAdapter<ClaimLog>{
 		ClaimLogExt clExt = values.get(position);
 		
 		txtTaskName.setText(clExt.taskName);
-		String strClaimDate = ""; //DateFormat.getDateFormat(context).format(clExt.claimLog.getClaimDate());
+		String strClaimDate = "";
 		if(clExt.claimLog.getDueDifference() == null) {
 			//nothing
 		}

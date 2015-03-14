@@ -49,13 +49,13 @@ public class TaskArrayAdapter extends ArrayAdapter<Task>{
 		else
 			txtTaskCurGoal.setVisibility(View.GONE);
 		if(task.isDue()) {
-			txtTaskDateDue.setText(DateFormat.getDateFormat(context).format(task.getDateDue()));
+			txtTaskDateDue.setText(DateFormat.getDateFormat(context).format(task.getDateDue().getTime()));
 			
 			Calendar dateDue = Calendar.getInstance();
-			dateDue.setTime(task.getDateDue());
+			dateDue.setTimeInMillis(task.getDateDue().getTimeInMillis());
 			dateDue.add(Calendar.DATE, 1);
 			Calendar dateBoundary = Calendar.getInstance();
-			dateBoundary.setTime(task.getDateDue());
+			dateBoundary.setTimeInMillis(task.getDateDue().getTimeInMillis());
 			dateBoundary.add(Calendar.DAY_OF_MONTH, -1);
 			if(Calendar.getInstance().after(dateDue))
 				txtTaskDateDue.setTextColor(res.getColor(R.color.red));

@@ -83,7 +83,7 @@ public class DataSource {
 		 */
 		public Task createTask(String name, String type, String description, float bounty, 
 				String stockType, long stockNumber, long timesClaimed, boolean isArchived,
-				String importance, boolean isDue, Date dateDue) {
+				String importance, boolean isDue, Calendar dateDue) {
 			ContentValues values = new ContentValues();
 			values.put(MySQLiteHelper.COL_TASK_NAME, name);
 			values.put(MySQLiteHelper.COL_TASK_TYPE, type);
@@ -101,7 +101,7 @@ public class DataSource {
 			values.put(MySQLiteHelper.COL_TASK_DATE_UPDATED, c.getTimeInMillis());
 			if(isDue) {
 				values.put(MySQLiteHelper.COL_TASK_IS_DUE, MySQLiteHelper.SQLITE_TRUE);
-				values.put(MySQLiteHelper.COL_TASK_DATE_DUE, dateDue.getTime());
+				values.put(MySQLiteHelper.COL_TASK_DATE_DUE, dateDue.getTimeInMillis());
 			}
 			else {
 				values.put(MySQLiteHelper.COL_TASK_IS_DUE, MySQLiteHelper.SQLITE_FALSE);
@@ -138,10 +138,10 @@ public class DataSource {
 			else
 				values.put(MySQLiteHelper.COL_TASK_IS_ARCHIVED, MySQLiteHelper.SQLITE_FALSE);
 			values.put(MySQLiteHelper.COL_TASK_IMPORTANCE, task.getImportance());
-			values.put(MySQLiteHelper.COL_TASK_DATE_UPDATED, task.getDateUpdated().getTime());
+			values.put(MySQLiteHelper.COL_TASK_DATE_UPDATED, task.getDateUpdated().getTimeInMillis());
 			if(task.isDue()) {
 				values.put(MySQLiteHelper.COL_TASK_IS_DUE, MySQLiteHelper.SQLITE_TRUE);
-				values.put(MySQLiteHelper.COL_TASK_DATE_DUE, task.getDateDue().getTime());
+				values.put(MySQLiteHelper.COL_TASK_DATE_DUE, task.getDateDue().getTimeInMillis());
 			}
 			else {
 				values.put(MySQLiteHelper.COL_TASK_IS_DUE, MySQLiteHelper.SQLITE_FALSE);
@@ -307,10 +307,14 @@ public class DataSource {
 			else
 				task.setArchived(false);
 			task.setImportance(cursor.getString(9));
-			task.setDateUpdated(new Date(cursor.getLong(10)));
+			Calendar dateUpdated = Calendar.getInstance();
+			dateUpdated.setTimeInMillis(cursor.getLong(10));
+			task.setDateUpdated(dateUpdated);
 			if(cursor.getLong(11) == MySQLiteHelper.SQLITE_TRUE) {
 				task.setDue(true);
-				task.setDateDue(new Date(cursor.getLong(12)));
+				Calendar dateDue = Calendar.getInstance();
+				dateDue.setTimeInMillis(cursor.getLong(12));
+				task.setDateDue(dateDue);
 			}
 			else {
 				task.setDue(false);

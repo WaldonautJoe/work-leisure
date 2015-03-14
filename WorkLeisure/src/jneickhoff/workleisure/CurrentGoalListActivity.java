@@ -72,6 +72,9 @@ public class CurrentGoalListActivity extends Activity {
 			txtNoGoals.setVisibility(View.GONE);
 	}
 	
+	/**
+	 * @return click listener that starts task detail for task associated with goal clicked
+	 */
 	private OnItemClickListener getGoalClickListener() {
 		return new OnItemClickListener() {
 

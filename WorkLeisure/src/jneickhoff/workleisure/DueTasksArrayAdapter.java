@@ -53,7 +53,7 @@ public class DueTasksArrayAdapter extends ArrayAdapter<Task>{
 			txtTaskImportance.setBackgroundColor(context.getResources().getColor(R.color.red));
 		}
 			
-		txtTaskDateDue.setText(" " + DateFormat.getDateFormat(context).format(task.getDateDue()));
+		txtTaskDateDue.setText(" " + DateFormat.getDateFormat(context).format(task.getDateDue().getTime()));
 		txtTaskBounty.setText(String.format("%.1f", task.getBounty()));
 		
 		return rowView;
