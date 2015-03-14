@@ -36,6 +36,7 @@ public class TaskDetailActivity extends Activity
 	
 	private static final int REQ_EDIT = 10;
 	private static final int REQ_VIEW_CLAIMS = 20;
+	private static final int REQ_CUR_GOAL = 25;
 	private static final int REQ_VIEW_GOALS = 30;
 	
 	private Task task;
@@ -219,6 +220,14 @@ public class TaskDetailActivity extends Activity
 					}
 				}
 			}
+			else if(requestCode == REQ_CUR_GOAL) {
+				boolean isCurrentGoalDeleted = data.getBooleanExtra(GoalClaimListActivity.BOOLEAN_DELETE_OK_EXTRA, false);
+				if(isCurrentGoalDeleted) {
+					dataSource.open();
+					updateCurrentGoal();
+					dataSource.close();
+				}
+			}
 			else if(requestCode == REQ_VIEW_GOALS) {
 				boolean isCurrentGoalUpdated = data.getBooleanExtra(BountyGoalListActivity.EXTRA_IS_CURRENT_GOAL_UPDATED, false);
 				if(isCurrentGoalUpdated) {
@@ -397,6 +406,12 @@ public class TaskDetailActivity extends Activity
 			DialogFragment dialog = new ClaimConfirmDialogFragment();
 			dialog.setArguments(bundle);
 			dialog.show(getFragmentManager(), "ClaimConfirmDialogFragment");
+			break;
+			
+		case R.id.lytCurrentGoal:
+			Intent intentCurrentGoal = new Intent(this, GoalClaimListActivity.class);
+			intentCurrentGoal.putExtra(GoalClaimListActivity.LONG_GOAL_ID_EXTRA, task.getCurrentGoal().getId());
+			startActivityForResult(intentCurrentGoal, REQ_CUR_GOAL);
 			break;
 			
 		case R.id.btnViewBountyGoals:
