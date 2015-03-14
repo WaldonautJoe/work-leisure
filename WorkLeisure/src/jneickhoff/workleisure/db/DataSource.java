@@ -2,7 +2,6 @@ package jneickhoff.workleisure.db;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -339,10 +338,10 @@ public class DataSource {
 		 * @param dueDifference		distance from due date
 		 * @return
 		 */
-		public ClaimLog createClaimLog(Date date, long taskID, String taskType, String comment, 
+		public ClaimLog createClaimLog(Calendar date, long taskID, String taskType, String comment, 
 				float bounty, float updatedBalance, float bountyDeviation, Long dueDifference){
 			ContentValues values = new ContentValues();
-			values.put(MySQLiteHelper.COL_CLAIM_DATE, date.getTime());
+			values.put(MySQLiteHelper.COL_CLAIM_DATE, date.getTimeInMillis());
 			values.put(MySQLiteHelper.COL_TASK_ID, taskID);
 			values.put(MySQLiteHelper.COL_TASK_TYPE, taskType);
 			values.put(MySQLiteHelper.COL_CLAIM_COMMENT, comment);
@@ -371,7 +370,7 @@ public class DataSource {
 		public void updateClaimLog(ClaimLog claimLog) {
 			//consider cutting values update if this method becomes useful
 			ContentValues values = new ContentValues();
-			values.put(MySQLiteHelper.COL_CLAIM_DATE, claimLog.getClaimDate().getTime());
+			values.put(MySQLiteHelper.COL_CLAIM_DATE, claimLog.getClaimDate().getTimeInMillis());
 			if(claimLog.getTaskID() == null)
 				values.putNull(MySQLiteHelper.COL_TASK_ID);
 			else
@@ -598,7 +597,7 @@ public class DataSource {
 		private ClaimLog cursorToClaimLog(Cursor cursor) {
 			ClaimLog claimLog = new ClaimLog();
 			claimLog.setId(cursor.getLong(0));
-			claimLog.setClaimDate(new Date(cursor.getLong(1)));
+			claimLog.setClaimDate(cursor.getLong(1));
 			if(cursor.getType(2) == Cursor.FIELD_TYPE_NULL)
 				claimLog.setTaskID(null);
 			else

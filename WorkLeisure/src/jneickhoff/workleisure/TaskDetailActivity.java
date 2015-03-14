@@ -2,7 +2,6 @@ package jneickhoff.workleisure;
 
 import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import jneickhoff.workleisure.db.ClaimLog;
@@ -288,7 +287,7 @@ public class TaskDetailActivity extends Activity
 		else
 			dueDifference = null;
 				
-		ClaimLog cl = dataSource.createClaimLog(currentTime.getTime(), task.getID(), task.getType(), comment, 
+		ClaimLog cl = dataSource.createClaimLog(currentTime, task.getID(), task.getType(), comment, 
 				bounty, balance, task.getBounty() - bounty, dueDifference);
 		
 		task.setTimesClaimed(1 + task.getTimesClaimed());

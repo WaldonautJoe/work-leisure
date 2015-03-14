@@ -165,7 +165,7 @@ public class MainActivity extends Activity {
 			ClaimLog claim = graphClaims.get(claimListPos);
 			
 			//if within group boundary
-			if(claim.getClaimDate().after(dateLimit.getTime())){
+			if(claim.getClaimDate().after(dateLimit)){
 				//add bounty to appropriate counter
 				if(claim.getTaskType().equals(Task.TYPE_WORK)){
 					workVals[groupsPos] += claim.getBounty();

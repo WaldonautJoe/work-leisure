@@ -34,7 +34,7 @@ public class ClaimSimpleArrayAdapter extends ArrayAdapter<ClaimLog>{
 		TextView txtClaimComment = (TextView) rowView.findViewById(R.id.txtClaimComment);
 		ClaimLog cl = values.get(position);
 		
-		String strClaimDate = DateFormat.getDateFormat(context).format(cl.getClaimDate());
+		String strClaimDate = DateFormat.getDateFormat(context).format(cl.getClaimDate().getTime());
 		if(cl.getDueDifference() == null) {
 			//nothing
 		}

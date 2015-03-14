@@ -2,7 +2,6 @@ package jneickhoff.workleisure.db;
 
 import java.util.Calendar;
 import java.util.Comparator;
-import java.util.Date;
 
 public class Task {
 

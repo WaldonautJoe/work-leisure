@@ -1,11 +1,11 @@
 package jneickhoff.workleisure.db;
 
-import java.util.Date;
+import java.util.Calendar;
 
 public class ClaimLog {
 
 	private long id;
-	private Date claimDate;
+	private Calendar claimDate;
 	private Long taskID;
 	private String taskType;
 	private String comment;
@@ -18,7 +18,7 @@ public class ClaimLog {
 		
 	}
 	
-	public ClaimLog(long id, Date claimDate, Long taskID, String taskType, String comment,
+	public ClaimLog(long id, Calendar claimDate, Long taskID, String taskType, String comment,
 			float bounty, float updatedBalance, float bountyDeviation, Long dueDifference) {
 		this.id = id;
 		this.claimDate = claimDate;
@@ -119,15 +119,24 @@ public class ClaimLog {
 	/**
 	 * @return the claim date
 	 */
-	public Date getClaimDate() {
+	public Calendar getClaimDate() {
 		return claimDate;
 	}
 
 	/**
 	 * @param claimDate the claim date to set
 	 */
-	public void setClaimDate(Date claimDate) {
+	public void setClaimDate(Calendar claimDate) {
 		this.claimDate = claimDate;
+	}
+	
+	/**
+	 * @param claimDate the claim date to set
+	 */
+	public void setClaimDate(long claimDate) {
+		Calendar c = Calendar.getInstance();
+		c.setTimeInMillis(claimDate);
+		this.claimDate = c;
 	}
 
 	/**

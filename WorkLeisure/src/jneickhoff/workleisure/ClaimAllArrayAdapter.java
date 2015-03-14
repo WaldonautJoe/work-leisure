@@ -62,7 +62,7 @@ public class ClaimAllArrayAdapter extends ArrayAdapter<ClaimLog>{
 		ClaimLogExt clExt = values.get(position);
 		
 		txtTaskName.setText(clExt.taskName);
-		String strClaimDate = DateFormat.getDateFormat(context).format(clExt.claimLog.getClaimDate());
+		String strClaimDate = DateFormat.getDateFormat(context).format(clExt.claimLog.getClaimDate().getTime());
 		if(clExt.claimLog.getDueDifference() == null) {
 			//nothing
 		}
