@@ -29,7 +29,7 @@
     <string name="task_name_hint">What is the task?</string>
     <string name="task_description">Description</string>
     <string name="task_description_hint">What are the details about the task?</string>
-    <string name="task_bounty">Expected hour bounty</string>
+    <string name="task_bounty">Expected bounty</string>
     <string name="task_stock">Remaining stock</string>
     <string name="stock_type_prompt">Choose…</string>
     <string name="default_stock">1</string>
