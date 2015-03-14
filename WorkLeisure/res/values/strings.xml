@@ -133,5 +133,6 @@
     <string name="current_goal_ended">Current goal ended now</string>
     <string name="current_goal_abandoned">Current goal abandoned</string>
     <string name="discarded">discarded</string>
+    <string name="no_claims">No claims</string>
 
 </resources>

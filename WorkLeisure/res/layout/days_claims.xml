@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="10dp"
+    android:orientation="vertical" >
+    
+    <TextView
+        android:id="@+id/txtDateHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:background="@color/yellow"
+        android:textColor="@color/white"
+        android:textSize="22sp" />
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingBottom="10dp"
+        android:orientation="vertical">
+        
+        <jneickhoff.workleisure.HorizontalMeter
+            android:id="@+id/meterWork"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            custom:color="@color/blue"
+            custom:overColor="@color/blue_light2"
+            custom:textColor="@color/light_grey"
+            custom:isBackgroundPainted="false"
+            custom:isMaxDisplayed="false" />
+        
+        <jneickhoff.workleisure.HorizontalMeter
+            android:id="@+id/meterLeisure"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            custom:color="@color/red"
+            custom:overColor="@color/red_light2"
+            custom:textColor="@color/light_grey"
+            custom:isBackgroundPainted="false"
+            custom:isMaxDisplayed="false" />
+        
+        <TextView
+            android:id="@+id/txtNoClaims"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_claims"
+            android:visibility="gone" />
+        
+        <LinearLayout
+            android:id="@+id/lytClaims"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+        
+    </LinearLayout>
+    
+
+</LinearLayout>
