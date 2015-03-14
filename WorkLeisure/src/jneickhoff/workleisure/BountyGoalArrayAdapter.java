@@ -50,12 +50,12 @@ public class BountyGoalArrayAdapter extends ArrayAdapter<NamedGoal> {
 		TextView txtCurStartDate = (TextView) rowView.findViewById(R.id.txtCurStartDate);
 		TextView txtCurEndDate = (TextView) rowView.findViewById(R.id.txtCurEndDate);
 		
-		NamedGoal cGoal = values.get(position);
+		NamedGoal namedGoal = values.get(position);
 		
 		
-		txtGoalName.setText(cGoal.name);
+		txtGoalName.setText(namedGoal.name);
 		
-		if(cGoal.type.equals(Task.TYPE_WORK)) {
+		if(namedGoal.type.equals(Task.TYPE_WORK)) {
 			metBounty.setColors(context.getResources().getColor(R.color.blue), 
 					context.getResources().getColor(R.color.blue_light2));
 			metTime.setColors(context.getResources().getColor(R.color.blue_light2), 
@@ -68,14 +68,14 @@ public class BountyGoalArrayAdapter extends ArrayAdapter<NamedGoal> {
 					context.getResources().getColor(R.color.red));
 		}
 		
-		metBounty.setValue(cGoal.goal.getBountyProgress(), cGoal.goal.getBountyTarget());
+		metBounty.setValue(namedGoal.goal.getBountyProgress(), namedGoal.goal.getBountyTarget());
 		metTime.setValue(Calendar.getInstance().getTimeInMillis(), 
-				cGoal.goal.getDateStart().getTimeInMillis(), 
-				cGoal.goal.getDateEnd().getTimeInMillis());
-		metTime.setNotchValues(cGoal.goal.getClaimDateList());
+				namedGoal.goal.getDateStart().getTimeInMillis(), 
+				namedGoal.goal.getDateEnd().getTimeInMillis());
+		metTime.setNotchValues(namedGoal.goal.getClaimDateList());
 		
-		txtCurStartDate.setText(dateFormat.format(cGoal.goal.getDateStart().getTime()));
-		txtCurEndDate.setText(dateFormat.format(cGoal.goal.getDateEnd().getTime()));
+		txtCurStartDate.setText(dateFormat.format(namedGoal.goal.getDateStart().getTime()));
+		txtCurEndDate.setText(dateFormat.format(namedGoal.goal.getDateEnd().getTime()));
 		
 		return rowView;
 	}

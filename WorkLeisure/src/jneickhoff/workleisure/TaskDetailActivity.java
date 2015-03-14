@@ -229,7 +229,7 @@ public class TaskDetailActivity extends Activity
 				}
 			}
 			else if(requestCode == REQ_VIEW_GOALS) {
-				boolean isCurrentGoalUpdated = data.getBooleanExtra(BountyGoalListActivity.EXTRA_IS_CURRENT_GOAL_UPDATED, false);
+				boolean isCurrentGoalUpdated = data.getBooleanExtra(BountyGoalListActivity.IS_CURRENT_GOAL_UPDATED_EXTRA, false);
 				if(isCurrentGoalUpdated) {
 					dataSource.open();
 					updateCurrentGoal();
@@ -416,7 +416,7 @@ public class TaskDetailActivity extends Activity
 			
 		case R.id.btnViewBountyGoals:
 			Intent intentGoals = new Intent(this, BountyGoalListActivity.class);
-			intentGoals.putExtra(BountyGoalListActivity.EXTRA_TASK_ID, task.getID());
+			intentGoals.putExtra(BountyGoalListActivity.LONG_TASK_ID_EXTRA, task.getID());
 			startActivityForResult(intentGoals, REQ_VIEW_GOALS);
 			break;
 			

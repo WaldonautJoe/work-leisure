@@ -10,7 +10,6 @@ import jneickhoff.workleisure.db.Task;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,16 +26,19 @@ import android.widget.Toast;
 public class BountyGoalListActivity extends Activity
 									implements SetGoalDialogFragment.SetGoalDialogListener {
 
-	public static final String EXTRA_TASK_ID = "extra_task_id";
+	//input extras
+	public static final String LONG_TASK_ID_EXTRA = "long_task_id_extra";
 	private long taskID;
+	
+	//output extras
+	public static final String IS_CURRENT_GOAL_UPDATED_EXTRA = "is_current_goal_updated_extra";
 	
 	private DateFormat dateFormat;
 	private List<Goal> goals;
 	private Goal currentGoal;
 	private BountyGoalHistoryArrayAdapter adapter;
 	private boolean isCurrentGoalUpdated;
-	private static final String KEY_IS_CURRENT_GOAL_UPDATED = "key_is_current_goal_updated";
-	public static final String EXTRA_IS_CURRENT_GOAL_UPDATED = "extra_is_current_goal_updated";
+	private static final String IS_CURRENT_GOAL_UPDATED_KEY = "is_current_goal_updated_key";
 	
 	private LinearLayout lytHeader;
 	private TextView txtName;
@@ -72,7 +74,7 @@ public class BountyGoalListActivity extends Activity
 		
 		dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
 		
-		taskID = getIntent().getLongExtra(EXTRA_TASK_ID, 0);
+		taskID = getIntent().getLongExtra(LONG_TASK_ID_EXTRA, 0);
 		
 		DataSource ds = new DataSource(this);
 		ds.open();
@@ -97,6 +99,7 @@ public class BountyGoalListActivity extends Activity
 					getResources().getColor(R.color.red));
 		}
 		
+		//first item in goals list must be most recent goal
 		if(goals.size() > 0 && goals.get(0).getDateEnd().after(Calendar.getInstance())) {
 			currentGoal = goals.get(0);
 			goals.remove(0);
@@ -124,10 +127,9 @@ public class BountyGoalListActivity extends Activity
 		
 		goalList.setOnItemClickListener(getViewGoalClaimsClickListener());
 		lytCurrentGoal.setOnClickListener(getCurrentGoalClickListener());
-//		goalList.setOnItemClickListener(getDeleteGoalClickListener());
 		
 		if(savedInstanceState != null) {
-			isCurrentGoalUpdated = savedInstanceState.getBoolean(KEY_IS_CURRENT_GOAL_UPDATED);
+			isCurrentGoalUpdated = savedInstanceState.getBoolean(IS_CURRENT_GOAL_UPDATED_KEY);
 		}
 		else {
 			isCurrentGoalUpdated = false;
@@ -138,14 +140,14 @@ public class BountyGoalListActivity extends Activity
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
 		
-		savedInstanceState.putBoolean(KEY_IS_CURRENT_GOAL_UPDATED, isCurrentGoalUpdated);
+		savedInstanceState.putBoolean(IS_CURRENT_GOAL_UPDATED_KEY, isCurrentGoalUpdated);
 	}
 	
 	@Override
 	public void finish() {
 		if(isCurrentGoalUpdated) {
 			Intent data = new Intent();
-			data.putExtra(EXTRA_IS_CURRENT_GOAL_UPDATED, isCurrentGoalUpdated);
+			data.putExtra(IS_CURRENT_GOAL_UPDATED_EXTRA, isCurrentGoalUpdated);
 			setResult(RESULT_OK, data);
 		}
 		
@@ -187,6 +189,7 @@ public class BountyGoalListActivity extends Activity
 					adapter.notifyDataSetChanged();
 				}
 				break;
+				
 			case REQ_VIEWGOALCLAIMS_FROMCUR:
 				if(data.getBooleanExtra(GoalClaimListActivity.BOOLEAN_DELETE_OK_EXTRA, false)) {
 					currentGoal = null;
@@ -209,14 +212,18 @@ public class BountyGoalListActivity extends Activity
 		ds.open();
 		if(isNewGoal) {
 			goal = ds.createGoal(taskID, bountyTarget, startDate, endDate);
-			Toast.makeText(this, getResources().getString(R.string.goal_started), Toast.LENGTH_SHORT).show();
+			
+			Toast.makeText(this, getResources().getString(R.string.goal_started), Toast.LENGTH_SHORT)
+				 .show();
 		}
 		else {
 			goal = new Goal(currentGoal.getId(), currentGoal.getTaskID(), currentGoal.getBountyProgress(), 
 					bountyTarget, startDate, endDate, currentGoal.getClaimDateList()); 
 			ds.updateGoal(goal);
-			Toast.makeText(this, getResources().getString(R.string.goal_updated), Toast.LENGTH_SHORT).show();
 			goal = ds.getGoal(goal.getId()); //updates claim date list
+			
+			Toast.makeText(this, getResources().getString(R.string.goal_updated), Toast.LENGTH_SHORT)
+				 .show();
 		}
 		ds.close();
 		
@@ -265,6 +272,9 @@ public class BountyGoalListActivity extends Activity
 						btnSetBountyGoal.setVisibility(View.VISIBLE);
 						lytEditButtons.setVisibility(View.GONE);
 						isCurrentGoalUpdated = true;
+						
+						Toast.makeText(BountyGoalListActivity.this, getString(R.string.current_goal_abandoned), Toast.LENGTH_SHORT)
+							 .show();
 					}
 				})
 				.setNegativeButton(R.string.cancel, null)
@@ -272,6 +282,9 @@ public class BountyGoalListActivity extends Activity
 				.show();
 	}
 	
+	/**
+	 * Display dialog to edit current goal
+	 */
 	private void displayEditGoalDialog() {
 		Bundle bundle = new Bundle();
 		bundle.putBoolean(SetGoalDialogFragment.IS_NEW_GOAL, false);
@@ -284,6 +297,10 @@ public class BountyGoalListActivity extends Activity
 		dialog.show(getFragmentManager(), "SetGoalDialogFragment");
 	}
 	
+	/**
+	 * Set end date of current goal to now and update display<br/>
+	 * Includes confirmation dialog
+	 */
 	private void endCurrentGoal() {
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -306,6 +323,9 @@ public class BountyGoalListActivity extends Activity
 						btnSetBountyGoal.setVisibility(View.VISIBLE);
 						lytEditButtons.setVisibility(View.GONE);
 						isCurrentGoalUpdated = true;
+						
+						Toast.makeText(BountyGoalListActivity.this, getString(R.string.current_goal_ended), Toast.LENGTH_SHORT)
+							 .show();
 					}
 				})
 				.setNegativeButton(R.string.cancel, null)
@@ -313,6 +333,9 @@ public class BountyGoalListActivity extends Activity
 				.show();
 	}
 	
+	/**
+	 * Display dialog to enter data on new goal
+	 */
 	private void displaySetNewGoalDialog() {
 		Bundle bundle = new Bundle();
 		bundle.putBoolean(SetGoalDialogFragment.IS_NEW_GOAL, true);
@@ -322,6 +345,9 @@ public class BountyGoalListActivity extends Activity
 		dialog.show(getFragmentManager(), "SetGoalDialogFragment");
 	}
 	
+	/**
+	 * @return click listener that starts an activity to display claims made during goal
+	 */
 	private OnItemClickListener getViewGoalClaimsClickListener() {
 		return new OnItemClickListener() {
 
@@ -338,6 +364,9 @@ public class BountyGoalListActivity extends Activity
 		};
 	}
 	
+	/**
+	 * @return click listener that starts an activity to display claims made during current goal
+	 */
 	private View.OnClickListener getCurrentGoalClickListener() {
 		return new View.OnClickListener() {
 
@@ -350,52 +379,4 @@ public class BountyGoalListActivity extends Activity
 		};
 	}
 	
-	/**
-	 * Return click listener that displays dialog confirming deletion of selected goal and 
-	 * deletes goal upon confirmation
-	 * @return click listener
-	 */
-	private OnItemClickListener getDeleteGoalClickListener(){
-		return new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				selectedPosition = position;
-				
-				getDeleteGoalConfirmDialog().show();
-			}
-		};
-	}
-	
-	/**
-	 * Create dialog when selecting a bounty to delete
-	 * @return dialog
-	 */
-	private Dialog getDeleteGoalConfirmDialog() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(BountyGoalListActivity.this);
-		builder.setMessage(R.string.delete_goal_q)
-			   .setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
-				
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						deleteSelectedGoal();
-					}
-				})
-				.setNegativeButton(R.string.cancel, null);
-		return builder.create();
-	}
-	
-	/**
-	 * Delete goal in adapter indicated by positionToDelete
-	 */
-	private void deleteSelectedGoal() {
-		Goal goal = adapter.getItem(selectedPosition);
-		DataSource ds = new DataSource(this);
-		ds.open();
-		ds.deleteGoal(goal);
-		ds.close();
-		adapter.remove(goal);
-		adapter.notifyDataSetChanged();
-	}
-
 }
