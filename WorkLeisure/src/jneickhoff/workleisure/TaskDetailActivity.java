@@ -11,8 +11,10 @@ import jneickhoff.workleisure.db.Goal;
 import jneickhoff.workleisure.db.Task;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -25,8 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class TaskDetailActivity extends Activity 
-								implements ClaimConfirmDialogFragment.ClaimConfirmDialogListener,
-										   TaskDeleteDialogFragment.TaskDeleteDialogListener {
+								implements ClaimConfirmDialogFragment.ClaimConfirmDialogListener {
 
 	public static final String EXTRA_TASK_ID = "extra_task_id";
 	
@@ -174,7 +175,7 @@ public class TaskDetailActivity extends Activity
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
 		case R.id.action_delete:
-			deleteTask();
+			confirmDeleteTask();
 			return true;
 		case R.id.action_edit:
 			editTask();
@@ -315,13 +316,31 @@ public class TaskDetailActivity extends Activity
 		
 		Toast.makeText(this, task.getName() + " " + getResources().getString(R.string.claimed), Toast.LENGTH_SHORT).show();
 	}
+
+	/**
+	 * Called when user clicks the delete task action. <br/>
+	 * Displays deletion confirmation dialog.
+	 */
+	private void confirmDeleteTask() {		
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(R.string.task_delete_confirm)
+			   .setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
+				
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						deleteTask();
+					}
+				})
+			   .setNegativeButton(R.string.cancel, null)
+			   .create()
+			   .show();
+	}
 	
-	@Override
-	public void onTaskDeleteDialogPositiveClick(DialogFragment dialog) {
+	private void deleteTask() {
 		dataSource.deleteTask(task);
 		dataSource.close();
 		
-		Toast.makeText(this, task.getName() + " discarded", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, task.getName() + " " + getString(R.string.discarded), Toast.LENGTH_SHORT).show();
 		
 		Intent intent = new Intent();
 		intent.putExtra(EXTRA_CHANGE_TYPE, CHANGE_DELETE);
@@ -329,22 +348,12 @@ public class TaskDetailActivity extends Activity
 		
 		super.finish();
 	}
-
-	/**
-	 * Called when user clicks the delete task action. <br/>
-	 * Displays deletion confirmation dialog.
-	 */
-	public void deleteTask() {		
-		
-		DialogFragment dialog = new TaskDeleteDialogFragment();
-		dialog.show(getFragmentManager(), "ClaimConfirmDialogFragment");
-	}
 	
 	/**
 	 * Called when user clicks the edit action.
 	 * Alters task data
 	 */
-	public void editTask() {
+	private void editTask() {
 		Intent intent = new Intent(this, EditTaskActivity.class);
 		intent.putExtra(EditTaskActivity.EXTRA_EDIT_TYPE, EditTaskActivity.EDIT_OLD);
 		intent.putExtra(EditTaskActivity.EXTRA_TASK_TYPE, task.getType());

@@ -132,5 +132,6 @@
     <string name="reset_balance_q">"Reset balance to 0.0?"</string>
     <string name="current_goal_ended">Current goal ended now</string>
     <string name="current_goal_abandoned">Current goal abandoned</string>
+    <string name="discarded">discarded</string>
 
 </resources>
