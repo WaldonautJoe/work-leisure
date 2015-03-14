@@ -317,11 +317,6 @@ public class TaskDetailActivity extends Activity
 	}
 	
 	@Override
-	public void onClaimDialogNegativeClick(DialogFragment dialog) {
-		//nothing
-	}
-	
-	@Override
 	public void onTaskDeleteDialogPositiveClick(DialogFragment dialog) {
 		dataSource.deleteTask(task);
 		dataSource.close();
