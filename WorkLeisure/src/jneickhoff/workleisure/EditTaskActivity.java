@@ -23,8 +23,6 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -82,7 +80,6 @@ public class EditTaskActivity extends Activity
 		spnStockType = (Spinner) findViewById(R.id.spnStockType);
 		editTaskStock = (EditText) findViewById(R.id.editTaskStock);
 		
-		chkTaskDue.setOnCheckedChangeListener(getDueCheckboxListener());
 		spnStockType.setOnItemSelectedListener(getStockTypeListener());
 		txtTaskDueDate.setOnClickListener(new View.OnClickListener() {
 			
@@ -151,7 +148,6 @@ public class EditTaskActivity extends Activity
 		if(editType == ADD_NEW) {
 			taskDueDate = new Date();
 			txtTaskDueDate.setText(DateFormat.getDateFormat(this).format(new Date()));
-			txtTaskDueDate.setEnabled(false);
 			spnTaskImportance.setSelection(1); //set selection to low importance
 			
 			taskIsArchived = extras.getBoolean(EXTRA_TASK_ISARCHIVED);
@@ -181,7 +177,6 @@ public class EditTaskActivity extends Activity
 				txtTaskDueDate.setText(DateFormat.getDateFormat(this).format(taskDueDate));
 			}
 			else {
-				txtTaskDueDate.setEnabled(false);
 				taskDueDate = new Date();
 				txtTaskDueDate.setText(DateFormat.getDateFormat(this).format(taskDueDate));
 			}
@@ -229,24 +224,6 @@ public class EditTaskActivity extends Activity
 	}
 	
 	/**
-	 * Returns listener for due date check box that changes enabled status of date picker dialog
-	 * @return OnCheckedChangeListener
-	 */
-	private OnCheckedChangeListener getDueCheckboxListener() {
-		return new OnCheckedChangeListener() {
-
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if(isChecked)
-					txtTaskDueDate.setEnabled(true);
-				else
-					txtTaskDueDate.setEnabled(false);
-			}
-			
-		};
-	}
-	
-	/**
 	 * Returns listener for stock type spinner that changes visibility of stock amount field (editTaskStock).
 	 * @return OnItemSelectedListener 
 	 */
@@ -277,6 +254,7 @@ public class EditTaskActivity extends Activity
 	@Override
 	public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 		Calendar calendar = new GregorianCalendar(year, monthOfYear, dayOfMonth);
+		chkTaskDue.setChecked(true);
 		taskDueDate = calendar.getTime();
 		txtTaskDueDate.setText(DateFormat.getDateFormat(this).format(taskDueDate));
 	}

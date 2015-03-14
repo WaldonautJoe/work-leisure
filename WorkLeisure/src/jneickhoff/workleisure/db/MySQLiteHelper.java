@@ -72,6 +72,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 			+ COL_CLAIM_ID + " integer primary key autoincrement, "
 			+ COL_CLAIM_DATE + " integer, "
 			+ COL_TASK_ID + " integer, "
+			+ COL_TASK_TYPE + " text, "
 			+ COL_TASK_STOCK_TYPE + " text, "
 			+ COL_CLAIM_COMMENT + " text, "
 			+ COL_CLAIM_BOUNTY + " real, "
