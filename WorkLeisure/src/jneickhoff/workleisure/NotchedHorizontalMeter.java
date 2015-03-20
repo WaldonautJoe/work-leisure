@@ -74,15 +74,6 @@ public class NotchedHorizontalMeter extends View {
 			a.recycle();
 		}
 		
-		if(value < minValue)
-			this.valueDisplay = minValue;
-		if(value < maxValue) {
-			this.valueDisplay = value;
-		}
-		else {
-			this.valueDisplay = maxValue;
-		}
-		
 		init();
 	}
 	
@@ -98,19 +89,17 @@ public class NotchedHorizontalMeter extends View {
 		this.maxValue = maxValue;
 		this.isBackgroundPainted = isBackgroundPainted;
 		
-		if(value < minValue)
-			this.valueDisplay = minValue;
-		if(value < maxValue) {
-			this.valueDisplay = value;
-		}
-		else {
-			this.valueDisplay = maxValue;
-		}
-		
 		init();
 	}
 	
 	private void init() {
+		if(value < minValue)
+			this.valueDisplay = minValue;
+		if(value < maxValue)
+			this.valueDisplay = value;
+		else
+			this.valueDisplay = maxValue;
+		
 		meterProgressPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		meterProgressPaint.setColor(progressColor);
 		meterProgressPaint.setStyle(Paint.Style.FILL);
@@ -223,22 +212,26 @@ public class NotchedHorizontalMeter extends View {
 		meterWidthProgress = (int) (((float) (valueDisplay - minValue) / (maxValue - minValue)) * (contentWidth - 2));
 		meterWidthBackground = (contentWidth - 2) - meterWidthProgress;
 		
-		meterProgress = new Rect(1 + getPaddingLeft(),
-			 	 getPaddingTop(), 
-			 	 1 + getPaddingLeft() + meterWidthProgress,
-			 	 getPaddingTop() + contentHeight);
-		meterBackground = new Rect(1 + getPaddingLeft() + meterWidthProgress,
-								   getPaddingTop(),
-								   1 + getPaddingLeft() + meterWidthProgress + meterWidthBackground,
-								   getPaddingTop() + contentHeight);
+		meterProgress = new Rect(1,
+			 					 0, 
+			 					 1 + meterWidthProgress,
+			 					 contentHeight);
+		meterProgress.offset(getPaddingLeft(), getPaddingTop());
+		meterBackground = new Rect(1 + meterWidthProgress,
+								   0,
+								   1 + meterWidthProgress + meterWidthBackground,
+								   contentHeight);
+		meterBackground.offset(getPaddingLeft(), getPaddingTop());
 		
 		notchPositions.clear();
 		for(Calendar cal : notchList) {
 			int notchPosition = (int) (((float) (cal.getTimeInMillis() - minValue) / (maxValue - minValue)) * (contentWidth - 2));
-			notchPositions.add(new Rect(1 + getPaddingLeft() + notchPosition, 
-										getPaddingTop(), 
-										4 + getPaddingLeft() + notchPosition, 
-										getPaddingTop() + contentHeight));
+			Rect notchRect = new Rect(1 + notchPosition, 
+									  0, 
+									  4 + notchPosition, 
+									  contentHeight);
+			notchRect.offset(getPaddingLeft(), getPaddingTop());
+			notchPositions.add(notchRect);
 		}
 	}
 	

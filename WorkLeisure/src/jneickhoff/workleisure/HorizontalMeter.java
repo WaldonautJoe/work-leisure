@@ -16,8 +16,8 @@ public class HorizontalMeter extends View {
 	private int backgroundColor;
 	private int textColor;
 	private float value;
-	private float valueNorm;
-	private float valueOver;
+	private float valueNorm; //portion of value under or equal to max value
+	private float valueOver; //portion of value over max value
 	private float maxValue;
 	private boolean isMaxDisplayed;
 	private boolean isBackgroundPainted;
@@ -121,6 +121,9 @@ public class HorizontalMeter extends View {
 		init();
 	}
 	
+	/**
+	 * run in every constructor
+	 */
 	private void init() {
 		textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		textPaint.setColor(textColor);
@@ -239,8 +242,9 @@ public class HorizontalMeter extends View {
 				meterWidthOver = (int) ((valueOver / maxValue) * (contentWidth - textSpace * 2 - spaceBetween * 2));
 			}
 			
-			textPos2 = new Point(getPaddingLeft() + textSpace * 2 + spaceBetween * 2 + meterWidthNorm + meterWidthBackground - (int) textPaint.measureText(String.format("%.1f", maxValue)),
-								 getPaddingTop() + (contentHeight + textSize)/2 - 3);
+			textPos2 = new Point(textSpace * 2 + spaceBetween * 2 + meterWidthNorm + meterWidthBackground - (int) textPaint.measureText(String.format("%.1f", maxValue)),
+								 (contentHeight + textSize)/2 - 3);
+			textPos2.offset(getPaddingLeft(), getPaddingTop());
 		}
 		else {
 			if(maxValue == 0) {
@@ -255,20 +259,24 @@ public class HorizontalMeter extends View {
 			}
 		}		
 		
-		textPos = new Point(getPaddingLeft() + textSpace - (int) textPaint.measureText(String.format("%.1f",value)), 
-							getPaddingTop() + (contentHeight + textSize)/2 - 3);
+		textPos = new Point(textSpace - (int) textPaint.measureText(String.format("%.1f",value)), 
+							(contentHeight + textSize)/2 - 3);
+		textPos.offset(getPaddingLeft(), getPaddingTop());
 		meterBackground = new Rect(textSpace + spaceBetween + meterWidthNorm,
-								   getPaddingTop(),
+								   0,
 								   textSpace + spaceBetween + meterWidthNorm + meterWidthBackground,
-								   getPaddingTop() + contentHeight);
+								   contentHeight);
+		meterBackground.offset(getPaddingLeft(), getPaddingTop());
 		meterNorm = new Rect(textSpace + spaceBetween,
-						 	 getPaddingTop(), 
+						 	 0, 
 						 	 textSpace + spaceBetween + meterWidthNorm,
-						 	 getPaddingTop() + contentHeight);
+						 	 contentHeight);
+		meterNorm.offset(getPaddingLeft(), getPaddingTop());
 		meterOver = new Rect(textSpace + spaceBetween,
-						 	 getPaddingTop(), 
+						 	 0, 
 						 	 textSpace + spaceBetween + meterWidthOver,
-						 	 getPaddingTop() + contentHeight);
+						 	 contentHeight);
+		meterOver.offset(getPaddingLeft(), getPaddingTop());
 		
 	}
 	

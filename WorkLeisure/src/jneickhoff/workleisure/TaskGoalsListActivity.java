@@ -287,10 +287,10 @@ public class TaskGoalsListActivity extends Activity
 	 */
 	private void displayEditGoalDialog() {
 		Bundle bundle = new Bundle();
-		bundle.putBoolean(SetGoalDialogFragment.IS_NEW_GOAL, false);
-		bundle.putFloat(SetGoalDialogFragment.FLOAT_BOUNTY_TARGET, currentGoal.getBountyTarget());
-		bundle.putLong(SetGoalDialogFragment.LONG_START_DATE, currentGoal.getDateStart().getTimeInMillis());
-		bundle.putLong(SetGoalDialogFragment.LONG_END_DATE, currentGoal.getDateEnd().getTimeInMillis());
+		bundle.putBoolean(SetGoalDialogFragment.IS_NEW_GOAL_KEY, false);
+		bundle.putFloat(SetGoalDialogFragment.FLOAT_BOUNTY_TARGET_KEY, currentGoal.getBountyTarget());
+		bundle.putLong(SetGoalDialogFragment.LONG_START_DATE_KEY, currentGoal.getDateStart().getTimeInMillis());
+		bundle.putLong(SetGoalDialogFragment.LONG_END_DATE_KEY, currentGoal.getDateEnd().getTimeInMillis());
 		
 		DialogFragment dialog = new SetGoalDialogFragment();
 		dialog.setArguments(bundle);
@@ -338,7 +338,7 @@ public class TaskGoalsListActivity extends Activity
 	 */
 	private void displaySetNewGoalDialog() {
 		Bundle bundle = new Bundle();
-		bundle.putBoolean(SetGoalDialogFragment.IS_NEW_GOAL, true);
+		bundle.putBoolean(SetGoalDialogFragment.IS_NEW_GOAL_KEY, true);
 		
 		DialogFragment dialog = new SetGoalDialogFragment();
 		dialog.setArguments(bundle);

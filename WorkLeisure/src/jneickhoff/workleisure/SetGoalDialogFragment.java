@@ -23,17 +23,17 @@ public class SetGoalDialogFragment extends DialogFragment {
 				boolean isNewGoal, float bountyTarget, Calendar startDate, Calendar endDate);
 	}
 	
-	public final static String IS_NEW_GOAL = "key_is_new_goal";
+	public final static String IS_NEW_GOAL_KEY = "key_is_new_goal";
 	private boolean isNewGoal;
-	public final static String FLOAT_BOUNTY_TARGET = "key_bounty_target";
+	public final static String FLOAT_BOUNTY_TARGET_KEY = "key_bounty_target";
 	private float bountyTarget;
-	public final static String LONG_START_DATE = "key_start_date";
+	public final static String LONG_START_DATE_KEY = "key_start_date";
 	private Calendar startDate;
-	public final static String LONG_END_DATE = "key_end_date";
+	public final static String LONG_END_DATE_KEY = "key_end_date";
 	private Calendar endDate;
 	
-	private final static String LONG_EDITED_START_DATE = "long_edited_start_date";
-	private final static String LONG_EDITED_END_DATE = "long_edited_end_date";
+	private final static String LONG_EDITED_START_DATE_KEY = "long_edited_start_date";
+	private final static String LONG_EDITED_END_DATE_KEY = "long_edited_end_date";
 	
 	private SetGoalDialogListener mListener;
 	private DateFormat dateFormat;
@@ -67,7 +67,7 @@ public class SetGoalDialogFragment extends DialogFragment {
 		
 		Bundle arguments = getArguments();
 		
-		isNewGoal = arguments.getBoolean(IS_NEW_GOAL);
+		isNewGoal = arguments.getBoolean(IS_NEW_GOAL_KEY);
 		
 		if(isNewGoal) {
 			bountyTarget = 0;
@@ -81,67 +81,29 @@ public class SetGoalDialogFragment extends DialogFragment {
 			endDate.add(Calendar.MILLISECOND, -1);
 		}
 		else {
-			bountyTarget = arguments.getFloat(FLOAT_BOUNTY_TARGET);
+			bountyTarget = arguments.getFloat(FLOAT_BOUNTY_TARGET_KEY);
 			startDate = Calendar.getInstance();
-			startDate.setTimeInMillis(arguments.getLong(LONG_START_DATE));
+			startDate.setTimeInMillis(arguments.getLong(LONG_START_DATE_KEY));
 			endDate = Calendar.getInstance();
-			endDate.setTimeInMillis(arguments.getLong(LONG_END_DATE));
+			endDate.setTimeInMillis(arguments.getLong(LONG_END_DATE_KEY));
 			
 			editBountyTarget.setText(Float.toString(bountyTarget));
 		}
 		
 		if(savedInstanceState != null) {
-			startDate.setTimeInMillis(savedInstanceState.getLong(LONG_EDITED_START_DATE));
-			endDate.setTimeInMillis(savedInstanceState.getLong(LONG_EDITED_END_DATE));
+			startDate.setTimeInMillis(savedInstanceState.getLong(LONG_EDITED_START_DATE_KEY));
+			endDate.setTimeInMillis(savedInstanceState.getLong(LONG_EDITED_END_DATE_KEY));
 		}
 		
 		txtStartDate.setText(dateFormat.format(startDate.getTime()));
 		txtEndDate.setText(dateFormat.format(endDate.getTime()));
 		
-		txtStartDate.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				DatePickerDialog dialog =  new DatePickerDialog(getActivity(), mStartDateListener, 
-						startDate.get(Calendar.YEAR), startDate.get(Calendar.MONTH), startDate.get(Calendar.DAY_OF_MONTH));
-				dialog.show();
-				
-			}
-		});
-		txtEndDate.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				DatePickerDialog dialog =  new DatePickerDialog(getActivity(), mEndDateListener, 
-						endDate.get(Calendar.YEAR), endDate.get(Calendar.MONTH), endDate.get(Calendar.DAY_OF_MONTH));
-				dialog.show();
-			}
-		});
+		txtStartDate.setOnClickListener(getOnStartDateClickListener());
+		txtEndDate.setOnClickListener(getOnEndDateClickListener());
 		
 		builder.setView(view)
-		       .setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
-				
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-						
-						String strBounty = editBountyTarget.getText().toString();
-						
-						if(strBounty.equals("") || strBounty.equals("."))
-							bountyTarget = 0;
-						else
-							bountyTarget = Float.valueOf(editBountyTarget.getText().toString());
-						
-						mListener.onGoalDialogPositiveClick(SetGoalDialogFragment.this, 
-								isNewGoal, bountyTarget, startDate, endDate);
-					}
-				})
-				.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-						//nothing
-					}
-				});
+		       .setPositiveButton(R.string.okay, getOnPositiveClickListener())
+				.setNegativeButton(R.string.cancel, null);
 		
 		return builder.create();
 	}
@@ -150,33 +112,95 @@ public class SetGoalDialogFragment extends DialogFragment {
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
 	
-		savedInstanceState.putLong(LONG_EDITED_START_DATE, startDate.getTimeInMillis());
-		savedInstanceState.putLong(LONG_EDITED_END_DATE, endDate.getTimeInMillis());
+		savedInstanceState.putLong(LONG_EDITED_START_DATE_KEY, startDate.getTimeInMillis());
+		savedInstanceState.putLong(LONG_EDITED_END_DATE_KEY, endDate.getTimeInMillis());
 	}
 	
-	private DatePickerDialog.OnDateSetListener mStartDateListener = new DatePickerDialog.OnDateSetListener() {
-		
-		@Override
-		public void onDateSet(DatePicker view, int year, int monthOfYear,
-				int dayOfMonth) {
-			startDate.clear();
-			startDate.set(year, monthOfYear, dayOfMonth);
+	/**
+	 * Returns click listener that starts a date picker dialog for start date
+	 */
+	private View.OnClickListener getOnStartDateClickListener(){
+		return new View.OnClickListener() {
 			
-			txtStartDate.setText(dateFormat.format(startDate.getTime()));
-		}
-	};
+			@Override
+			public void onClick(View v) {
+				DatePickerDialog dialog =  new DatePickerDialog(getActivity(), getStartDateSetListener(), 
+						startDate.get(Calendar.YEAR), startDate.get(Calendar.MONTH), startDate.get(Calendar.DAY_OF_MONTH));
+				dialog.show();
+				
+			}
+		};
+	}
 	
-	private DatePickerDialog.OnDateSetListener mEndDateListener = new DatePickerDialog.OnDateSetListener() {
-
-		@Override
-		public void onDateSet(DatePicker view, int year, int monthOfYear,
-				int dayOfMonth) {
-			endDate.clear();
-			endDate.set(year, monthOfYear, dayOfMonth + 1);
-			endDate.add(Calendar.MILLISECOND, -1);
+	/**
+	 * Returns listener that updates start date when edited from dialog by user
+	 */
+	private DatePickerDialog.OnDateSetListener getStartDateSetListener() { 
+		return new DatePickerDialog.OnDateSetListener() {
 			
-			txtEndDate.setText(dateFormat.format(endDate.getTime()));
-		}
-	};
+			@Override
+			public void onDateSet(DatePicker view, int year, int monthOfYear,
+					int dayOfMonth) {
+				startDate.clear();
+				startDate.set(year, monthOfYear, dayOfMonth);
+				
+				txtStartDate.setText(dateFormat.format(startDate.getTime()));
+			}
+		};
+	}
 	
+	/**
+	 * Returns a click listener that starts a date picker dialog for end date
+	 */
+	private View.OnClickListener getOnEndDateClickListener() {
+		return new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				DatePickerDialog dialog =  new DatePickerDialog(getActivity(), getEndDateSetListener(), 
+						endDate.get(Calendar.YEAR), endDate.get(Calendar.MONTH), endDate.get(Calendar.DAY_OF_MONTH));
+				dialog.show();
+			}
+		};
+	}
+	
+	/**
+	 * Returns a listener that updates the end date when edited from dialog by user
+	 */
+	private DatePickerDialog.OnDateSetListener getEndDateSetListener() {
+		return new DatePickerDialog.OnDateSetListener() {
+	
+			@Override
+			public void onDateSet(DatePicker view, int year, int monthOfYear,
+					int dayOfMonth) {
+				endDate.clear();
+				endDate.set(year, monthOfYear, dayOfMonth + 1);
+				endDate.add(Calendar.MILLISECOND, -1);
+				
+				txtEndDate.setText(dateFormat.format(endDate.getTime()));
+			}
+		};
+	}
+	
+	/**
+	 * Returns a listener that formats and returns entered information to calling activity
+	 */
+	private DialogInterface.OnClickListener getOnPositiveClickListener(){
+		return new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int id) {
+				
+				String strBounty = editBountyTarget.getText().toString();
+				
+				if(strBounty.equals("") || strBounty.equals("."))
+					bountyTarget = 0;
+				else
+					bountyTarget = Float.valueOf(editBountyTarget.getText().toString());
+				
+				mListener.onGoalDialogPositiveClick(SetGoalDialogFragment.this, 
+						isNewGoal, bountyTarget, startDate, endDate);
+			}
+		};
+	}
 }

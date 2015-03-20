@@ -28,7 +28,7 @@ public class MainActivity extends Activity {
 	private DataSource ds;
 	
 	private final static int GRAPH_DISPLAYED_DAYS = 7;
-	public final static String LAST_DISLPAY_LATE_UPCOMING_TASKS = "last_display_late_upcoming_tasks";
+	public final static String LAST_DISLPAY_OF_DUE_TASKS = "last_display_late_upcoming_tasks";
 	private final static long ACCEPTABLE_DISPLAY_TIME_LAPSE = 600000; //10 minutes
 	
 	@Override
@@ -46,12 +46,12 @@ public class MainActivity extends Activity {
 				this.getSharedPreferences(getString(R.string.user_balances), Context.MODE_PRIVATE);
 		
 		long currentTime = Calendar.getInstance().getTimeInMillis();
-		long lastDisplayLateUpcomingTasks = sharedPref.getLong(LAST_DISLPAY_LATE_UPCOMING_TASKS, currentTime - ACCEPTABLE_DISPLAY_TIME_LAPSE);
+		long lastDisplayOfDueTasks = sharedPref.getLong(LAST_DISLPAY_OF_DUE_TASKS, currentTime - ACCEPTABLE_DISPLAY_TIME_LAPSE);
 		
-		if((currentTime - lastDisplayLateUpcomingTasks) >= ACCEPTABLE_DISPLAY_TIME_LAPSE) {
-			displayLateUpcomingTasksDialog();
+		if((currentTime - lastDisplayOfDueTasks) >= ACCEPTABLE_DISPLAY_TIME_LAPSE) {
+			displayDueTasksDialog();
 			sharedPref.edit()
-					  .putLong(LAST_DISLPAY_LATE_UPCOMING_TASKS, currentTime)
+					  .putLong(LAST_DISLPAY_OF_DUE_TASKS, currentTime)
 					  .commit();
 		}
 	}
@@ -76,7 +76,7 @@ public class MainActivity extends Activity {
 			confirmResetBalance();
 			return true;
 		case R.id.action_settings:
-			
+			//do nothing
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);	
@@ -99,7 +99,7 @@ public class MainActivity extends Activity {
 			displayRecentClaims();
 			break;
 		case R.id.btnViewLateUpcomingTasks:
-			displayLateUpcomingTasks();
+			displayDueTasks();
 			break;
 		case R.id.btnViewCurrentGoals:
 			displayCurrentGoals();
@@ -222,7 +222,7 @@ public class MainActivity extends Activity {
 	/**
 	 * Starts activity that displays late and upcoming due tasks
 	 */
-	public void displayLateUpcomingTasks() {
+	public void displayDueTasks() {
 		Intent i = new Intent(this, TasksDueActivity.class);
 		startActivity(i);
 	}
@@ -235,7 +235,10 @@ public class MainActivity extends Activity {
 		startActivity(i);
 	}
 	
-	public void displayLateUpcomingTasksDialog() {
+	/**
+	 * Displays dialog that shows tasks with late, upcoming due dates and upcoming goal end dates
+	 */
+	public void displayDueTasksDialog() {
 		DialogFragment dialog = new TasksDueDialogFragment();
 		dialog.show(getFragmentManager(), "LateUpcomingDialogFragment");
 	}
@@ -255,6 +258,9 @@ public class MainActivity extends Activity {
 			   .show();
 	}
 	
+	/**
+	 * Sets the balance to 0
+	 */
 	private void resetBalance() {
 		SharedPreferences sharedPref = 
 				this.getSharedPreferences(getString(R.string.user_balances), Context.MODE_PRIVATE);
