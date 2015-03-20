@@ -23,7 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class GoalListActivity extends Activity
+public class TaskGoalsListActivity extends Activity
 									implements SetGoalDialogFragment.SetGoalDialogListener {
 
 	//input extras
@@ -58,7 +58,7 @@ public class GoalListActivity extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_bounty_goal_list);
+		setContentView(R.layout.activity_task_goals_list);
 		
 		Task task;
 		
@@ -263,7 +263,7 @@ public class GoalListActivity extends Activity
 			
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						DataSource ds = new DataSource(GoalListActivity.this);
+						DataSource ds = new DataSource(TaskGoalsListActivity.this);
 						ds.open();
 						ds.deleteGoal(currentGoal);
 						ds.close();
@@ -273,7 +273,7 @@ public class GoalListActivity extends Activity
 						lytEditButtons.setVisibility(View.GONE);
 						isCurrentGoalUpdated = true;
 						
-						Toast.makeText(GoalListActivity.this, getString(R.string.current_goal_abandoned), Toast.LENGTH_SHORT)
+						Toast.makeText(TaskGoalsListActivity.this, getString(R.string.current_goal_abandoned), Toast.LENGTH_SHORT)
 							 .show();
 					}
 				})
@@ -309,7 +309,7 @@ public class GoalListActivity extends Activity
 					
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						DataSource ds = new DataSource(GoalListActivity.this);
+						DataSource ds = new DataSource(TaskGoalsListActivity.this);
 						ds.open();
 						currentGoal.setDateEnd(Calendar.getInstance());
 						ds.updateGoal(currentGoal);
@@ -324,7 +324,7 @@ public class GoalListActivity extends Activity
 						lytEditButtons.setVisibility(View.GONE);
 						isCurrentGoalUpdated = true;
 						
-						Toast.makeText(GoalListActivity.this, getString(R.string.current_goal_ended), Toast.LENGTH_SHORT)
+						Toast.makeText(TaskGoalsListActivity.this, getString(R.string.current_goal_ended), Toast.LENGTH_SHORT)
 							 .show();
 					}
 				})
@@ -357,7 +357,7 @@ public class GoalListActivity extends Activity
 				Goal goal = adapter.getItem(position);
 				selectedPosition = position;
 				
-				Intent i = new Intent(GoalListActivity.this, GoalClaimListActivity.class);
+				Intent i = new Intent(TaskGoalsListActivity.this, GoalClaimListActivity.class);
 				i.putExtra(GoalClaimListActivity.LONG_GOAL_ID_EXTRA, goal.getId());
 				startActivityForResult(i, REQ_VIEWGOALCLAIMS_FROMLIST);
 			}
@@ -372,7 +372,7 @@ public class GoalListActivity extends Activity
 
 			@Override
 			public void onClick(View v) {
-				Intent i = new Intent(GoalListActivity.this, GoalClaimListActivity.class);
+				Intent i = new Intent(TaskGoalsListActivity.this, GoalClaimListActivity.class);
 				i.putExtra(GoalClaimListActivity.LONG_GOAL_ID_EXTRA, currentGoal.getId());
 				startActivityForResult(i, REQ_VIEWGOALCLAIMS_FROMCUR);
 			}

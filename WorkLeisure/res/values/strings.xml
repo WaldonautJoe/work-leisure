@@ -2,10 +2,10 @@
 <resources>
 
     <string name="app_name">Work/Leisure</string>
-    <string name="title_activity_claim_list">Claim List</string>
-    <string name="title_activity_task_list">Task List</string>
-    <string name="title_activity_edit_task">Edit Task</string>
-    <string name="title_activity_task_detail">Task Detail</string>
+    <string name="title_activity_claim_list">Claim list</string>
+    <string name="title_activity_task_list">Task list</string>
+    <string name="title_activity_edit_task">Edit task</string>
+    <string name="title_activity_task_detail">Task details</string>
     <string name="action_settings">Settings</string>
     <string name="action_add_task">Add task</string>
     <string name="action_edit">Edit</string>
@@ -98,7 +98,7 @@
     <string name="claim_delete_confirm">"Discard claim and refund bounty?"</string>
     <string name="title_activity_late_upcoming_tasks">Due tasks</string>
     <string name="view_late_upcoming_tasks">View due tasks</string>
-    <string name="title_activity_bounty_goal_list">Bounty Goal List</string>
+    <string name="title_activity_bounty_goal_list">Goal list</string>
     <string name="set_bounty_goal">Set bounty goal</string>
     <string name="edit">Edit</string>
     <string name="current_bounty_goal">Current bounty goal</string>
@@ -113,7 +113,7 @@
     <string name="delete_goal_q">"Discard goal?"</string>
     <string name="to_view_claims_tap_goal">To view all claims made during goal, tap it</string>
     <string name="goals">Goals</string>
-    <string name="title_activity_current_goal_list">Current Goal List</string>
+    <string name="title_activity_current_goal_list">Current goals list</string>
     <string name="view_current_goals">View current goals</string>
     <string name="no_goal_set">No goals are set</string>
     <string name="forward_slash">"/"</string>
@@ -121,7 +121,7 @@
     <string name="goal">Goal</string>
     <string name="end_now">End now</string>
     <string name="end_now_q">"End current goal now?"</string>
-    <string name="title_activity_goal_claim_list">Goal Claim List</string>
+    <string name="title_activity_goal_claim_list">Goal claims list</string>
     <string name="goal_discarded">Goal discarded</string>
     <string name="goal_started">Goal started</string>
     <string name="goal_updated">Goal updated</string>

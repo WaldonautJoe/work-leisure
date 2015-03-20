@@ -24,7 +24,7 @@ public class GoalCurrentListActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_current_goal_list);
+		setContentView(R.layout.activity_goal_current_list);
 		
 		txtNoGoals = (TextView) findViewById(R.id.txtNoGoals);
 		ListView listCurrentGoals = (ListView) findViewById(R.id.listCurrentGoals);

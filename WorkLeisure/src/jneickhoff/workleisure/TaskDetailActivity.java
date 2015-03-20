@@ -229,7 +229,7 @@ public class TaskDetailActivity extends Activity
 				}
 			}
 			else if(requestCode == REQ_VIEW_GOALS) {
-				boolean isCurrentGoalUpdated = data.getBooleanExtra(GoalListActivity.IS_CURRENT_GOAL_UPDATED_EXTRA, false);
+				boolean isCurrentGoalUpdated = data.getBooleanExtra(TaskGoalsListActivity.IS_CURRENT_GOAL_UPDATED_EXTRA, false);
 				if(isCurrentGoalUpdated) {
 					dataSource.open();
 					updateCurrentGoal();
@@ -418,8 +418,8 @@ public class TaskDetailActivity extends Activity
 			break;
 			
 		case R.id.btnViewBountyGoals:
-			Intent intentGoals = new Intent(this, GoalListActivity.class);
-			intentGoals.putExtra(GoalListActivity.LONG_TASK_ID_EXTRA, task.getID());
+			Intent intentGoals = new Intent(this, TaskGoalsListActivity.class);
+			intentGoals.putExtra(TaskGoalsListActivity.LONG_TASK_ID_EXTRA, task.getID());
 			startActivityForResult(intentGoals, REQ_VIEW_GOALS);
 			break;
 			

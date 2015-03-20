@@ -47,7 +47,7 @@
             android:label="@string/title_activity_late_upcoming_tasks" >
         </activity>
         <activity
-            android:name="jneickhoff.workleisure.GoalListActivity"
+            android:name="jneickhoff.workleisure.TaskGoalsListActivity"
             android:label="@string/title_activity_bounty_goal_list" >
         </activity>
         <activity
