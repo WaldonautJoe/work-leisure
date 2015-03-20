@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -71,6 +72,20 @@ public class TaskEditActivity extends Activity {
 		editTaskDesc = (EditText) findViewById(R.id.editTaskDesc);
 		editTaskBounty = (EditText) findViewById(R.id.editTaskBounty);
 		
+		chkTaskDue.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if(isChecked) {
+					txtTaskDueDate.setText(DateFormat.getDateFormat(TaskEditActivity.this).format(taskDueDate.getTime()));
+				}
+				else {
+					txtTaskDueDate.setText(getString(R.string.never));
+				}
+				
+			}
+		});
+		
 		txtTaskDueDate.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -118,7 +133,7 @@ public class TaskEditActivity extends Activity {
 		
 		if(editType == ADD_NEW) {
 			taskDueDate = Calendar.getInstance();
-			txtTaskDueDate.setText(DateFormat.getDateFormat(this).format(taskDueDate.getTime()));
+			txtTaskDueDate.setText(getString(R.string.never));
 			spnTaskImportance.setSelection(1); //set selection to low importance
 			
 			taskIsArchived = extras.getBoolean(EXTRA_TASK_ISARCHIVED);
@@ -143,14 +158,14 @@ public class TaskEditActivity extends Activity {
 				spnTaskImportance.setSelection(0);
 			
 			if(oldTask.isDue()) {
-				chkTaskDue.setChecked(true);
 				taskDueDate = Calendar.getInstance();
 				taskDueDate.setTimeInMillis(oldTask.getDateDue().getTimeInMillis());
-				txtTaskDueDate.setText(DateFormat.getDateFormat(this).format(taskDueDate.getTime()));
+				chkTaskDue.setChecked(true); //updates due date display
 			}
 			else {
 				taskDueDate = Calendar.getInstance();
-				txtTaskDueDate.setText(DateFormat.getDateFormat(this).format(taskDueDate.getTime()));
+				chkTaskDue.setChecked(false);
+				txtTaskDueDate.setText(getString(R.string.never));
 			}
 			editTaskDesc.setText(oldTask.getDesc());
 			editTaskBounty.setText(String.valueOf(oldTask.getBounty()));
