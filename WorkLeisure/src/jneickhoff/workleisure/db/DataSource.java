@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import jneickhoff.workleisure.NamedGoal;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;

@@ -1,6 +1,5 @@
-package jneickhoff.workleisure;
+package jneickhoff.workleisure.db;
 
-import jneickhoff.workleisure.db.Goal;
 
 public class NamedGoal extends Goal {
 

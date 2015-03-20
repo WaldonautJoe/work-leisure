@@ -4,6 +4,7 @@ import java.util.List;
 
 import jneickhoff.workleisure.GoalCurrentArrayAdapter;
 import jneickhoff.workleisure.db.DataSource;
+import jneickhoff.workleisure.db.NamedGoal;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;

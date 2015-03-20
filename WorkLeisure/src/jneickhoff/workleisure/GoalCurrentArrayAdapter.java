@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+import jneickhoff.workleisure.db.NamedGoal;
 import jneickhoff.workleisure.db.Task;
 import android.content.Context;
 import android.view.LayoutInflater;
