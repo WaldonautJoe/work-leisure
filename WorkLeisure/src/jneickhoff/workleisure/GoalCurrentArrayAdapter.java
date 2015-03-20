@@ -4,8 +4,6 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.List;
 
-import jneickhoff.workleisure.GoalArrayAdapter.NamedGoal;
-import jneickhoff.workleisure.db.Goal;
 import jneickhoff.workleisure.db.Task;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -14,25 +12,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class GoalArrayAdapter extends ArrayAdapter<NamedGoal> {
-	
-	public static class NamedGoal {
-		public String name;
-		public String type;
-		public Goal goal;
-		
-		public NamedGoal(String name, String type, Goal goal) {
-			this.name = name;
-			this.type = type;
-			this.goal = goal;
-		}
-	}
+public class GoalCurrentArrayAdapter extends ArrayAdapter<NamedGoal> {
 	
 	private Context context;
 	private List<NamedGoal> values;
 	private DateFormat dateFormat;
 	
-	public GoalArrayAdapter(Context context, List<NamedGoal> goalValues) {
+	public GoalCurrentArrayAdapter(Context context, List<NamedGoal> goalValues) {
 		super(context, R.layout.row_goal, goalValues);
 		this.context = context;
 		this.values = goalValues;
@@ -53,9 +39,9 @@ public class GoalArrayAdapter extends ArrayAdapter<NamedGoal> {
 		NamedGoal namedGoal = values.get(position);
 		
 		
-		txtGoalName.setText(namedGoal.name);
+		txtGoalName.setText(namedGoal.getTaskName());
 		
-		if(namedGoal.type.equals(Task.TYPE_WORK)) {
+		if(namedGoal.getTaskType().equals(Task.TYPE_WORK)) {
 			metBounty.setColors(context.getResources().getColor(R.color.blue), 
 					context.getResources().getColor(R.color.blue_light2));
 			metTime.setColors(context.getResources().getColor(R.color.blue_light2), 
@@ -68,14 +54,14 @@ public class GoalArrayAdapter extends ArrayAdapter<NamedGoal> {
 					context.getResources().getColor(R.color.red));
 		}
 		
-		metBounty.setValue(namedGoal.goal.getBountyProgress(), namedGoal.goal.getBountyTarget());
+		metBounty.setValue(namedGoal.getBountyProgress(), namedGoal.getBountyTarget());
 		metTime.setValue(Calendar.getInstance().getTimeInMillis(), 
-				namedGoal.goal.getDateStart().getTimeInMillis(), 
-				namedGoal.goal.getDateEnd().getTimeInMillis());
-		metTime.setNotchValues(namedGoal.goal.getClaimDateList());
+				namedGoal.getDateStart().getTimeInMillis(), 
+				namedGoal.getDateEnd().getTimeInMillis());
+		metTime.setNotchValues(namedGoal.getClaimDateList());
 		
-		txtCurStartDate.setText(dateFormat.format(namedGoal.goal.getDateStart().getTime()));
-		txtCurEndDate.setText(dateFormat.format(namedGoal.goal.getDateEnd().getTime()));
+		txtCurStartDate.setText(dateFormat.format(namedGoal.getDateStart().getTime()));
+		txtCurEndDate.setText(dateFormat.format(namedGoal.getDateEnd().getTime()));
 		
 		return rowView;
 	}

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import jneickhoff.workleisure.NamedGoal;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -210,6 +211,31 @@ public class DataSource {
 				cursor.close();
 				
 				return taskName;
+			}
+			else {
+				throw new IllegalArgumentException("No task associated with ID");
+			}
+			
+		}
+		
+		/**
+		 * Returns a list of the name and type of the task whose ID was provided
+		 */
+		private String[] getTaskNameType(long taskId) {
+			String[] taskNameTypeColumns = { MySQLiteHelper.COL_TASK_NAME,
+										MySQLiteHelper.COL_TASK_TYPE};
+			
+			Cursor cursor = database.query(MySQLiteHelper.TAB_TASK, taskNameTypeColumns, 
+					MySQLiteHelper.COL_TASK_ID + " = " + taskId, 
+					null, null, null, null);
+			
+			cursor.moveToFirst();
+			if(!cursor.isAfterLast()) {
+				String[] taskNameType = {cursor.getString(0),	//task name
+										 cursor.getString(1)};	//task type
+				
+				cursor.close();
+				return taskNameType;
 			}
 			else {
 				throw new IllegalArgumentException("No task associated with ID");
@@ -769,6 +795,19 @@ public class DataSource {
 			List<Goal> goalList = getAllGoalsEndingBetween(Calendar.getInstance(), null);
 			
 			return goalList;
+		}
+		
+		public List<NamedGoal> getAllCurrentGoalsNamed() {
+			List<NamedGoal> namedGoalList = new ArrayList<NamedGoal>();
+			List<Goal> goalList = getAllCurrentGoals();
+			
+			for(Goal goal : goalList) {
+				String[] taskNameType = getTaskNameType(goal.getTaskID());
+				NamedGoal namedGoal = new NamedGoal(goal, taskNameType[0], taskNameType[1]);
+				namedGoalList.add(namedGoal);
+			}
+			
+			return namedGoalList;
 		}
 		
 		public List<Goal> getAllGoalsEndingBetween(Calendar afterThisDate, Calendar beforeThisDate) {
