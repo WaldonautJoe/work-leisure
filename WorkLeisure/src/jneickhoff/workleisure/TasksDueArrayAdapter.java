@@ -11,12 +11,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class DueTasksArrayAdapter extends ArrayAdapter<Task>{
+public class TasksDueArrayAdapter extends ArrayAdapter<Task>{
 	
 	private Context context;
 	private List<Task> values;
 	
-	public DueTasksArrayAdapter(Context context, List<Task> values) {
+	public TasksDueArrayAdapter(Context context, List<Task> values) {
 		super(context, R.layout.row_task, values);
 		this.context = context;
 		this.values = values;
@@ -36,14 +36,6 @@ public class DueTasksArrayAdapter extends ArrayAdapter<Task>{
 		
 		
 		txtTaskName.setText(task.getName());
-//		if(task.getImportance().equals(Task.IMPORTANCE_HIGH)) {
-//			txtTaskImportance.setText(context.getResources().getString(R.string.high));
-//			txtTaskImportance.setBackgroundColor(context.getResources().getColor(R.color.yellow));
-//		}
-//		else if(task.getImportance().equals(Task.IMPORTANCE_LOW)) {
-//			txtTaskImportance.setText(context.getResources().getString(R.string.low));
-//			txtTaskImportance.setBackgroundColor(context.getResources().getColor(R.color.light_grey));
-//		}
 		if(task.getType().equals(Task.TYPE_WORK)) {
 			txtTaskImportance.setText(context.getResources().getString(R.string.work));
 			txtTaskImportance.setBackgroundColor(context.getResources().getColor(R.color.blue));

@@ -353,10 +353,10 @@ public class TaskDetailActivity extends Activity
 	 * Alters task data
 	 */
 	private void editTask() {
-		Intent intent = new Intent(this, EditTaskActivity.class);
-		intent.putExtra(EditTaskActivity.EXTRA_EDIT_TYPE, EditTaskActivity.EDIT_OLD);
-		intent.putExtra(EditTaskActivity.EXTRA_TASK_TYPE, task.getType());
-		intent.putExtra(EditTaskActivity.EXTRA_TASK_ID, task.getID());
+		Intent intent = new Intent(this, TaskEditActivity.class);
+		intent.putExtra(TaskEditActivity.EXTRA_EDIT_TYPE, TaskEditActivity.EDIT_OLD);
+		intent.putExtra(TaskEditActivity.EXTRA_TASK_TYPE, task.getType());
+		intent.putExtra(TaskEditActivity.EXTRA_TASK_ID, task.getID());
 		startActivityForResult(intent, REQ_EDIT);
 	}
 	

@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class LateUpcomingTasksActivity extends Activity {
+public class TasksDueActivity extends Activity {
 
 	private TextView txtNoDueTasks;
 	private LinearLayout lytDueLateHeader;
@@ -27,7 +27,7 @@ public class LateUpcomingTasksActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_late_upcoming_tasks);
+		setContentView(R.layout.activity_tasks_due);
 		
 		txtNoDueTasks = (TextView) findViewById(R.id.txtNoDueTasks);
 		lytDueLateHeader = (LinearLayout) findViewById(R.id.lytDueLateHeader);
@@ -42,7 +42,7 @@ public class LateUpcomingTasksActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.late_upcoming_tasks, menu);
+		getMenuInflater().inflate(R.menu.tasks_due, menu);
 		return true;
 	}
 	
@@ -83,7 +83,7 @@ public class LateUpcomingTasksActivity extends Activity {
 			public void onClick(View v) {
 				long taskID = (Long) v.getTag();
 				
-				Intent intent = new Intent(LateUpcomingTasksActivity.this, TaskDetailActivity.class);
+				Intent intent = new Intent(TasksDueActivity.this, TaskDetailActivity.class);
 				intent.putExtra(TaskDetailActivity.EXTRA_TASK_ID, taskID);
 				startActivity(intent);
 			}
@@ -106,7 +106,7 @@ public class LateUpcomingTasksActivity extends Activity {
 			
 			if(lateTasksDue.size() > 0) {
 				lytDueLateTasks.removeAllViews();
-				DueTasksArrayAdapter adapter = new DueTasksArrayAdapter(this, lateTasksDue);
+				TasksDueArrayAdapter adapter = new TasksDueArrayAdapter(this, lateTasksDue);
 				for(int i = 0; i < adapter.getCount(); i++) {
 					View view = adapter.getView(i, null, null);
 					Task task = adapter.getItem(i);
@@ -126,7 +126,7 @@ public class LateUpcomingTasksActivity extends Activity {
 			
 			if(soonTasksDue.size() > 0) {
 				lytDueSoonTasks.removeAllViews();
-				DueTasksArrayAdapter adapter = new DueTasksArrayAdapter(this, soonTasksDue);
+				TasksDueArrayAdapter adapter = new TasksDueArrayAdapter(this, soonTasksDue);
 				for(int i = 0; i < adapter.getCount(); i++) {
 					View view = adapter.getView(i, null, null);
 					Task task = adapter.getItem(i);
@@ -146,7 +146,7 @@ public class LateUpcomingTasksActivity extends Activity {
 			
 			if(somedayTasksDue.size() > 0) {
 				lytDueSomedayTasks.removeAllViews();
-				DueTasksArrayAdapter adapter = new DueTasksArrayAdapter(this, somedayTasksDue);
+				TasksDueArrayAdapter adapter = new TasksDueArrayAdapter(this, somedayTasksDue);
 				for(int i = 0; i < adapter.getCount(); i++) {
 					View view = adapter.getView(i, null, null);
 					Task task = adapter.getItem(i);

@@ -26,7 +26,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class EditTaskActivity extends Activity {
+public class TaskEditActivity extends Activity {
 
 	public static final String EXTRA_EDIT_TYPE = "edit_type";
 	public static final int ADD_NEW = 10;
@@ -64,7 +64,7 @@ public class EditTaskActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_edit_task);
+		setContentView(R.layout.activity_task_edit);
 		
 		lytHeader = (LinearLayout) findViewById(R.id.lytHeader);
 		editTaskName = (EditText) findViewById(R.id.editTaskName);
@@ -195,7 +195,7 @@ public class EditTaskActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.edit_task, menu);
+		getMenuInflater().inflate(R.menu.task_edit, menu);
 		return true;
 	}
 	
@@ -379,7 +379,7 @@ public class EditTaskActivity extends Activity {
 			public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 				taskDueDate = new GregorianCalendar(year, monthOfYear, dayOfMonth);
 				chkTaskDue.setChecked(true);
-				txtTaskDueDate.setText(DateFormat.getDateFormat(EditTaskActivity.this).format(taskDueDate.getTime()));
+				txtTaskDueDate.setText(DateFormat.getDateFormat(TaskEditActivity.this).format(taskDueDate.getTime()));
 			}
 		};
 	}

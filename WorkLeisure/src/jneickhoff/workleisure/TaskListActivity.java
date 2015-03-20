@@ -109,10 +109,10 @@ public class TaskListActivity extends Activity {
 	 * @param view
 	 */
 	public void addNewTask() {
-		Intent i = new Intent(this, EditTaskActivity.class);
-		i.putExtra(EditTaskActivity.EXTRA_EDIT_TYPE, EditTaskActivity.ADD_NEW);
-		i.putExtra(EditTaskActivity.EXTRA_TASK_TYPE, strTaskType);
-		i.putExtra(EditTaskActivity.EXTRA_TASK_ISARCHIVED, displayArchived);
+		Intent i = new Intent(this, TaskEditActivity.class);
+		i.putExtra(TaskEditActivity.EXTRA_EDIT_TYPE, TaskEditActivity.ADD_NEW);
+		i.putExtra(TaskEditActivity.EXTRA_TASK_TYPE, strTaskType);
+		i.putExtra(TaskEditActivity.EXTRA_TASK_ISARCHIVED, displayArchived);
 		startActivityForResult(i, REQ_NEW);
 	}
 	
@@ -191,7 +191,7 @@ public class TaskListActivity extends Activity {
 			
 			switch(requestCode) {
 			case REQ_NEW:
-				long newID = data.getExtras().getLong(EditTaskActivity.UPDATE_TASK_ID);
+				long newID = data.getExtras().getLong(TaskEditActivity.UPDATE_TASK_ID);
 				dataSource.open();
 				Task newTask = dataSource.getTask(newID);
 				dataSource.close();

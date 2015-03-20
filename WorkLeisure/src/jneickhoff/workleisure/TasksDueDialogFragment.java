@@ -17,14 +17,14 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class LateUpcomingDialogFragment extends DialogFragment {
+public class TasksDueDialogFragment extends DialogFragment {
 	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		View view = inflater.inflate(R.layout.dialog_lateupcoming, null);
+		View view = inflater.inflate(R.layout.dialog_due, null);
 		
 		TextView txtDueLateHeader = (TextView) view.findViewById(R.id.txtDueLateHeader);
 		LinearLayout lytDueLateTasks = (LinearLayout) view.findViewById(R.id.lytDueLateTasks);

@@ -223,7 +223,7 @@ public class MainActivity extends Activity {
 	 * Starts activity that displays late and upcoming due tasks
 	 */
 	public void displayLateUpcomingTasks() {
-		Intent i = new Intent(this, LateUpcomingTasksActivity.class);
+		Intent i = new Intent(this, TasksDueActivity.class);
 		startActivity(i);
 	}
 	
@@ -236,7 +236,7 @@ public class MainActivity extends Activity {
 	}
 	
 	public void displayLateUpcomingTasksDialog() {
-		DialogFragment dialog = new LateUpcomingDialogFragment();
+		DialogFragment dialog = new TasksDueDialogFragment();
 		dialog.show(getFragmentManager(), "LateUpcomingDialogFragment");
 	}
 	

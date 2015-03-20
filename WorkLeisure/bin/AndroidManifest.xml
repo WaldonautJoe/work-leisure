@@ -27,7 +27,7 @@
             android:label="@string/title_activity_task_list" >
         </activity>
         <activity
-            android:name="jneickhoff.workleisure.EditTaskActivity"
+            android:name="jneickhoff.workleisure.TaskEditActivity"
             android:label="@string/title_activity_edit_task" >
         </activity>
         <activity
@@ -43,7 +43,7 @@
             android:label="@string/title_activity_claim_recent" >
         </activity>
         <activity
-            android:name="jneickhoff.workleisure.LateUpcomingTasksActivity"
+            android:name="jneickhoff.workleisure.TasksDueActivity"
             android:label="@string/title_activity_late_upcoming_tasks" >
         </activity>
         <activity
