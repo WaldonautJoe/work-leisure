@@ -193,6 +193,31 @@ public class DataSource {
 		}
 		
 		/**
+		 * Returns the name of the task whose ID was provided
+		 */
+		public String getTaskName(long taskId) {
+			String[] taskNameColumn = { MySQLiteHelper.COL_TASK_NAME };
+			String taskName;
+			
+			Cursor cursor = database.query(MySQLiteHelper.TAB_TASK, taskNameColumn, 
+					MySQLiteHelper.COL_TASK_ID + " = " + taskId, 
+					null, null, null, null);
+			
+			cursor.moveToFirst();
+			if(!cursor.isAfterLast()) {
+				taskName = cursor.getString(0);
+				
+				cursor.close();
+				
+				return taskName;
+			}
+			else {
+				throw new IllegalArgumentException("No task associated with ID");
+			}
+			
+		}
+		
+		/**
 		 * Returns a list of all tasks with specified type
 		 * 
 		 * @param taskType type of tasks to return
@@ -490,6 +515,22 @@ public class DataSource {
 			cursor.close();
 			
 			return claimLogs;
+		}
+		
+		/**
+		 * Return list of claim logs with associated task names
+		 */
+		public List<ClaimLogExt> getAllClaimLogsExt(Calendar claimsAfterDate, Calendar claimsBeforeDate, boolean retNullTaskID) {
+			List<ClaimLogExt> claimsExt = new ArrayList<ClaimLogExt>();
+			
+			List<ClaimLog> claimLogs = getAllClaimLogs(claimsAfterDate, claimsBeforeDate, null, retNullTaskID);
+			
+			for(ClaimLog claim : claimLogs) {
+				String taskName = getTaskName(claim.getTaskID());
+				claimsExt.add(new ClaimLogExt(claim, taskName));
+			}
+			
+			return claimsExt;
 		}
 		
 		/**

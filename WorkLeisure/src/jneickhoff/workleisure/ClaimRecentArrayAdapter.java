@@ -1,10 +1,8 @@
 package jneickhoff.workleisure;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import jneickhoff.workleisure.db.ClaimLog;
-import jneickhoff.workleisure.db.DataSource;
+import jneickhoff.workleisure.db.ClaimLogExt;
 import jneickhoff.workleisure.db.Task;
 import android.content.Context;
 import android.content.res.Resources;
@@ -14,36 +12,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class ClaimRecentArrayAdapter extends ArrayAdapter<ClaimLog>{
-
-	private class ClaimLogExt {
-		public String taskName;
-		public String taskType;
-		public ClaimLog claimLog;
-		
-		public ClaimLogExt(String taskName, String taskType, ClaimLog claimLog) {
-			this.taskName = taskName;
-			this.taskType = taskType;
-			this.claimLog = claimLog;
-		}
-	}
+public class ClaimRecentArrayAdapter extends ArrayAdapter<ClaimLogExt>{
 	
 	private Context context;
 	private List<ClaimLogExt> values;
 	
-	public ClaimRecentArrayAdapter(Context context, List<ClaimLog> claimValues) {
+	public ClaimRecentArrayAdapter(Context context, List<ClaimLogExt> claimValues) {
 		super(context, R.layout.row_claim_named, claimValues);
 		this.context = context;
-		DataSource ds = new DataSource(context);
-		ds.open();
-		List<ClaimLogExt> values = new ArrayList<ClaimLogExt>();
-		for(ClaimLog claim : claimValues) {
-			Task task = ds.getTask(claim.getTaskID());
-			ClaimLogExt ext = new ClaimLogExt(task.getName(), task.getType(), claim);
-			values.add(ext);
-		}
-		this.values = values;
-		ds.close();
+		this.values = claimValues;
 	}
 	
 	@Override
@@ -56,52 +33,45 @@ public class ClaimRecentArrayAdapter extends ArrayAdapter<ClaimLog>{
 		TextView txtTaskType = (TextView) rowView.findViewById(R.id.txtTaskType);
 		TextView txtClaimBounty = (TextView) rowView.findViewById(R.id.txtClaimBounty);
 		TextView txtClaimComment = (TextView) rowView.findViewById(R.id.txtClaimComment);
-		ClaimLogExt clExt = values.get(position);
+		ClaimLogExt claimExt = values.get(position);
 		
-		txtTaskName.setText(clExt.taskName);
+		txtTaskName.setText(claimExt.getTaskName());
 		String strClaimDate = "";
-		if(clExt.claimLog.getDueDifference() == null) {
+		if(claimExt.getDueDifference() == null) {
 			//nothing
 		}
-		else if(clExt.claimLog.getDueDifference() > 0) {
-			strClaimDate += "Early " + clExt.claimLog.getDueDifference() + " day";
-			if(clExt.claimLog.getDueDifference() != 1)
+		else if(claimExt.getDueDifference() > 0) {
+			strClaimDate += "Early " + claimExt.getDueDifference() + " day";
+			if(claimExt.getDueDifference() != 1)
 				strClaimDate += "s";
 		}
-		else if(clExt.claimLog.getDueDifference() == 0){
+		else if(claimExt.getDueDifference() == 0){
 			strClaimDate += "On time";
 		}
-		else if(clExt.claimLog.getDueDifference() < 0) {
-			strClaimDate += "Late " + Math.abs(clExt.claimLog.getDueDifference()) + " day";
-			if(clExt.claimLog.getDueDifference() != -1)
+		else if(claimExt.getDueDifference() < 0) {
+			strClaimDate += "Late " + Math.abs(claimExt.getDueDifference()) + " day";
+			if(claimExt.getDueDifference() != -1)
 				strClaimDate += "s";
 		}
 		txtClaimDate.setText(strClaimDate);
-		txtClaimBounty.setText(String.format("%.1f", clExt.claimLog.getBounty()));
+		txtClaimBounty.setText(String.format("%.1f", claimExt.getBounty()));
 		Resources r = context.getResources();
-		if(clExt.taskType.equals(Task.TYPE_WORK)) {
+		if(claimExt.getTaskType().equals(Task.TYPE_WORK)) {
 			txtTaskType.setText(r.getString(R.string.work));
 			txtTaskType.setBackgroundColor(r.getColor(R.color.blue));
 		}
-		else if(clExt.taskType.equals(Task.TYPE_LEISURE)) {
+		else if(claimExt.getTaskType().equals(Task.TYPE_LEISURE)) {
 			txtTaskType.setText(r.getString(R.string.leisure));
 			txtTaskType.setBackgroundColor(r.getColor(R.color.red));
 		}
 		
-		txtClaimComment.setText(clExt.claimLog.getComment());
+		txtClaimComment.setText(claimExt.getComment());
 		
 		return rowView;
 	}
 	
-	public void addTop(ClaimLog claim) {
-		DataSource ds = new DataSource(context);
-		ds.open();
-		Task task = ds.getTask(claim.getTaskID());
-		ds.close();
-		ClaimLogExt ext = new ClaimLogExt(task.getName(), task.getType(), claim);
-		values.add(0, ext);
-//		if(values.size() > MAX_LIST_SIZE)
-//			values.remove(values.size() - 1);
+	public void addTop(ClaimLogExt claim) {
+		values.add(0, claim);
 	}
 	
 }

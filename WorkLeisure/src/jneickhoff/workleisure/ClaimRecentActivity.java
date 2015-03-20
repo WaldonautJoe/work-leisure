@@ -3,7 +3,7 @@ package jneickhoff.workleisure;
 import java.util.Calendar;
 import java.util.List;
 
-import jneickhoff.workleisure.db.ClaimLog;
+import jneickhoff.workleisure.db.ClaimLogExt;
 import jneickhoff.workleisure.db.DataSource;
 import jneickhoff.workleisure.db.Task;
 import android.os.Bundle;
@@ -77,7 +77,7 @@ public class ClaimRecentActivity extends Activity {
 		while (groupsPos >= 0) {
 			//set up claim displays and count bounties totals
 			View dayView = inflater.inflate(R.layout.days_claims, lytRecentClaims, false);
-			List<ClaimLog> daysClaims = ds.getAllClaimLogs(targetDateBeg, targetDateEnd, null, false);
+			List<ClaimLogExt> daysClaims = ds.getAllClaimLogsExt(targetDateBeg, targetDateEnd, false);
 			
 			TextView txtDateHeader = (TextView) dayView.findViewById(R.id.txtDateHeader);
 			HorizontalMeter meterWork = (HorizontalMeter) dayView.findViewById(R.id.meterWork);
@@ -94,7 +94,7 @@ public class ClaimRecentActivity extends Activity {
 			else {
 				ClaimRecentArrayAdapter claimAdapter = new ClaimRecentArrayAdapter(this, daysClaims);
 				for(int i = 0; i < daysClaims.size(); i++) {
-					ClaimLog claim = daysClaims.get(i);
+					ClaimLogExt claim = daysClaims.get(i);
 					View view = claimAdapter.getView(i, null, null);
 					
 					view.setOnClickListener(getClaimClickListener(claim.getTaskID()));

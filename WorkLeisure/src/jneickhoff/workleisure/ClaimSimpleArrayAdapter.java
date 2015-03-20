@@ -58,6 +58,10 @@ public class ClaimSimpleArrayAdapter extends ArrayAdapter<ClaimLog>{
 		return rowView;
 	}
 	
+	/**
+	 * Adds claim to top of list, removing the last item if list is larger than MAX_LIST_SIZE
+	 * @param claim claim to add
+	 */
 	public void addTop(ClaimLog claim) {
 		values.add(0, claim);
 		if(values.size() > MAX_LIST_SIZE)
