@@ -93,50 +93,8 @@
 		    <View
 		        android:layout_width="fill_parent"
 		        android:layout_height="1dip"
-		        android:background="#999999" />
-		    
-		    <LinearLayout
-		        android:layout_width="fill_parent"
-		        android:layout_height="wrap_content"
-		        android:paddingTop="10dp"
-		        android:orientation="horizontal" >
-		        
-			    <TextView 
-			        android:layout_weight="1"
-			        android:layout_width="0dip"
-			        android:layout_height="wrap_content"
-			        android:textSize="18sp"
-			        android:text="@string/bounty_label" />
-		    
-			    <TextView
-			        android:id="@+id/txtBounty"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:textSize="22sp"
-			        android:textColor="@color/blue" />
-			    
-		    </LinearLayout>
-		    
-		    <LinearLayout
-		        android:layout_width="fill_parent"
-		        android:layout_height="wrap_content"
-		        android:orientation="horizontal" >
-			    
-			    <TextView
-			        android:layout_weight="1"
-			        android:layout_width="0dip"
-			        android:layout_height="wrap_content"
-			        android:textSize="18sp"
-			        android:text="@string/stock_label" />
-			    
-			    <TextView
-			        android:id="@+id/txtStock"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:textSize="22sp"
-			        android:textColor="@color/blue" />
-			    
-		    </LinearLayout>
+		        android:background="#999999"
+		        android:layout_marginBottom="10dp" />
 		    
 		    <LinearLayout
 	            android:id="@+id/lytDue"
@@ -184,6 +142,27 @@
 			        android:text="@string/dueItTomorrow"
 			        android:onClick="onClick" />
 		        
+		    </LinearLayout>
+		    
+		    <LinearLayout
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:orientation="horizontal" >
+		        
+			    <TextView 
+			        android:layout_weight="1"
+			        android:layout_width="0dip"
+			        android:layout_height="wrap_content"
+			        android:textSize="18sp"
+			        android:text="@string/bounty_label" />
+		    
+			    <TextView
+			        android:id="@+id/txtBounty"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:textSize="22sp"
+			        android:textColor="@color/blue" />
+			    
 		    </LinearLayout>
 		    
 	        <Button

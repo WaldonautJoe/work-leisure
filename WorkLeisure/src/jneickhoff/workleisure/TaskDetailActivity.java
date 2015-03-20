@@ -28,9 +28,11 @@ import android.widget.Toast;
 public class TaskDetailActivity extends Activity 
 								implements ClaimConfirmDialogFragment.ClaimConfirmDialogListener {
 
-	public static final String EXTRA_TASK_ID = "extra_task_id";
+	//input extras
+	public static final String LONG_TASK_ID_EXTRA = "extra_task_id";
 	
-	public static final String EXTRA_CHANGE_TYPE = "extra_change_type";
+	//output extras
+	public static final String INT_CHANGE_TYPE_EXTRA = "extra_change_type";
 	public static final int CHANGE_EDIT = 10;
 	public static final int CHANGE_DELETE = 20;
 	
@@ -43,7 +45,7 @@ public class TaskDetailActivity extends Activity
 	private DateFormat dateFormat;
 	private DataSource dataSource;
 	private boolean isTaskEdited;
-	private static final String KEY_IS_TASK_EDITED = "is_task_edited";
+	private static final String IS_TASK_EDITED_KEY = "is_task_edited";
 	
 	private TextView txtName;
 	private TextView txtDateUpdated;
@@ -53,9 +55,7 @@ public class TaskDetailActivity extends Activity
 	private TextView txtImportance;
 	private TextView txtDesc;
 	private TextView txtBounty;
-	private TextView txtStock;
 	private LinearLayout lytDueButtons;
-	private Button btnClaimTask;
 	private LinearLayout lytCurrentGoal;
 	private HorizontalMeter metBountyCurrentGoal;
 	private NotchedHorizontalMeter metTimeCurrentGoal;
@@ -71,7 +71,7 @@ public class TaskDetailActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_task_detail);
 		
-		long id = getIntent().getExtras().getLong(EXTRA_TASK_ID);
+		long id = getIntent().getExtras().getLong(LONG_TASK_ID_EXTRA);
 		
 		dataSource = new DataSource(this);
 		dataSource.open();
@@ -88,9 +88,7 @@ public class TaskDetailActivity extends Activity
 		txtImportance = (TextView) findViewById(R.id.txtImportance);
 		txtDesc = (TextView) findViewById(R.id.txtDesc);
 		txtBounty = (TextView) findViewById(R.id.txtBounty);
-		txtStock = (TextView) findViewById(R.id.txtStock);
 		lytDueButtons = (LinearLayout) findViewById(R.id.lytDueButtons);
-		btnClaimTask = (Button) findViewById(R.id.btnClaimTask);
 		lytCurrentGoal = (LinearLayout) findViewById(R.id.lytCurrentGoal);
 		metBountyCurrentGoal = (HorizontalMeter) findViewById(R.id.metCurrentGoal);
 		metTimeCurrentGoal = (NotchedHorizontalMeter) findViewById(R.id.metTimeCurrentGoal);
@@ -125,7 +123,7 @@ public class TaskDetailActivity extends Activity
 		}
 		
 		if(savedInstanceState != null) {
-			isTaskEdited = savedInstanceState.getBoolean(KEY_IS_TASK_EDITED);
+			isTaskEdited = savedInstanceState.getBoolean(IS_TASK_EDITED_KEY);
 		}
 		else
 		{
@@ -149,14 +147,14 @@ public class TaskDetailActivity extends Activity
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
 		
-		savedInstanceState.putBoolean(KEY_IS_TASK_EDITED, isTaskEdited);
+		savedInstanceState.putBoolean(IS_TASK_EDITED_KEY, isTaskEdited);
 	}
 	
 	@Override
 	public void finish(){
 		if(isTaskEdited) {
 			Intent intent = new Intent();
-			intent.putExtra(EXTRA_CHANGE_TYPE, CHANGE_EDIT);
+			intent.putExtra(INT_CHANGE_TYPE_EXTRA, CHANGE_EDIT);
 			setResult(RESULT_OK, intent);
 		}
 		
@@ -189,36 +187,15 @@ public class TaskDetailActivity extends Activity
 		if(resultCode == RESULT_OK) {
 			if(requestCode == REQ_EDIT) {
 				dataSource.open();
-				task = dataSource.getTask(task.getID());
-				
-				updateDisplay();
+				onEditResult();
 				dataSource.close();
-				
-				isTaskEdited = true;
 			}
 			else if(requestCode == REQ_VIEW_CLAIMS) {
 				boolean isClaimDeleted = data.getBooleanExtra(ClaimListActivity.IS_CLAIM_DELETED_EXTRA, false);
 				
-				if(isClaimDeleted) {
-					dataSource.open();
-					List<ClaimLog> claims = dataSource.getAllClaimLogs(task.getID(), ClaimSimpleArrayAdapter.MAX_LIST_SIZE);
-					task = dataSource.getTask(task.getID()); //update times claimed
-					updateCurrentGoal();
-					dataSource.close();
-					
-					adapter.clear();
-					adapter.addAll(claims);
-					listLatestClaims.removeAllViews();
-					for(int i = 0; i < adapter.getCount(); i++) {
-						View view = adapter.getView(i, null, null);
-						listLatestClaims.addView(view);
-					}
-					
-					txtTimesClaimed.setText(task.getTimesClaimed() + " " + getResources().getString(R.string.total_claims));
-					if(task.getTimesClaimed() == 0) {
-						btnViewAllClaims.setVisibility(View.GONE);
-					}
-				}
+				dataSource.open();
+				onViewClaimsResult(isClaimDeleted);
+				dataSource.close();
 			}
 			else if(requestCode == REQ_CUR_GOAL) {
 				boolean isCurrentGoalDeleted = data.getBooleanExtra(GoalClaimListActivity.BOOLEAN_DELETE_OK_EXTRA, false);
@@ -240,18 +217,45 @@ public class TaskDetailActivity extends Activity
 		}
 	}
 	
+	private void onEditResult() {
+		task = dataSource.getTask(task.getID());
+		updateDisplay();
+		isTaskEdited = true;
+	}
+	
+	private void onViewClaimsResult(boolean isClaimDeleted) {
+		if(isClaimDeleted) {
+			List<ClaimLog> claims = dataSource.getAllClaimLogs(task.getID(), ClaimSimpleArrayAdapter.MAX_LIST_SIZE);
+			task = dataSource.getTask(task.getID()); //update times claimed
+			updateCurrentGoal();
+			
+			adapter.clear();
+			adapter.addAll(claims);
+			listLatestClaims.removeAllViews();
+			for(int i = 0; i < adapter.getCount(); i++) {
+				View view = adapter.getView(i, null, null);
+				listLatestClaims.addView(view);
+			}
+			
+			txtTimesClaimed.setText(task.getTimesClaimed() + " " + getResources().getString(R.string.total_claims));
+			if(task.getTimesClaimed() == 0) {
+				btnViewAllClaims.setVisibility(View.GONE);
+			}
+		}
+	}
+	
 	@Override
 	public void onClaimDialogPositiveClick(DialogFragment dialog, String newBounty, String comment, boolean toRemoveDue) {
-		if(task.getStockType().equals(Task.STOCK_TYPE_LIMITED)){
-			long taskStock = task.getStockNumber();
-			taskStock--;
-			task.setStockNumber(taskStock);
-			
-			if(taskStock <= 0)
-				btnClaimTask.setEnabled(false);
-			
-			txtStock.setText(String.valueOf(taskStock));
-		}
+//		if(task.getStockType().equals(Task.STOCK_TYPE_LIMITED)){
+//			long taskStock = task.getStockNumber();
+//			taskStock--;
+//			task.setStockNumber(taskStock);
+//			
+//			if(taskStock <= 0)
+//				btnClaimTask.setEnabled(false);
+//			
+//			txtStock.setText(String.valueOf(taskStock));
+//		}
 		Calendar currentTime = Calendar.getInstance();
 		
 		float bounty;
@@ -342,7 +346,7 @@ public class TaskDetailActivity extends Activity
 		Toast.makeText(this, task.getName() + " " + getString(R.string.discarded), Toast.LENGTH_SHORT).show();
 		
 		Intent intent = new Intent();
-		intent.putExtra(EXTRA_CHANGE_TYPE, CHANGE_DELETE);
+		intent.putExtra(INT_CHANGE_TYPE_EXTRA, CHANGE_DELETE);
 		setResult(RESULT_OK, intent);
 		
 		super.finish();
@@ -475,17 +479,6 @@ public class TaskDetailActivity extends Activity
 			txtDesc.setText(task.getDesc());
 		}
 		txtBounty.setText(String.format("%.1f", task.getBounty()));
-		if(task.getStockType().equals(Task.STOCK_TYPE_UNLIMITED)){
-			txtStock.setText(getResources().getString(R.string.unlimited));
-			btnClaimTask.setEnabled(true);
-		}
-		else {
-			txtStock.setText(String.valueOf(task.getStockNumber()));
-			if(task.getStockNumber() <= 0)
-				btnClaimTask.setEnabled(false);
-			else
-				btnClaimTask.setEnabled(true);
-		}
 		txtTimesClaimed.setText(String.valueOf(task.getTimesClaimed() + " " + getResources().getString(R.string.total_claims)));
 		if(task.getTimesClaimed() == 0) {
 			btnViewAllClaims.setVisibility(View.GONE);

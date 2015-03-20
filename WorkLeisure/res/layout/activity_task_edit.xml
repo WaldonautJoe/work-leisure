@@ -67,34 +67,6 @@
 				android:textSize="22sp"
 				android:text="@string/default_bounty"/>
 			
-			<TextView
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:paddingTop="10dp"
-			    android:text="@string/task_stock" />
-			
-			<LinearLayout 
-			    android:layout_width="fill_parent"
-			    android:layout_height="wrap_content"
-			    android:orientation="horizontal">
-			    
-			    <Spinner 
-			        android:id="@+id/spnStockType"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:entries="@array/stock_types" />
-		
-			    <EditText
-				    android:id="@+id/editTaskStock"
-				    android:inputType="number"
-				    android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:hint="@string/task_stock"
-					android:textSize="22sp"
-					android:text="@string/default_stock"/>
-			    	    
-			</LinearLayout>
-			
 			<LinearLayout 
 		        android:layout_width="fill_parent"
 		        android:layout_height="wrap_content"

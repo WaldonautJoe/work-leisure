@@ -70,7 +70,7 @@ public class GoalCurrentListActivity extends Activity {
 				NamedGoal namedGoal = adapter.getItem(position);
 				
 				Intent i = new Intent(GoalCurrentListActivity.this, TaskDetailActivity.class);
-				i.putExtra(TaskDetailActivity.EXTRA_TASK_ID, namedGoal.getTaskID());
+				i.putExtra(TaskDetailActivity.LONG_TASK_ID_EXTRA, namedGoal.getTaskID());
 				startActivity(i);
 			}
 		};

@@ -84,7 +84,7 @@ public class TasksDueActivity extends Activity {
 				long taskID = (Long) v.getTag();
 				
 				Intent intent = new Intent(TasksDueActivity.this, TaskDetailActivity.class);
-				intent.putExtra(TaskDetailActivity.EXTRA_TASK_ID, taskID);
+				intent.putExtra(TaskDetailActivity.LONG_TASK_ID_EXTRA, taskID);
 				startActivity(intent);
 			}
 		};

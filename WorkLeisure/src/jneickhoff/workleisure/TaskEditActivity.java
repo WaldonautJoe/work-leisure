@@ -16,8 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -56,8 +54,6 @@ public class TaskEditActivity extends Activity {
 	private TextView txtTaskDueDate;
 	private EditText editTaskDesc;
 	private EditText editTaskBounty;
-	private Spinner spnStockType;
-	private EditText editTaskStock;
 	
 	private Calendar taskDueDate;
 	
@@ -74,10 +70,7 @@ public class TaskEditActivity extends Activity {
 		txtTaskDueDate = (TextView) findViewById(R.id.txtTaskDueDate);
 		editTaskDesc = (EditText) findViewById(R.id.editTaskDesc);
 		editTaskBounty = (EditText) findViewById(R.id.editTaskBounty);
-		spnStockType = (Spinner) findViewById(R.id.spnStockType);
-		editTaskStock = (EditText) findViewById(R.id.editTaskStock);
 		
-		spnStockType.setOnItemSelectedListener(getStockTypeListener());
 		txtTaskDueDate.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -105,24 +98,6 @@ public class TaskEditActivity extends Activity {
 					else {
 						//correct formatting of decimal input
 						editTaskBounty.setText(String.format("%.1f", Float.parseFloat(editTaskBounty.getText().toString())));
-					}
-				}
-			}
-		});
-		editTaskStock.setOnFocusChangeListener(new OnFocusChangeListener() {
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				if(hasFocus) {
-					editTaskStock.setText("");
-					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-					imm.showSoftInput(editTaskStock, InputMethodManager.SHOW_IMPLICIT);
-				}
-				else {
-					if(editTaskStock.getText().length() == 0){
-						if(editType == ADD_NEW)
-							editTaskStock.setText(getResources().getText(R.string.default_stock));
-						else if(editType == EDIT_OLD)
-							editTaskStock.setText(Long.toString(oldTask.getStockNumber()));
 					}
 				}
 			}
@@ -179,11 +154,6 @@ public class TaskEditActivity extends Activity {
 			}
 			editTaskDesc.setText(oldTask.getDesc());
 			editTaskBounty.setText(String.valueOf(oldTask.getBounty()));
-			if(oldTask.getStockType().equals(Task.STOCK_TYPE_UNLIMITED))
-				spnStockType.setSelection(0);
-			else
-				spnStockType.setSelection(1);
-			editTaskStock.setText(String.valueOf(oldTask.getStockNumber()));
 		}
 		
 		if(savedInstanceState != null) {
@@ -220,34 +190,6 @@ public class TaskEditActivity extends Activity {
 		}
 	}
 	
-	/**
-	 * Returns listener for stock type spinner that changes visibility of stock amount field (editTaskStock).
-	 * @return OnItemSelectedListener 
-	 */
-	private OnItemSelectedListener getStockTypeListener() {
-		return new OnItemSelectedListener() {
-
-			@Override
-			public void onItemSelected(AdapterView<?> parentView, View selectedItemView,
-					int position, long id) {
-				switch(position){
-					case 0:
-						editTaskStock.setVisibility(View.GONE);
-						break;
-					case 1:
-						editTaskStock.setVisibility(View.VISIBLE);
-						break;
-				}
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-				// nothing
-			}
-			
-		};
-	}
-	
 	@Override
 	public void finish() {
 		Intent intent = new Intent();
@@ -277,17 +219,9 @@ public class TaskEditActivity extends Activity {
 			taskBounty = 0;
 		else
 			taskBounty = Math.round(10 * Float.parseFloat(editTaskBounty.getText().toString())) / 10.0f; //removes digits past 10ths place
-		if(spnStockType.getSelectedItemPosition() == 0) {
-			taskStockType = Task.STOCK_TYPE_UNLIMITED;
-			taskStockNum = 1;
-		}
-		else {
-			taskStockType = Task.STOCK_TYPE_LIMITED;
-			if(editTaskStock.length() == 0)
-				taskStockNum = 1;
-			else
-				taskStockNum = Long.parseLong(editTaskStock.getText().toString());
-		}
+		taskStockType = Task.STOCK_TYPE_UNLIMITED;
+		taskStockNum = 1;
+		
 		
 		switch(editType) {
 		case ADD_NEW:

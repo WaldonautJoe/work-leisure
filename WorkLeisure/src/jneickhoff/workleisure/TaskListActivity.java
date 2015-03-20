@@ -203,12 +203,12 @@ public class TaskListActivity extends Activity {
 				
 				selectedItemPosition = adapter.getPosition(newTask);
 				Intent intent = new Intent(getApplicationContext(), TaskDetailActivity.class);
-				intent.putExtra(TaskDetailActivity.EXTRA_TASK_ID, newTask.getID());
+				intent.putExtra(TaskDetailActivity.LONG_TASK_ID_EXTRA, newTask.getID());
 				startActivityForResult(intent, REQ_DETAIL);
 				break;
 			
 			case REQ_DETAIL: 
-				int changeType = data.getExtras().getInt(TaskDetailActivity.EXTRA_CHANGE_TYPE);
+				int changeType = data.getExtras().getInt(TaskDetailActivity.INT_CHANGE_TYPE_EXTRA);
 				Task oldTask = adapter.getItem(selectedItemPosition);
 				
 				if(changeType == TaskDetailActivity.CHANGE_EDIT) {
@@ -266,7 +266,7 @@ public class TaskListActivity extends Activity {
 				selectedItemPosition = position;
 				
 				Intent intent = new Intent(getApplicationContext(), TaskDetailActivity.class);
-				intent.putExtra(TaskDetailActivity.EXTRA_TASK_ID, task.getID());
+				intent.putExtra(TaskDetailActivity.LONG_TASK_ID_EXTRA, task.getID());
 				startActivityForResult(intent, REQ_DETAIL);
 			}
 			
