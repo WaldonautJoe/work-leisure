@@ -16,13 +16,7 @@ public class Goal {
 	private List<Calendar> claimDateList;
 	
 	public Goal() {
-		id = 0;
-		taskID = 0;
-		bountyProgress = 0;
-		bountyTarget = 0;
-		dateStart = Calendar.getInstance();
-		dateEnd = Calendar.getInstance();
-		claimDateList = new ArrayList<Calendar>();
+
 	}
 	
 	public Goal(long id, long taskID, float bountyProgress, float bountyTarget, 

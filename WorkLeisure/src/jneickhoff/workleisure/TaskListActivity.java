@@ -21,11 +21,14 @@ import android.widget.TextView;
 
 public class TaskListActivity extends Activity {
 	
-	public static final String EXTRA_BOOL_ARCHIVE = "extra_bool_archive";
+	//input extras
+	public static final String BOOLEAN_ARCHIVE_EXTRA = "extra_bool_archive";
 	private boolean displayArchived;
-	public static final String EXTRA_TASK_TYPE = "extra_task_type";
+	public static final String STRING_TASK_TYPE_EXTRA = "extra_task_type";
 	private String strTaskType;
-	public static final String EXTRA_BOOL_ITEMUNARCHIVED = "extra_bool_itemunarchived";
+	
+	//output extras
+	public static final String BOOLEAN_ITEM_UNARCHIVED_EXTRA = "extra_bool_itemunarchived";
 	private boolean itemUnarchived;
 	
 	private static final int REQ_NEW = 100;
@@ -42,8 +45,8 @@ public class TaskListActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_task_list);
 		
-		strTaskType = getIntent().getStringExtra(EXTRA_TASK_TYPE);
-		displayArchived = getIntent().getBooleanExtra(EXTRA_BOOL_ARCHIVE, false);
+		strTaskType = getIntent().getStringExtra(STRING_TASK_TYPE_EXTRA);
+		displayArchived = getIntent().getBooleanExtra(BOOLEAN_ARCHIVE_EXTRA, false);
 		itemUnarchived = false;
 		spnSortType = (Spinner) findViewById(R.id.spnSort);
 		
@@ -110,46 +113,15 @@ public class TaskListActivity extends Activity {
 	 */
 	public void addNewTask() {
 		Intent i = new Intent(this, TaskEditActivity.class);
-		i.putExtra(TaskEditActivity.EXTRA_EDIT_TYPE, TaskEditActivity.ADD_NEW);
-		i.putExtra(TaskEditActivity.EXTRA_TASK_TYPE, strTaskType);
-		i.putExtra(TaskEditActivity.EXTRA_TASK_ISARCHIVED, displayArchived);
+		i.putExtra(TaskEditActivity.INT_EDIT_TYPE_EXTRA, TaskEditActivity.ADD_NEW);
+		i.putExtra(TaskEditActivity.STRING_TASK_TYPE_EXTRA, strTaskType);
+		i.putExtra(TaskEditActivity.BOOLEAN_TASK_ISARCHIVED_EXTRA, displayArchived);
 		startActivityForResult(i, REQ_NEW);
 	}
 	
 	public void deleteTask(final Task task) {
 		final TaskArrayAdapter adapter = (TaskArrayAdapter) taskList.getAdapter();
 		adapter.remove(task);
-		
-//		TextView txtUndoMessage = (TextView) findViewById(R.id.txtUndoMessage);
-//		Button btnUndo = (Button) findViewById(R.id.btnUndo);
-//		final Handler handler = new Handler();
-//		
-//		final Runnable runDelete = new Runnable() {
-//			
-//			@Override
-//			public void run() {
-//				dataSource.open();
-//				dataSource.deleteTask(task);
-//				dataSource.close();
-//				lytUndoPrompt.setVisibility(View.GONE);
-//			}
-//		};
-//		
-//		adapter.remove(task);
-//		txtUndoMessage.setText(task.getName() + " discarded");
-//		lytUndoPrompt.setVisibility(View.VISIBLE);
-//		handler.postDelayed(runDelete, 4000);
-//		btnUndo.setOnClickListener(new View.OnClickListener() {
-//			
-//			@Override
-//			public void onClick(View v) {
-//				lytUndoPrompt.setVisibility(View.GONE);
-//				handler.removeCallbacks(runDelete);
-//				adapter.add(task);
-//				sortList();
-//				Toast.makeText(TaskListActivity.this, "Deletion undone", Toast.LENGTH_SHORT).show();
-//			}
-//		});
 	}
 	
 	/**
@@ -159,8 +131,8 @@ public class TaskListActivity extends Activity {
 	 */
 	public void viewArchive() {
 		Intent i = new Intent(this, TaskListActivity.class);
-		i.putExtra(EXTRA_TASK_TYPE, strTaskType);
-		i.putExtra(EXTRA_BOOL_ARCHIVE, true);
+		i.putExtra(STRING_TASK_TYPE_EXTRA, strTaskType);
+		i.putExtra(BOOLEAN_ARCHIVE_EXTRA, true);
 		startActivityForResult(i, REQ_ARCHIVE);
 	}
 	
@@ -168,15 +140,8 @@ public class TaskListActivity extends Activity {
 	public void finish() {
 		if(displayArchived) {
 			Intent i = new Intent();
-			i.putExtra(EXTRA_BOOL_ITEMUNARCHIVED, itemUnarchived);
+			i.putExtra(BOOLEAN_ITEM_UNARCHIVED_EXTRA, itemUnarchived);
 			setResult(RESULT_OK, i);
-			
-			/*
-			if(itemUnarchived)
-				setResult(RESULT_OK);
-			else
-				setResult(RESULT_CANCELED);
-			*/
 		}
 		
 		super.finish();
@@ -191,7 +156,7 @@ public class TaskListActivity extends Activity {
 			
 			switch(requestCode) {
 			case REQ_NEW:
-				long newID = data.getExtras().getLong(TaskEditActivity.UPDATE_TASK_ID);
+				long newID = data.getExtras().getLong(TaskEditActivity.LONG_UPDATE_TASK_ID_EXTRA);
 				dataSource.open();
 				Task newTask = dataSource.getTask(newID);
 				dataSource.close();
@@ -234,7 +199,7 @@ public class TaskListActivity extends Activity {
 			
 				break;
 			case REQ_ARCHIVE:
-					boolean itemUnarchived = data.getBooleanExtra(EXTRA_BOOL_ITEMUNARCHIVED, false);
+					boolean itemUnarchived = data.getBooleanExtra(BOOLEAN_ITEM_UNARCHIVED_EXTRA, false);
 					if(itemUnarchived) {
 						dataSource.open();
 						List<Task> values = dataSource.getAllTasksOfType(strTaskType, displayArchived);

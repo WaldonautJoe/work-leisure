@@ -16,7 +16,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -353,88 +352,117 @@ public class TaskDetailActivity extends Activity
 	}
 	
 	/**
-	 * Called when user clicks the edit action.
+	 * Called when user clicks the edit action. <br />
 	 * Alters task data
 	 */
 	private void editTask() {
 		Intent intent = new Intent(this, TaskEditActivity.class);
-		intent.putExtra(TaskEditActivity.EXTRA_EDIT_TYPE, TaskEditActivity.EDIT_OLD);
-		intent.putExtra(TaskEditActivity.EXTRA_TASK_TYPE, task.getType());
-		intent.putExtra(TaskEditActivity.EXTRA_TASK_ID, task.getID());
+		intent.putExtra(TaskEditActivity.INT_EDIT_TYPE_EXTRA, TaskEditActivity.EDIT_OLD);
+		intent.putExtra(TaskEditActivity.STRING_TASK_TYPE_EXTRA, task.getType());
+		intent.putExtra(TaskEditActivity.LONG_TASK_ID_EXTRA, task.getID());
 		startActivityForResult(intent, REQ_EDIT);
 	}
 	
 	public void onClick(View view) {
 		switch(view.getId()) {
 		case R.id.btnDueToday:
-			Log.w("Info", "btnDueToday clicked");
-			Calendar dateToday = Calendar.getInstance();
-			dateToday.set(Calendar.HOUR_OF_DAY, 0);
-			dateToday.set(Calendar.MINUTE, 0);
-			dateToday.set(Calendar.SECOND, 0);
-			dateToday.set(Calendar.MILLISECOND, 0);
-			task.setDue(true);;
-			task.setDateDue(dateToday);
-			dataSource.updateTask(task);
-			updateDisplay();
-			
-			isTaskEdited = true;
+			dueTaskToday();
 			break;
 			
 		case R.id.btnDueTomorrow:
-			Calendar dateTomorrow = Calendar.getInstance();
-			dateTomorrow.set(Calendar.HOUR_OF_DAY, 0);
-			dateTomorrow.set(Calendar.MINUTE, 0);
-			dateTomorrow.set(Calendar.SECOND, 0);
-			dateTomorrow.set(Calendar.MILLISECOND, 0);
-			dateTomorrow.add(Calendar.DATE, 1);
-			task.setDue(true);
-			task.setDateDue(dateTomorrow);
-			dataSource.updateTask(task);
-			updateDisplay();
-			
-			isTaskEdited = true;
+			dueTaskTomorrow();
 			break;
 			
 		case R.id.btnClaimTask:
-			Bundle bundle = new Bundle();
-			bundle.putFloat(ClaimConfirmDialogFragment.FLOAT_BOUNTY, task.getBounty());
-			bundle.putString(ClaimConfirmDialogFragment.STRING_TASKTYPE, task.getType());
-			bundle.putBoolean(ClaimConfirmDialogFragment.BOOLEAN_ISDUE, task.isDue());
-			if(task.getCurrentGoal() == null)
-				bundle.putBoolean(ClaimConfirmDialogFragment.BOOLEAN_ISCURRENTGOAL, false);
-			else
-			{
-				bundle.putBoolean(ClaimConfirmDialogFragment.BOOLEAN_ISCURRENTGOAL, true);
-				bundle.putFloat(ClaimConfirmDialogFragment.FLOAT_CURRENTGOALPROGRESS, task.getCurrentGoal().getBountyProgress());
-				bundle.putFloat(ClaimConfirmDialogFragment.FLOAT_CURRENTGOALTARGET, task.getCurrentGoal().getBountyTarget());
-			}
-			
-			DialogFragment dialog = new ClaimConfirmDialogFragment();
-			dialog.setArguments(bundle);
-			dialog.show(getFragmentManager(), "ClaimConfirmDialogFragment");
+			showClaimTaskDialog();
 			break;
 			
 		case R.id.lytCurrentGoal:
-			Intent intentCurrentGoal = new Intent(this, GoalClaimListActivity.class);
-			intentCurrentGoal.putExtra(GoalClaimListActivity.LONG_GOAL_ID_EXTRA, task.getCurrentGoal().getId());
-			startActivityForResult(intentCurrentGoal, REQ_CUR_GOAL);
+			displayCurrentGoalClaims();
 			break;
 			
 		case R.id.btnViewBountyGoals:
-			Intent intentGoals = new Intent(this, TaskGoalsListActivity.class);
-			intentGoals.putExtra(TaskGoalsListActivity.LONG_TASK_ID_EXTRA, task.getID());
-			startActivityForResult(intentGoals, REQ_VIEW_GOALS);
+			displayTaskGoals();
 			break;
 			
 		case R.id.btnViewAllClaims:
-			Intent intentViewClaims = new Intent(this, ClaimListActivity.class);
-			intentViewClaims.putExtra(ClaimListActivity.EXTRA_TASK_ID, task.getID());
-			intentViewClaims.putExtra(ClaimListActivity.EXTRA_TASK_NAME, task.getName());
-			intentViewClaims.putExtra(ClaimListActivity.EXTRA_TASK_TYPE, task.getType());
-			startActivityForResult(intentViewClaims, REQ_VIEW_CLAIMS);
+			displayTaskClaims();
 			break;
 		}
+	}
+	
+	/**
+	 * Update task to be due today
+	 */
+	private void dueTaskToday() {
+		Calendar dateToday = Calendar.getInstance();
+		dateToday.set(Calendar.HOUR_OF_DAY, 0);
+		dateToday.set(Calendar.MINUTE, 0);
+		dateToday.set(Calendar.SECOND, 0);
+		dateToday.set(Calendar.MILLISECOND, 0);
+		task.setDue(true);;
+		task.setDateDue(dateToday);
+		dataSource.updateTask(task);
+		updateDisplay();
+		
+		isTaskEdited = true;
+	}
+	
+	/**
+	 * Update task to be due tomorrow
+	 */
+	private void dueTaskTomorrow() {
+		Calendar dateTomorrow = Calendar.getInstance();
+		dateTomorrow.set(Calendar.HOUR_OF_DAY, 0);
+		dateTomorrow.set(Calendar.MINUTE, 0);
+		dateTomorrow.set(Calendar.SECOND, 0);
+		dateTomorrow.set(Calendar.MILLISECOND, 0);
+		dateTomorrow.add(Calendar.DATE, 1);
+		task.setDue(true);
+		task.setDateDue(dateTomorrow);
+		dataSource.updateTask(task);
+		updateDisplay();
+		
+		isTaskEdited = true;
+	}
+	
+	private void showClaimTaskDialog() {
+		Bundle bundle = new Bundle();
+		bundle.putFloat(ClaimConfirmDialogFragment.FLOAT_BOUNTY, task.getBounty());
+		bundle.putString(ClaimConfirmDialogFragment.STRING_TASKTYPE, task.getType());
+		bundle.putBoolean(ClaimConfirmDialogFragment.BOOLEAN_ISDUE, task.isDue());
+		if(task.getCurrentGoal() == null)
+			bundle.putBoolean(ClaimConfirmDialogFragment.BOOLEAN_ISCURRENTGOAL, false);
+		else
+		{
+			bundle.putBoolean(ClaimConfirmDialogFragment.BOOLEAN_ISCURRENTGOAL, true);
+			bundle.putFloat(ClaimConfirmDialogFragment.FLOAT_CURRENTGOALPROGRESS, task.getCurrentGoal().getBountyProgress());
+			bundle.putFloat(ClaimConfirmDialogFragment.FLOAT_CURRENTGOALTARGET, task.getCurrentGoal().getBountyTarget());
+		}
+		
+		DialogFragment dialog = new ClaimConfirmDialogFragment();
+		dialog.setArguments(bundle);
+		dialog.show(getFragmentManager(), "ClaimConfirmDialogFragment");
+	}
+	
+	private void displayCurrentGoalClaims() {
+		Intent intentCurrentGoal = new Intent(this, GoalClaimListActivity.class);
+		intentCurrentGoal.putExtra(GoalClaimListActivity.LONG_GOAL_ID_EXTRA, task.getCurrentGoal().getId());
+		startActivityForResult(intentCurrentGoal, REQ_CUR_GOAL);
+	}
+	
+	private void displayTaskGoals() {
+		Intent intentGoals = new Intent(this, TaskGoalsListActivity.class);
+		intentGoals.putExtra(TaskGoalsListActivity.LONG_TASK_ID_EXTRA, task.getID());
+		startActivityForResult(intentGoals, REQ_VIEW_GOALS);
+	}
+	
+	private void displayTaskClaims() {
+		Intent intentViewClaims = new Intent(this, ClaimListActivity.class);
+		intentViewClaims.putExtra(ClaimListActivity.EXTRA_TASK_ID, task.getID());
+		intentViewClaims.putExtra(ClaimListActivity.EXTRA_TASK_NAME, task.getName());
+		intentViewClaims.putExtra(ClaimListActivity.EXTRA_TASK_TYPE, task.getType());
+		startActivityForResult(intentViewClaims, REQ_VIEW_CLAIMS);
 	}
 	
 	private void updateDisplay() {

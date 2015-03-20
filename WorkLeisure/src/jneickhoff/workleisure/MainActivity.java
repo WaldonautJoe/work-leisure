@@ -198,7 +198,7 @@ public class MainActivity extends Activity {
 	 */
 	public void displayWorkTasks() {
 		Intent i = new Intent(this, TaskListActivity.class);
-		i.putExtra(TaskListActivity.EXTRA_TASK_TYPE, Task.TYPE_WORK);
+		i.putExtra(TaskListActivity.STRING_TASK_TYPE_EXTRA, Task.TYPE_WORK);
 		startActivity(i);
 	}
 
@@ -207,7 +207,7 @@ public class MainActivity extends Activity {
 	 */
 	public void displayLeisureTasks() {
 		Intent i = new Intent(this, TaskListActivity.class);
-		i.putExtra(TaskListActivity.EXTRA_TASK_TYPE, Task.TYPE_LEISURE);
+		i.putExtra(TaskListActivity.STRING_TASK_TYPE_EXTRA, Task.TYPE_LEISURE);
 		startActivity(i);
 	}
 	

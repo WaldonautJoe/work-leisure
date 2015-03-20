@@ -27,25 +27,19 @@ import android.widget.Toast;
 
 public class TaskEditActivity extends Activity {
 
-	public static final String EXTRA_EDIT_TYPE = "edit_type";
+	//input extras
+	public static final String INT_EDIT_TYPE_EXTRA = "edit_type";
 	public static final int ADD_NEW = 10;
 	public static final int EDIT_OLD = 20;
 	private int editType;
-	
-	public static final String EXTRA_TASK_TYPE = "task_type";
+	public static final String STRING_TASK_TYPE_EXTRA = "task_type";
 	private String taskType;
-	
-	public static final String EXTRA_TASK_ISARCHIVED = "task_isarchived";
+	public static final String BOOLEAN_TASK_ISARCHIVED_EXTRA = "task_isarchived";
 	private boolean taskIsArchived; //only used for a new task
+	public static final String LONG_TASK_ID_EXTRA = "update_task_id";
 	
-	public static final String EXTRA_TASK_ID = "update_task_id";
-	private Task oldTask;
-	
-	public static final String UPDATE_TASK_ID = "update_task_id";
-	
-	private static final String UNNAMED_TASK = "Unnamed Task";
-	
-	private static final String LONG_DUE_DATE = "long_due_date";
+	//output extra
+	public static final String LONG_UPDATE_TASK_ID_EXTRA = "update_task_id";
 	
 	private LinearLayout lytHeader;
 	private EditText editTaskName;
@@ -56,7 +50,15 @@ public class TaskEditActivity extends Activity {
 	private EditText editTaskDesc;
 	private EditText editTaskBounty;
 	
+	private Task oldTask;
 	private Calendar taskDueDate;
+	private static final String LONG_DUE_DATE_KEY = "long_due_date";
+	
+	private static final String DEFAULT_NAME = "Unnamed task";
+	private static final String DEFAULT_IMPORTANCE = Task.IMPORTANCE_LOW;
+	private static final boolean DEFAULT_IS_DUE = false;
+	private static final float DEFAULT_BOUNTY = 0.0f;
+	private static final String DEFAULT_STOCK_TYPE = Task.STOCK_TYPE_UNLIMITED;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,28 +74,8 @@ public class TaskEditActivity extends Activity {
 		editTaskDesc = (EditText) findViewById(R.id.editTaskDesc);
 		editTaskBounty = (EditText) findViewById(R.id.editTaskBounty);
 		
-		chkTaskDue.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-			
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if(isChecked) {
-					txtTaskDueDate.setText(DateFormat.getDateFormat(TaskEditActivity.this).format(taskDueDate.getTime()));
-				}
-				else {
-					txtTaskDueDate.setText(getString(R.string.never));
-				}
-				
-			}
-		});
-		
-		txtTaskDueDate.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				pickDueDate();
-				
-			}
-		});
+		chkTaskDue.setOnCheckedChangeListener(getDueDateOnCheckedChangeListener());
+		txtTaskDueDate.setOnClickListener(getDueDateOnClickListener());
 		editTaskBounty.setOnFocusChangeListener(new OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
@@ -119,8 +101,8 @@ public class TaskEditActivity extends Activity {
 		});
 		
 		Bundle extras = getIntent().getExtras();
-		taskType = extras.getString(EXTRA_TASK_TYPE);
-		editType = extras.getInt(EXTRA_EDIT_TYPE);
+		taskType = extras.getString(STRING_TASK_TYPE_EXTRA);
+		editType = extras.getInt(INT_EDIT_TYPE_EXTRA);
 		
 		if(taskType.equals(Task.TYPE_WORK)) {
 			lytHeader.setBackgroundColor(getResources().getColor(R.color.blue));
@@ -133,17 +115,18 @@ public class TaskEditActivity extends Activity {
 		
 		if(editType == ADD_NEW) {
 			taskDueDate = Calendar.getInstance();
+			chkTaskArchived.setChecked(DEFAULT_IS_DUE);
 			txtTaskDueDate.setText(getString(R.string.never));
 			spnTaskImportance.setSelection(1); //set selection to low importance
 			
-			taskIsArchived = extras.getBoolean(EXTRA_TASK_ISARCHIVED);
+			taskIsArchived = extras.getBoolean(BOOLEAN_TASK_ISARCHIVED_EXTRA);
 			chkTaskArchived.setChecked(taskIsArchived);
 			chkTaskArchived.setEnabled(false);
 			TextView txtTaskArchived = (TextView) findViewById(R.id.txtArchived);
 			txtTaskArchived.setEnabled(false);
 		}
 		else if(editType == EDIT_OLD){
-			long id = extras.getLong(EXTRA_TASK_ID);
+			long id = extras.getLong(LONG_TASK_ID_EXTRA);
 			DataSource dataSource = new DataSource(this);
 			dataSource.open();
 			oldTask = dataSource.getTask(id);
@@ -172,7 +155,7 @@ public class TaskEditActivity extends Activity {
 		}
 		
 		if(savedInstanceState != null) {
-			taskDueDate.setTimeInMillis(savedInstanceState.getLong(LONG_DUE_DATE));
+			taskDueDate.setTimeInMillis(savedInstanceState.getLong(LONG_DUE_DATE_KEY));
 			txtTaskDueDate.setText(DateFormat.getDateFormat(this).format(taskDueDate.getTime()));
 		}
 	}
@@ -188,7 +171,7 @@ public class TaskEditActivity extends Activity {
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
 	
-		savedInstanceState.putLong(LONG_DUE_DATE, taskDueDate.getTimeInMillis());
+		savedInstanceState.putLong(LONG_DUE_DATE_KEY, taskDueDate.getTimeInMillis());
 	}
 	
 	@Override
@@ -207,7 +190,7 @@ public class TaskEditActivity extends Activity {
 	
 	@Override
 	public void finish() {
-		Intent intent = new Intent();
+		Intent data = new Intent();
 		String taskName,
 			   taskImportance,
 			   taskDesc, 
@@ -220,8 +203,8 @@ public class TaskEditActivity extends Activity {
 		//get info from fields
 		taskName = editTaskName.getText().toString();
 		if(editTaskName.length() == 0)
-			taskName = UNNAMED_TASK;
-		taskIsArchived = chkTaskArchived.isChecked();
+			taskName = DEFAULT_NAME;
+		taskIsArchived = this.taskIsArchived;
 		if(spnTaskImportance.getSelectedItemPosition() == 1)
 			taskImportance = Task.IMPORTANCE_LOW;
 		else
@@ -234,22 +217,21 @@ public class TaskEditActivity extends Activity {
 			taskBounty = 0;
 		else
 			taskBounty = Math.round(10 * Float.parseFloat(editTaskBounty.getText().toString())) / 10.0f; //removes digits past 10ths place
-		taskStockType = Task.STOCK_TYPE_UNLIMITED;
+		taskStockType = DEFAULT_STOCK_TYPE;
 		taskStockNum = 1;
 		
 		
 		switch(editType) {
 		case ADD_NEW:
 			//test if task is empty
-			if(taskName.equals(UNNAMED_TASK)
-					&& taskImportance.equals(Task.IMPORTANCE_LOW)
-					&& !taskIsDue
+			if(taskName.equals(DEFAULT_NAME)
+					&& taskImportance.equals(DEFAULT_IMPORTANCE)
+					&& taskIsDue == DEFAULT_IS_DUE
 					&& taskDesc.length() == 0 
-					&& taskBounty == 0
-					&& taskStockType.equals(Task.STOCK_TYPE_UNLIMITED)
-					&& !taskIsArchived) {
-				Toast.makeText(this, "Empty task discarded", Toast.LENGTH_SHORT).show();
-				setResult(RESULT_CANCELED, intent);
+					&& taskBounty == DEFAULT_BOUNTY
+					&& taskStockType.equals(DEFAULT_STOCK_TYPE)) {
+				Toast.makeText(this, getString(R.string.empty_task_discarded), Toast.LENGTH_SHORT).show();
+				setResult(RESULT_CANCELED, data);
 			}
 			else {
 				//add task to database
@@ -262,8 +244,8 @@ public class TaskEditActivity extends Activity {
 				Toast.makeText(this, "Added " + newTask.getName() + " to " + taskType + " tasks", 
 						Toast.LENGTH_SHORT).show();
 				
-				intent.putExtra(UPDATE_TASK_ID, newTask.getID());
-				setResult(RESULT_OK, intent);
+				data.putExtra(LONG_UPDATE_TASK_ID_EXTRA, newTask.getID());
+				setResult(RESULT_OK, data);
 			}
 			break;
 		case EDIT_OLD:
@@ -272,8 +254,8 @@ public class TaskEditActivity extends Activity {
 					taskImportance, oldTask.getDateUpdated(), taskIsDue, taskDueDate, oldTask.getCurrentGoal());
 			
 			if(newTask.equals(oldTask)) {
-				Toast.makeText(this, "No changes made", Toast.LENGTH_SHORT).show();
-				setResult(RESULT_CANCELED, intent);
+				Toast.makeText(this, getString(R.string.no_changes_made), Toast.LENGTH_SHORT).show();
+				setResult(RESULT_CANCELED, data);
 			}
 			else {
 				newTask.setDateUpdated(Calendar.getInstance());
@@ -283,14 +265,14 @@ public class TaskEditActivity extends Activity {
 				dataSource.updateTask(newTask);
 				dataSource.close();
 				
-				Toast.makeText(this, "Edited " + newTask.getName(), 
+				Toast.makeText(this, getString(R.string.edited) + " " + newTask.getName(), 
 						Toast.LENGTH_SHORT).show();
 				
-				setResult(RESULT_OK);
+				setResult(RESULT_OK, data);
 			}
 			break;
 		default:
-			setResult(RESULT_CANCELED, intent);
+			setResult(RESULT_CANCELED, data);
 			Toast.makeText(this, "Unknown task type", Toast.LENGTH_SHORT).show();
 			break;
 		}
@@ -305,21 +287,43 @@ public class TaskEditActivity extends Activity {
 	 */
 	public void cancel() {
 		if(editType == ADD_NEW)
-			Toast.makeText(this, "New task discarded", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, getString(R.string.new_task_discarded), Toast.LENGTH_SHORT).show();
 		else if(editType == EDIT_OLD)
-			Toast.makeText(this, "Changes abandoned", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, getString(R.string.changes_abandoned), Toast.LENGTH_SHORT).show();
 		setResult(RESULT_CANCELED);
 		super.finish();
 	}
 	
-	private void pickDueDate() {
-		DatePickerDialog dialog = new DatePickerDialog(this, getDueDateSetListener(), 
-				taskDueDate.get(Calendar.YEAR),
-				taskDueDate.get(Calendar.MONTH),
-				taskDueDate.get(Calendar.DAY_OF_MONTH));
-		dialog.show();
+	public CompoundButton.OnCheckedChangeListener getDueDateOnCheckedChangeListener(){
+		return new CompoundButton.OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if(isChecked) {
+					txtTaskDueDate.setText(DateFormat.getDateFormat(TaskEditActivity.this).format(taskDueDate.getTime()));
+				}
+				else {
+					txtTaskDueDate.setText(getString(R.string.never));
+				}
+				
+			}
+		};
 	}
 	
+	private View.OnClickListener getDueDateOnClickListener() {
+		return new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				DatePickerDialog dialog = new DatePickerDialog(TaskEditActivity.this, getDueDateSetListener(), 
+						taskDueDate.get(Calendar.YEAR),
+						taskDueDate.get(Calendar.MONTH),
+						taskDueDate.get(Calendar.DAY_OF_MONTH));
+				dialog.show();
+			}
+		};
+	}
+		
 	private DatePickerDialog.OnDateSetListener getDueDateSetListener() {
 		
 		return new DatePickerDialog.OnDateSetListener() {

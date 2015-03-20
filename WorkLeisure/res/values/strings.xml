@@ -135,5 +135,11 @@
     <string name="discarded">discarded</string>
     <string name="no_claims">No claims</string>
     <string name="never">never</string>
+    <string name="unnamed_task">Unnamed Task</string>
+    <string name="empty_task_discarded">Empty task discarded</string>
+    <string name="no_changes_made">No changes made</string>
+    <string name="edited">Edited</string>
+    <string name="new_task_discarded">New task discarded</string>
+    <string name="changes_abandoned">Changes abandoned</string>
 
 </resources>
