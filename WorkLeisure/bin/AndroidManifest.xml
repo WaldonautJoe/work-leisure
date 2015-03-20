@@ -47,11 +47,11 @@
             android:label="@string/title_activity_late_upcoming_tasks" >
         </activity>
         <activity
-            android:name="jneickhoff.workleisure.BountyGoalListActivity"
+            android:name="jneickhoff.workleisure.GoalListActivity"
             android:label="@string/title_activity_bounty_goal_list" >
         </activity>
         <activity
-            android:name="jneickhoff.workleisure.CurrentGoalListActivity"
+            android:name="jneickhoff.workleisure.GoalCurrentListActivity"
             android:label="@string/title_activity_current_goal_list" >
         </activity>
         <activity

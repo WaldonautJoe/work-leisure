@@ -231,7 +231,7 @@ public class MainActivity extends Activity {
 	 * Starts activity that displays currently started bounty goals
 	 */
 	public void displayCurrentGoals(){
-		Intent i = new Intent(this, CurrentGoalListActivity.class);
+		Intent i = new Intent(this, GoalCurrentListActivity.class);
 		startActivity(i);
 	}
 	

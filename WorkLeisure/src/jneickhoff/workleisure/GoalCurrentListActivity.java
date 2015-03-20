@@ -3,7 +3,7 @@ package jneickhoff.workleisure;
 import java.util.ArrayList;
 import java.util.List;
 
-import jneickhoff.workleisure.BountyGoalArrayAdapter;
+import jneickhoff.workleisure.GoalArrayAdapter;
 import jneickhoff.workleisure.db.DataSource;
 import jneickhoff.workleisure.db.Goal;
 import jneickhoff.workleisure.db.Task;
@@ -16,9 +16,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class CurrentGoalListActivity extends Activity {
+public class GoalCurrentListActivity extends Activity {
 
-	BountyGoalArrayAdapter adapter;
+	GoalArrayAdapter adapter;
 	TextView txtNoGoals;
 	
 	@Override
@@ -29,7 +29,7 @@ public class CurrentGoalListActivity extends Activity {
 		txtNoGoals = (TextView) findViewById(R.id.txtNoGoals);
 		ListView listCurrentGoals = (ListView) findViewById(R.id.listCurrentGoals);
 		
-		adapter = new BountyGoalArrayAdapter(this, getUpdatedNamedGoalList());
+		adapter = new GoalArrayAdapter(this, getUpdatedNamedGoalList());
 		
 		updateNoGoalDisplay();
 		
@@ -46,17 +46,17 @@ public class CurrentGoalListActivity extends Activity {
 		updateNoGoalDisplay();
 	}
 	
-	private List<BountyGoalArrayAdapter.NamedGoal> getUpdatedNamedGoalList(){
+	private List<GoalArrayAdapter.NamedGoal> getUpdatedNamedGoalList(){
 		DataSource dataSource = new DataSource(this);
 		dataSource.open();
 		
 		List<Goal> goals = dataSource.getAllCurrentGoals();
-		List<BountyGoalArrayAdapter.NamedGoal> namedGoalList = new ArrayList<BountyGoalArrayAdapter.NamedGoal>();
+		List<GoalArrayAdapter.NamedGoal> namedGoalList = new ArrayList<GoalArrayAdapter.NamedGoal>();
 				
 		for(Goal goal : goals) {
 			Task task = dataSource.getTask(goal.getTaskID());
-			BountyGoalArrayAdapter.NamedGoal namedGoal = 
-					new BountyGoalArrayAdapter.NamedGoal(task.getName(), task.getType(), goal);
+			GoalArrayAdapter.NamedGoal namedGoal = 
+					new GoalArrayAdapter.NamedGoal(task.getName(), task.getType(), goal);
 			namedGoalList.add(namedGoal);
 		}
 		
@@ -80,9 +80,9 @@ public class CurrentGoalListActivity extends Activity {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				BountyGoalArrayAdapter.NamedGoal namedGoal = adapter.getItem(position);
+				GoalArrayAdapter.NamedGoal namedGoal = adapter.getItem(position);
 				
-				Intent i = new Intent(CurrentGoalListActivity.this, TaskDetailActivity.class);
+				Intent i = new Intent(GoalCurrentListActivity.this, TaskDetailActivity.class);
 				i.putExtra(TaskDetailActivity.EXTRA_TASK_ID, namedGoal.goal.getTaskID());
 				startActivity(i);
 			}

@@ -12,14 +12,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class BountyGoalHistoryArrayAdapter extends ArrayAdapter<Goal>{
+public class GoalHistoryArrayAdapter extends ArrayAdapter<Goal>{
 	
 	private Context context;
 	private List<Goal> values;
 	String type;
 	private DateFormat dateFormat;
 	
-	public BountyGoalHistoryArrayAdapter(Context context, List<Goal> goalValues, String type) {
+	public GoalHistoryArrayAdapter(Context context, List<Goal> goalValues, String type) {
 		super(context, R.layout.row_goal, goalValues);
 		this.context = context;
 		this.values = goalValues;
